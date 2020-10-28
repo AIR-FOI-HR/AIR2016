@@ -6,4 +6,10 @@
     <string name="sign_in_with_email">Sign up with email</string>
     <string name="login">Log in</string>
     <string name="sign_up">Sign up</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="step1">User data</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="profilepicture">Upload profile picture \n (Optional)</string>
+    <string name="step1_next_button">Account Details</string>
 </resources>

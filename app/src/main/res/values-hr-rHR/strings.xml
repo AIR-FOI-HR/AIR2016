@@ -7,4 +7,10 @@
     <string name="sign_in_with_email">Email registracija</string>
     <string name="login">Prijava</string>
     <string name="sign_up">Registriraj se</string>
+    <string name="name">Ime</string>
+    <string name="surname">Prezime</string>
+    <string name="step1">Podaci o korisniku</string>
+    <string name="already_have_account">Već imaš korisnički račun?</string>
+    <string name="profilepicture">Uploadaj profilnu sliku \n (Opcionalno)</string>
+    <string name="step1_next_button">Podaci o računu</string>
 </resources>
