@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TreeApp</string>
+    <string name="password">Lozinka</string>
+    <string name="email">Email</string>
+    <string name="registration">REGISTRACIJA</string>
+    <string name="sign_in_with_email">Email registracija</string>
+    <string name="login">Prijava</string>
+    <string name="sign_up">Registriraj se</string>
+</resources>
