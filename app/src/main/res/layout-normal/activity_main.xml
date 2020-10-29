@@ -46,6 +46,7 @@
         android:fontFamily="robo"
         android:text="@string/sign_up"
         android:textSize="18sp"
+        android:onClick="OpenRegistration"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
