@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TreeApp</string>
+    <string name="password">Lozinka</string>
+    <string name="email">Email</string>
+    <string name="registration">REGISTRACIJA</string>
+    <string name="sign_in_with_email">Email registracija</string>
+    <string name="login">Prijava</string>
+    <string name="sign_up">Registriraj se</string>
+<<<<<<< HEAD
+    <string name="continue_as_a_guest">Nastavi kao gost</string>
+=======
+    <string name="name">Ime</string>
+    <string name="surname">Prezime</string>
+    <string name="step1">Podaci o korisniku</string>
+    <string name="already_have_account">Već imaš korisnički račun?</string>
+    <string name="profilepicture">Uploadaj profilnu sliku \n (Opcionalno)</string>
+    <string name="step1_next_button">Podaci o računu</string>
+    <string name="step2_next_button">Potvrda emaila</string>
+    <string name="repeat_password">Ponovite lozinku</string>
+    <string name="username">Korisničko ime</string>
+>>>>>>> feature/registration-design
+</resources>
