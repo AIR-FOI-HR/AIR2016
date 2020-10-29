@@ -13,4 +13,7 @@
     <string name="already_have_account">Već imaš korisnički račun?</string>
     <string name="profilepicture">Uploadaj profilnu sliku \n (Opcionalno)</string>
     <string name="step1_next_button">Podaci o računu</string>
+    <string name="step2_next_button">Potvrda emaila</string>
+    <string name="repeat_password">Ponovite lozinku</string>
+    <string name="username">Korisničko ime</string>
 </resources>

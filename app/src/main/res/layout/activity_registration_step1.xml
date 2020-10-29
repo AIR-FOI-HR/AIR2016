@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:forceDarkAllowed="false"
     tools:context=".RegistrationStep1">
 
 
@@ -29,7 +28,7 @@
         app:srcCompat="@drawable/logosmall" />
 
     <TextView
-        android:id="@+id/lblRegistracija"
+        android:id="@+id/lblStep1Registracija"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="92dp"
@@ -42,44 +41,44 @@
         app:layout_constraintTop_toTopOf="@+id/imgViewStep1Top" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/imgViewStep1Step2"
         android:layout_width="58dp"
         android:layout_height="49dp"
         android:layout_marginStart="130dp"
         android:layout_marginTop="135dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imgViewStep1Top"
-        app:srcCompat="@drawable/group_3" />
+        app:srcCompat="@drawable/step2white" />
 
     <ImageView
-        android:id="@+id/imageView8"
+        android:id="@+id/imgViewStep1Step3"
         android:layout_width="59dp"
         android:layout_height="49dp"
         android:layout_marginStart="214dp"
         android:layout_marginTop="135dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imgViewStep1Top"
-        app:srcCompat="@drawable/group_4" />
+        app:srcCompat="@drawable/step3white" />
 
     <ImageView
-        android:id="@+id/imageView9"
+        android:id="@+id/imgViewStep1Step4"
         android:layout_width="59dp"
         android:layout_height="49dp"
         android:layout_marginStart="299dp"
         android:layout_marginTop="135dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imgViewStep1Top"
-        app:srcCompat="@drawable/group_5" />
+        app:srcCompat="@drawable/step4white" />
 
     <ImageView
-        android:id="@+id/imageView10"
+        android:id="@+id/imgViewStep1Step1"
         android:layout_width="63dp"
         android:layout_height="51dp"
         android:layout_marginStart="43dp"
         android:layout_marginTop="133dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imgViewStep1Top"
-        app:srcCompat="@drawable/group_2" />
+        app:srcCompat="@drawable/step1green" />
 
     <ImageView
         android:id="@+id/imgProfile"
@@ -92,7 +91,7 @@
         app:srcCompat="@drawable/profileplaceholder" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/lblStep1UserData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
@@ -100,26 +99,26 @@
         android:text="@string/step1"
         android:textColor="@color/tree_green"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        app:layout_constraintTop_toBottomOf="@+id/progressBarStep1" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/lblLogInStep1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
         android:layout_marginTop="20dp"
+        android:forceDarkAllowed="false"
         android:text="@string/already_have_account"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnStep1Next"
-        android:forceDarkAllowed="false"
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/txtBoxStep1Name"
         android:layout_width="318dp"
-        android:layout_height="44dp"
+        android:layout_height="50dp"
         android:layout_marginStart="43dp"
         android:layout_marginTop="35dp"
         android:backgroundTint="@color/tree_green"
@@ -127,14 +126,13 @@
         android:hint="@string/name"
         android:inputType="textPersonName"
         android:textColor="@color/tree_green"
-        android:textColorHint="@color/tree_green"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgProfile" />
 
     <EditText
         android:id="@+id/txtBoxStep1Surname"
         android:layout_width="318dp"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:layout_marginStart="43dp"
         android:layout_marginTop="29dp"
         android:backgroundTint="@color/tree_green"
@@ -143,7 +141,6 @@
         android:inputType="textPersonName"
         android:textColor="@color/tree_green"
         android:textColorHighlight="@color/tree_green"
-        android:textColorHint="@color/tree_green"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtBoxStep1Name" />
 
@@ -160,7 +157,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txtBoxStep1Surname" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progressBarStep1"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="317dp"
         android:layout_height="17dp"
@@ -169,34 +166,35 @@
         android:backgroundTint="@color/tree_green"
         android:progress="20"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView10" />
+        app:layout_constraintTop_toBottomOf="@+id/imgViewStep1Step1" />
 
     <Button
         android:id="@+id/btnStep1Next"
-        android:layout_width="317dp"
-        android:layout_height="48dp"
+        android:layout_width="318dp"
+        android:layout_height="50dp"
         android:layout_marginStart="44dp"
         android:layout_marginTop="28dp"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="@color/tree_green"
-        android:text="@string/step1_next_button"
         android:onClick="OpenRegistrationStep2"
+        android:text="@string/step1_next_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextDate" />
 
     <TextView
-        android:id="@+id/btnLogIn"
+        android:id="@+id/btnLogInStep1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="20dp"
+        android:onClick="OpenLogIn"
         android:text="@string/login"
         android:textColor="@color/tree_green"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintStart_toEndOf="@+id/lblLogInStep1"
         app:layout_constraintTop_toBottomOf="@+id/btnStep1Next" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/lblStep1Profile"
         android:layout_width="135dp"
         android:layout_height="50dp"
         android:layout_marginStart="4dp"
@@ -207,6 +205,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.214"
         app:layout_constraintStart_toEndOf="@+id/imgProfile"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        app:layout_constraintTop_toBottomOf="@+id/progressBarStep1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
