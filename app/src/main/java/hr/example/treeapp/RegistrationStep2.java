@@ -4,7 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.google.protobuf.DescriptorProtos;
+
+import org.w3c.dom.Text;
 
 public class RegistrationStep2 extends AppCompatActivity {
 
@@ -12,6 +19,15 @@ public class RegistrationStep2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_step2);
+
+        Intent intent=getIntent();
+        String str_name = intent.getStringExtra("name_key");
+        String str_surname = intent.getStringExtra("surname_key");
+      //  String str_date = (String) intent.getSerializableExtra("date_key");
+        Log.d("Poruka", str_name);
+        Log.d("Poruka", str_surname);
+    //    Log.d("Poruka", str_date);
+
     }
     public void OpenRegistrationStep1(View view) {
         Intent open = new Intent(RegistrationStep2.this, RegistrationStep1.class);

@@ -145,7 +145,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txtBoxStep1Name" />
 
     <EditText
-        android:id="@+id/editTextDate"
+        android:id="@+id/txtStep1Date"
         android:layout_width="318dp"
         android:layout_height="46dp"
         android:layout_marginStart="43dp"
@@ -179,7 +179,7 @@
         android:onClick="OpenRegistrationStep2"
         android:text="@string/step1_next_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDate" />
+        app:layout_constraintTop_toBottomOf="@+id/txtStep1Date" />
 
     <TextView
         android:id="@+id/btnLogInStep1"
