@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TreeApp">
-        <activity android:name=".RegistrationStep3"></activity>
+        <activity android:name=".RegistrationStep4"></activity>
+        <activity android:name=".RegistrationStep3" />
         <activity android:name=".RegistrationStep2" />
         <activity android:name=".RegistrationStep1" />
         <activity android:name=".MainActivity">

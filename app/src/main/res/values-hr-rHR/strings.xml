@@ -21,4 +21,8 @@
     <string name="email_check">Provjerite svoj mail i kliknite na link potvrde za nastavak.</string>
     <string name="email_not_sent">Email nije stigao?</string>
     <string name="resend_mail">Ponovno pošalji mail</string>
+    <string name="AllDone">Gotovo!</string>
+    <string name="AccountCreated">Račun je uspješno kreiran!</string>
+    <string name="PlantATree">Posadi drvo, ne budi panj</string>
+    <string name="NewsFeed">Naslovnica</string>
 </resources>

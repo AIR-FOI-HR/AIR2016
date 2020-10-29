@@ -22,6 +22,12 @@ public class RegistrationStep3 extends AppCompatActivity {
         Intent open = new Intent(RegistrationStep3.this, RegistrationStep2.class);
         startActivity(open);
     }
+
+    public void OpenRegistrationStep4(View view) {
+        Intent open = new Intent(RegistrationStep3.this, RegistrationStep4.class);
+        startActivity(open);
+    }
+
     public void OpenLogIn(View view){
         Intent open = new Intent(RegistrationStep3.this, MainActivity.class);
         startActivity(open);
