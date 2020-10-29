@@ -7,6 +7,10 @@
     <string name="sign_in_with_email">Email registracija</string>
     <string name="login">Prijava</string>
     <string name="sign_up">Registriraj se</string>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 512dae518b1901f8ae4a72739a40f614df43328c
     <string name="continue_as_a_guest">Nastavi kao gost</string>
 
     <string name="name">Ime</string>
