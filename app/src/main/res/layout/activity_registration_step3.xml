@@ -201,4 +201,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lblStep2AccountDetails2"
         app:srcCompat="@drawable/mail_icon" />
+
+    <TextView
+        android:id="@+id/lblStep3NotSent"
+        android:layout_width="330dp"
+        android:layout_height="23dp"
+        android:layout_marginBottom="3dp"
+        android:text="@string/email_not_sent"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/btnStep3ResendMail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
