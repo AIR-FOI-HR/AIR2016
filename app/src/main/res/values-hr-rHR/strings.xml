@@ -7,4 +7,5 @@
     <string name="sign_in_with_email">Email registracija</string>
     <string name="login">Prijava</string>
     <string name="sign_up">Registriraj se</string>
+    <string name="continue_as_a_guest">Nastavi kao gost</string>
 </resources>
