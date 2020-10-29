@@ -13,17 +13,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.protobuf.DescriptorProtos;
 
 import org.w3c.dom.Text;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RegistrationStep2 extends AppCompatActivity {
     EditText email, korIme, password, repeatedPassword;
+    String Ime, Prezime, userID;
 
     FirebaseAuth firebaseAuth;
+    FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +39,11 @@ public class RegistrationStep2 extends AppCompatActivity {
         setContentView(R.layout.activity_registration_step2);
 
         Intent intent=getIntent();
-        String str_name = intent.getStringExtra("name_key");
-        String str_surname = intent.getStringExtra("surname_key");
+        Ime = intent.getStringExtra("name_key");
+        Prezime = intent.getStringExtra("surname_key");
       //  String str_date = (String) intent.getSerializableExtra("date_key");
-        Log.d("Poruka", str_name);
-        Log.d("Poruka", str_surname);
+        Log.d("Poruka", Ime);
+        Log.d("Poruka", Prezime);
     //    Log.d("Poruka", str_date);
 
         //dohvacanje upisanih podataka kao objekte
@@ -46,6 +54,7 @@ public class RegistrationStep2 extends AppCompatActivity {
 
         //kreiranje instance Firebase autentikacije
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
     }
     public void OpenRegistrationStep1(View view) {
@@ -89,8 +98,20 @@ public class RegistrationStep2 extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Intent open = new Intent(RegistrationStep2.this, RegistrationStep3.class);
-                    startActivity(open);
+                    userID = firebaseAuth.getCurrentUser().getUid();
+                    DocumentReference documentReference = firebaseFirestore.collection("korisnici").document(userID);
+                    Map<String, Object> korisnik = new HashMap<>();
+                    korisnik.put("Ime", Ime);
+                    korisnik.put("Prezime", Prezime);
+                    korisnik.put("E-mail", Email);
+                    korisnik.put("Korisnicko_ime", KorIme);
+                    documentReference.set(korisnik).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Intent open = new Intent(RegistrationStep2.this, RegistrationStep3.class);
+                            startActivity(open);
+                        }
+                    });
                 }else{
 
                 }

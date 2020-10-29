@@ -57,11 +57,11 @@ public class RegistrationStep1 extends AppCompatActivity {
      //   String pattern = "MM/dd/yyyy";
      //   DateFormat df = new SimpleDateFormat(pattern);
     //    String date1 = df.format(date);
-        String name1=name.getText().toString();
-        String surname1=surname.getText().toString();
+        String Name=name.getText().toString();
+        String Surname=surname.getText().toString();
         Intent open = new Intent(getApplicationContext(), RegistrationStep2.class);
-        open.putExtra("name_key", name1);
-        open.putExtra("surname_key", surname1);
+        open.putExtra("name_key", Name);
+        open.putExtra("surname_key", Surname);
    //     open.putExtra("date_key", date1);
 
         startActivity(open);
