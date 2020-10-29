@@ -20,6 +20,10 @@
     <string name="step2_next_button">Email Confirmation</string>
     <string name="repeat_password">Repeat Password</string>
     <string name="username">Username</string>
+    <string name="please_confirm">Please confirm your email address</string>
+    <string name="email_sent">Confirmation email was sent to:</string>
+    <string name="email_check">Please check your mail and click on confirmation link to continue.</string>
+    <string name="email_not_sent">Email not sent?</string>
 
 
 </resources>
