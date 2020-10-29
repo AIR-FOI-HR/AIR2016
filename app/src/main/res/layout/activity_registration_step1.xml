@@ -173,13 +173,13 @@
         android:layout_width="318dp"
         android:layout_height="50dp"
         android:layout_marginStart="44dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginBottom="68dp"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="@color/tree_green"
         android:onClick="OpenRegistrationStep2"
         android:text="@string/step1_next_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDate" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/btnLogInStep1"
