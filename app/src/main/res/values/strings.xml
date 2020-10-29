@@ -23,7 +23,8 @@
     <string name="please_confirm">Please confirm your email address</string>
     <string name="email_sent">Confirmation email was sent to:</string>
     <string name="email_check">Please check your mail and click on confirmation link to continue.</string>
-    <string name="email_not_sent">Email not sent?</string>
+    <string name="email_not_sent">Mail not sent?</string>
+    <string name="resend_mail">Resend Mail</string>
 
 
 </resources>

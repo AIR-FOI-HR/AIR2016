@@ -20,4 +20,5 @@
     <string name="email_sent">Poslan vam je email potvrde na adresu:</string>
     <string name="email_check">Provjerite svoj mail i kliknite na link potvrde za nastavak.</string>
     <string name="email_not_sent">Email nije stigao?</string>
+    <string name="resend_mail">Ponovno pošalji mail</string>
 </resources>
