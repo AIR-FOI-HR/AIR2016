@@ -31,7 +31,6 @@ public class RegistrationStep1 extends AppCompatActivity {
     ImageView imageView;
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST=71;
-    FirebaseAuth firebaseAuth;
 
 
     @Override
@@ -39,7 +38,7 @@ public class RegistrationStep1 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_step1);
         imageView=(ImageView) findViewById(R.id.imgProfile);
-        firebaseAuth = FirebaseAuth.getInstance();
+
         imageView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -57,7 +56,7 @@ public class RegistrationStep1 extends AppCompatActivity {
         surname=findViewById(R.id.txtBoxStep1Surname);
         datumrodenja= findViewById(R.id.datePickerStep1);
         int day=datumrodenja.getDayOfMonth();
-        int month=datumrodenja.getMonth();
+        int month=datumrodenja.getMonth()+1;
         int year=datumrodenja.getYear();
 
 
@@ -89,7 +88,6 @@ public class RegistrationStep1 extends AppCompatActivity {
 
         }
         startActivity(open);
-
    //     open.putExtra("date_key", date1);
 
 

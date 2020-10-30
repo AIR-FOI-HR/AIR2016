@@ -3,6 +3,7 @@ package hr.example.treeapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,29 +18,42 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.protobuf.DescriptorProtos;
+import com.google.type.DateTime;
 
 import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class RegistrationStep2 extends AppCompatActivity {
     EditText email, korIme, password, repeatedPassword;
-    String Ime, Prezime, userID, Slika;
+    String Ime, Prezime, userID, Slika, slikaID;
     int day,month,year;
-
+    String datumRodenja;
 
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
+    FirebaseStorage firebaseStorage;
+    StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +68,9 @@ public class RegistrationStep2 extends AppCompatActivity {
         day = extras.getInt("day_key");
         month = extras.getInt("month_key");
         year = extras.getInt("year_key");
+
+        datumRodenja = String.valueOf(day) + "/" + String.valueOf(month) + "/" + String.valueOf(year);
+
         String extraStr = extras.getString("image_key");
         if(extraStr==null){
             Log.d("Poruka", "Nema slike");
@@ -82,6 +99,8 @@ public class RegistrationStep2 extends AppCompatActivity {
         //kreiranje instance Firebase autentikacije
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
 
     }
     public void OpenRegistrationStep1(View view) {
@@ -126,12 +145,17 @@ public class RegistrationStep2 extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     userID = firebaseAuth.getCurrentUser().getUid();
-                    DocumentReference documentReference = firebaseFirestore.collection("korisnici").document(userID);
+                    DocumentReference documentReference = firebaseFirestore.collection("Korisnici").document(userID);
                     Map<String, Object> korisnik = new HashMap<>();
                     korisnik.put("Ime", Ime);
                     korisnik.put("Prezime", Prezime);
                     korisnik.put("E-mail", Email);
                     korisnik.put("Korisnicko_ime", KorIme);
+                    if(!TextUtils.isEmpty(Slika)) {
+                        UploadPicture();
+                    }
+                    korisnik.put("Profilna_slika_ID", slikaID);
+                    korisnik.put("Datum_rodenja", datumRodenja);
                     documentReference.set(korisnik).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -151,5 +175,27 @@ public class RegistrationStep2 extends AppCompatActivity {
         Intent open = new Intent(RegistrationStep2.this, MainActivity.class);
         startActivity(open);
         overridePendingTransition(R.anim.slideleft,R.anim.stayinplace);
+    }
+
+    private void UploadPicture(){
+
+        slikaID = UUID.randomUUID().toString();
+        StorageReference riversRef = storageReference.child("Profilne_slike/" + slikaID);
+
+        Uri myUri = Uri.parse(Slika);
+
+        riversRef.putFile(myUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Snackbar.make(findViewById(android.R.id.content), "Slika uploadana.", Snackbar.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getApplicationContext(), "Slika nije uploadana.", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }
