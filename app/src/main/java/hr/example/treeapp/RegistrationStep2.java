@@ -46,13 +46,24 @@ public class RegistrationStep2 extends AppCompatActivity {
         Intent intent=getIntent();
         Ime = intent.getStringExtra("name_key");
         Prezime = intent.getStringExtra("surname_key");
-        Slika =intent.getStringExtra("image_key");
-        Uri SlikaUri = Uri.parse(Slika);
+        Bundle extras = getIntent().getExtras();
+        String extraStr = extras.getString("image_key");
+        if(extraStr==null){
+            Log.d("Poruka", "Nema slike");
+        }
+        else{
+            Log.d("Poruka", "Ima slike");
+            Slika=extraStr;
+            Log.d("Poruka", Slika);
+        }
+
+
+
 
 
         Log.d("Poruka", Ime);
         Log.d("Poruka", Prezime);
-        Log.d("Poruka", Slika);
+
 
         //dohvacanje upisanih podataka kao objekte
         email = (EditText)findViewById(R.id.txtBoxStep2Email);

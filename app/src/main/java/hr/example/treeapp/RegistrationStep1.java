@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,8 +49,6 @@ public class RegistrationStep1 extends AppCompatActivity {
         }
 
 
-
-
     public void OpenRegistrationStep2(View view) {
         name=findViewById(R.id.txtBoxStep1Name);
         surname=findViewById(R.id.txtBoxStep1Surname);
@@ -64,12 +63,23 @@ public class RegistrationStep1 extends AppCompatActivity {
         String Surname=surname.getText().toString();
 
         Intent open = new Intent(getApplicationContext(), RegistrationStep2.class);
-        open.putExtra("name_key", Name);
-        open.putExtra("surname_key", Surname);
-        open.putExtra("image_key", filePath.toString());
+        if (filePath != null && !filePath.equals(Uri.EMPTY)) {
+            open.putExtra("name_key", Name);
+            open.putExtra("surname_key", Surname);
+            open.putExtra("image_key", filePath.toString());
+            Log.d("Dobro", "Ima slike");
+        }
+        else{
+            open.putExtra("name_key", Name);
+            open.putExtra("surname_key", Surname);
+            Log.d("Lose", "Nema slike");
+
+        }
+        startActivity(open);
+
    //     open.putExtra("date_key", date1);
 
-        startActivity(open);
+
 
     }
     public void OpenLogIn(View view){
