@@ -28,12 +28,15 @@ import com.google.protobuf.DescriptorProtos;
 import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RegistrationStep2 extends AppCompatActivity {
     EditText email, korIme, password, repeatedPassword;
     String Ime, Prezime, userID, Slika;
+    int day,month,year;
+
 
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
@@ -46,7 +49,11 @@ public class RegistrationStep2 extends AppCompatActivity {
         Intent intent=getIntent();
         Ime = intent.getStringExtra("name_key");
         Prezime = intent.getStringExtra("surname_key");
+
         Bundle extras = getIntent().getExtras();
+        day = extras.getInt("day_key");
+        month = extras.getInt("month_key");
+        year = extras.getInt("year_key");
         String extraStr = extras.getString("image_key");
         if(extraStr==null){
             Log.d("Poruka", "Nema slike");
@@ -58,11 +65,12 @@ public class RegistrationStep2 extends AppCompatActivity {
         }
 
 
-
-
-
         Log.d("Poruka", Ime);
         Log.d("Poruka", Prezime);
+        Log.d("Poruka", String.valueOf(day));
+        Log.d("Poruka", String.valueOf(month));
+        Log.d("Poruka", String.valueOf(year));
+
 
 
         //dohvacanje upisanih podataka kao objekte
