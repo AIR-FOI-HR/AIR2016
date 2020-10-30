@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -27,6 +28,7 @@ public class RegistrationStep1 extends AppCompatActivity {
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST=71;
     FirebaseAuth firebaseAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +44,6 @@ public class RegistrationStep1 extends AppCompatActivity {
         });
 
     //}
-
-      //  name=findViewById(R.id.txtBoxStep1Name);
-       // surname=findViewById(R.id.txtBoxStep1Surname);
-        //btStep2=findViewById(R.id.btnStep1Next);
-
-       // btStep2.setOnClickListener(new View.OnClickListener() {
-          //  @Override
-         //   public void onClick(View v) {
-           //     String name1=name.getText().toString();
-           //     String surname1=surname.getText().toString();
-          //      Intent intent = new Intent(getApplicationContext(), RegistrationStep2.class);
-           //     intent.putExtra("message_key", name1);
-           //     startActivity(intent);
-    //       });
 
         }
 
@@ -74,9 +62,11 @@ public class RegistrationStep1 extends AppCompatActivity {
     //    String date1 = df.format(date);
         String Name=name.getText().toString();
         String Surname=surname.getText().toString();
+
         Intent open = new Intent(getApplicationContext(), RegistrationStep2.class);
         open.putExtra("name_key", Name);
         open.putExtra("surname_key", Surname);
+        open.putExtra("image_key", filePath.toString());
    //     open.putExtra("date_key", date1);
 
         startActivity(open);
@@ -103,8 +93,10 @@ public class RegistrationStep1 extends AppCompatActivity {
         {
             filePath = data.getData();
             try {
+
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
+
             }
             catch (IOException e)
             {

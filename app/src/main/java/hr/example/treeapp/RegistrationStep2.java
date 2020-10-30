@@ -4,8 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -23,12 +27,13 @@ import com.google.protobuf.DescriptorProtos;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RegistrationStep2 extends AppCompatActivity {
     EditText email, korIme, password, repeatedPassword;
-    String Ime, Prezime, userID;
+    String Ime, Prezime, userID, Slika;
 
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
@@ -41,10 +46,13 @@ public class RegistrationStep2 extends AppCompatActivity {
         Intent intent=getIntent();
         Ime = intent.getStringExtra("name_key");
         Prezime = intent.getStringExtra("surname_key");
-      //  String str_date = (String) intent.getSerializableExtra("date_key");
+        Slika =intent.getStringExtra("image_key");
+        Uri SlikaUri = Uri.parse(Slika);
+
+
         Log.d("Poruka", Ime);
         Log.d("Poruka", Prezime);
-    //    Log.d("Poruka", str_date);
+        Log.d("Poruka", Slika);
 
         //dohvacanje upisanih podataka kao objekte
         email = (EditText)findViewById(R.id.txtBoxStep2Email);
