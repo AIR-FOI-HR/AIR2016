@@ -21,5 +21,18 @@
     <string name="step2_next_button">Potvrda emaila</string>
     <string name="repeat_password">Ponovite lozinku</string>
     <string name="username">Korisničko ime</string>
+<<<<<<< HEAD
+>>>>>>> feature/registration-design
+=======
+    <string name="please_confirm">Molimo potvrdite email adresu</string>
+    <string name="email_sent">Poslan vam je email potvrde na adresu:</string>
+    <string name="email_check">Provjerite svoj mail i kliknite na link potvrde za nastavak.</string>
+    <string name="email_not_sent">Email nije stigao?</string>
+    <string name="resend_mail">Ponovno pošalji mail</string>
+    <string name="AllDone">Gotovo!</string>
+    <string name="AccountCreated">Račun je uspješno kreiran!</string>
+    <string name="PlantATree">Posadi drvo, ne budi panj</string>
+    <string name="NewsFeed">Naslovnica</string>
+    <string name="DatePicker">Datum rođenja:</string>
 >>>>>>> feature/registration-design
 </resources>
