@@ -10,12 +10,12 @@
 
     <ImageView
         android:id="@+id/imgViewStep1Top"
-        android:layout_width="422dp"
-        android:layout_height="149dp"
+        android:layout_width="433dp"
+        android:layout_height="151dp"
         android:forceDarkAllowed="false"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/backsmall"
-        tools:layout_editor_absoluteX="-3dp" />
+        tools:layout_editor_absoluteX="-11dp" />
 
     <ImageView
         android:id="@+id/imgViewStep1LogoSmall"
@@ -107,15 +107,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
         android:fontFamily="@font/roboto"
         android:forceDarkAllowed="false"
         android:text="@string/already_have_account"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnStep1Next"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/txtBoxStep1Surname"
@@ -135,11 +133,9 @@
         app:layout_constraintTop_toBottomOf="@+id/txtBoxStep1Name" />
 
     <EditText
-<<<<<<< HEAD
-        android:id="@+id/txtStep1Date"
-=======
+
+
         android:id="@+id/txtBoxStep1Name"
->>>>>>> feature/registration-design
         android:layout_width="318dp"
         android:layout_height="50dp"
         android:layout_marginTop="4dp"
@@ -170,15 +166,16 @@
         android:id="@+id/btnStep1Next"
         android:layout_width="318dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="68dp"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="@color/tree_green"
         android:fontFamily="@font/roboto_medium"
         android:onClick="OpenRegistrationStep2"
         android:text="@string/step1_next_button"
-<<<<<<< HEAD
+
+        app:layout_constraintBottom_toTopOf="@+id/lblLogInStep1"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtStep1Date" />
+        app:layout_constraintTop_toBottomOf="@+id/datePickerStep1" />
 =======
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -190,13 +187,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
         android:fontFamily="@font/roboto"
         android:onClick="OpenLogIn"
         android:text="@string/login"
         android:textColor="@color/tree_green"
-        app:layout_constraintStart_toEndOf="@+id/lblLogInStep1"
-        app:layout_constraintTop_toBottomOf="@+id/btnStep1Next" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/lblLogInStep1" />
 
     <TextView
         android:id="@+id/lblStep1Profile"
