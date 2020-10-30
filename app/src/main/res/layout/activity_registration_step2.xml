@@ -101,7 +101,6 @@
         android:id="@+id/btnStep2Next"
         android:layout_width="318dp"
         android:layout_height="50dp"
-        android:layout_marginStart="44dp"
         android:layout_marginBottom="68dp"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="@color/tree_green"
@@ -109,19 +108,20 @@
         android:onClick="OpenRegistrationStep3"
         android:text="@string/step2_next_button"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/txtBoxStep2Email"
         android:layout_width="318dp"
         android:layout_height="50dp"
-        android:layout_marginStart="43dp"
         android:layout_marginTop="272dp"
         android:backgroundTint="@color/tree_green"
         android:ems="10"
         android:fontFamily="@font/roboto"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -129,13 +129,13 @@
         android:id="@+id/txtBoxStep2Username"
         android:layout_width="318dp"
         android:layout_height="50dp"
-        android:layout_marginStart="43dp"
         android:layout_marginTop="36dp"
         android:backgroundTint="@color/tree_green"
         android:ems="10"
         android:fontFamily="@font/roboto"
         android:hint="@string/username"
         android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtBoxStep2Email" />
 
@@ -143,13 +143,13 @@
         android:id="@+id/txtBoxStep2Password"
         android:layout_width="318dp"
         android:layout_height="50dp"
-        android:layout_marginStart="43dp"
         android:layout_marginTop="36dp"
         android:backgroundTint="@color/tree_green"
         android:ems="10"
         android:fontFamily="@font/roboto"
         android:hint="@string/password"
         android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtBoxStep2Username" />
 
@@ -157,13 +157,13 @@
         android:id="@+id/txtBoxStep2PasswordRepeat"
         android:layout_width="318dp"
         android:layout_height="50dp"
-        android:layout_marginStart="43dp"
         android:layout_marginTop="36dp"
         android:backgroundTint="@color/tree_green"
         android:ems="10"
         android:fontFamily="@font/roboto"
         android:hint="@string/repeat_password"
         android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtBoxStep2Password" />
 

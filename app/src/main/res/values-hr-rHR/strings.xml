@@ -25,4 +25,5 @@
     <string name="AccountCreated">Račun je uspješno kreiran!</string>
     <string name="PlantATree">Posadi drvo, ne budi panj</string>
     <string name="NewsFeed">Naslovnica</string>
+    <string name="DatePicker">Datum rođenja:</string>
 </resources>

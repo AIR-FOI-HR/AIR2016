@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:foregroundTint="@color/tree_green"
     tools:context=".RegistrationStep1">
 
 
@@ -118,26 +118,10 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
-        android:id="@+id/txtBoxStep1Name"
-        android:layout_width="318dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="43dp"
-        android:layout_marginTop="35dp"
-        android:backgroundTint="@color/tree_green"
-        android:ems="10"
-        android:fontFamily="@font/roboto"
-        android:hint="@string/name"
-        android:inputType="textPersonName"
-        android:textColor="@color/tree_green"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgProfile" />
-
-    <EditText
         android:id="@+id/txtBoxStep1Surname"
         android:layout_width="318dp"
         android:layout_height="50dp"
-        android:layout_marginStart="43dp"
-        android:layout_marginTop="29dp"
+        android:layout_marginTop="28dp"
         android:backgroundTint="@color/tree_green"
         android:ems="10"
         android:fontFamily="@font/roboto"
@@ -145,21 +129,26 @@
         android:inputType="textPersonName"
         android:textColor="@color/tree_green"
         android:textColorHighlight="@color/tree_green"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtBoxStep1Name" />
 
     <EditText
-        android:id="@+id/editTextDate"
+        android:id="@+id/txtBoxStep1Name"
         android:layout_width="318dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="43dp"
-        android:layout_marginTop="37dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="4dp"
+        android:backgroundTint="@color/tree_green"
         android:ems="10"
         android:fontFamily="@font/roboto"
-        android:inputType="date"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
         android:textColor="@color/tree_green"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtBoxStep1Surname" />
+        app:layout_constraintTop_toBottomOf="@+id/imgProfile" />
 
     <ProgressBar
         android:id="@+id/progressBarStep1"
@@ -177,7 +166,6 @@
         android:id="@+id/btnStep1Next"
         android:layout_width="318dp"
         android:layout_height="50dp"
-        android:layout_marginStart="44dp"
         android:layout_marginBottom="68dp"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="@color/tree_green"
@@ -185,6 +173,7 @@
         android:onClick="OpenRegistrationStep2"
         android:text="@string/step1_next_button"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -202,8 +191,8 @@
 
     <TextView
         android:id="@+id/lblStep1Profile"
-        android:layout_width="135dp"
-        android:layout_height="50dp"
+        android:layout_width="134dp"
+        android:layout_height="70dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="76dp"
         android:fontFamily="@font/roboto"
@@ -214,5 +203,34 @@
         app:layout_constraintHorizontal_bias="0.214"
         app:layout_constraintStart_toEndOf="@+id/imgProfile"
         app:layout_constraintTop_toBottomOf="@+id/progressBarStep1" />
+
+    <DatePicker
+        android:id="@+id/datePickerStep1"
+        android:layout_width="262dp"
+        android:layout_height="139dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/tree_green"
+        android:calendarTextColor="@color/tree_green"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
+        android:headerBackground="@color/tree_green"
+        android:yearListSelectorColor="@color/tree_green"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtBoxStep1Surname" />
+
+    <TextView
+        android:id="@+id/lblStep1DatePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/roboto"
+        android:text="@string/DatePicker"
+        app:layout_constraintBottom_toTopOf="@+id/datePickerStep1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.138"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtBoxStep1Surname" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

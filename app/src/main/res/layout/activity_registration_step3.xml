@@ -36,7 +36,6 @@
         android:id="@+id/btnStep3ResendMail"
         android:layout_width="318dp"
         android:layout_height="50dp"
-        android:layout_marginStart="56dp"
         android:layout_marginBottom="68dp"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="@color/tree_green"
@@ -44,6 +43,7 @@
         android:onClick="OpenRegistrationStep4"
         android:text="@string/resend_mail"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
@@ -124,11 +124,12 @@
         android:id="@+id/lblStep2AccountDetails2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="152dp"
         android:layout_marginTop="4dp"
         android:fontFamily="@font/roboto"
         android:text="@string/step2_next_button"
         android:textColor="@color/tree_green"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.527"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBarStep3" />
 

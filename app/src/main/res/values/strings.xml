@@ -29,6 +29,7 @@
     <string name="AccountCreated">Account created succesfully!</string>
     <string name="PlantATree">Plant a tree, dont be a stump</string>
     <string name="NewsFeed">News Feed</string>
+    <string name="DatePicker">Birth Date:</string>
 
 
 </resources>
