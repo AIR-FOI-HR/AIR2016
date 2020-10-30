@@ -12,12 +12,12 @@
         android:id="@+id/btnStep3ResendMail2"
         android:layout_width="318dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="68dp"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="@color/tree_green"
         android:fontFamily="@font/roboto"
         android:text="@string/NewsFeed"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/gifImageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -130,13 +130,14 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/lblStep4PlantATree"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
     <TextView
         android:id="@+id/lblStep4PlantATree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="47dp"
+        android:layout_marginBottom="20dp"
         android:fontFamily="@font/roboto"
         android:text="@string/PlantATree"
         android:textAlignment="center"
@@ -154,9 +155,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBarStep4"
         app:srcCompat="@drawable/stablogif" />
+
     <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gifImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/stablogif"
-        />
+        android:src="@drawable/stablogif" />
 </androidx.constraintlayout.widget.ConstraintLayout>
