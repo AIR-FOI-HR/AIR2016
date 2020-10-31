@@ -6,4 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".LoginTest">
 
+    <Button
+        android:id="@+id/btnLogoutTest"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="208dp"
+        android:layout_marginEnd="100dp"
+        android:text="LOGOUT"
+        android:onClick="logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Logout" />
 </androidx.constraintlayout.widget.ConstraintLayout>
