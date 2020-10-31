@@ -8,9 +8,10 @@
     <string name="sign_in_with_email">Sign up with email</string>
     <string name="login">Log in</string>
     <string name="sign_up">Sign up</string>
-<<<<<<< HEAD
     <string name="continue_as_a_guest">Continue as a guest</string>
-=======
+
+
+>>>>>>> 512dae518b1901f8ae4a72739a40f614df43328c
 
     //Registration
 
@@ -23,6 +24,16 @@
     <string name="step2_next_button">Email Confirmation</string>
     <string name="repeat_password">Repeat Password</string>
     <string name="username">Username</string>
+    <string name="please_confirm">Please confirm your email address</string>
+    <string name="email_sent">Confirmation email was sent to:</string>
+    <string name="email_check">Please check your mail and click on confirmation link to continue.</string>
+    <string name="email_not_sent">Mail not sent?</string>
+    <string name="resend_mail">Resend Mail</string>
+    <string name="AllDone">All Done!</string>
+    <string name="AccountCreated">Account created succesfully!</string>
+    <string name="PlantATree">Plant a tree, dont be a stump</string>
+    <string name="NewsFeed">News Feed</string>
+    <string name="DatePicker">Birth Date:</string>
 
 
 >>>>>>> feature/registration-design
