@@ -114,28 +114,30 @@ public class RegistrationStep2 extends AppCompatActivity {
         String KorIme = korIme.getText().toString().trim();
         String Password = password.getText().toString().trim();
         String RepeatedPassword = repeatedPassword.getText().toString().trim();
+        Integer Bodovi = 0;
+        Integer UlogaID = 2;
 
         //provjerava je li upisan e-mail
         if(TextUtils.isEmpty(Email)){
-            email.setError("Upišite važeći e-mail.");
+            email.setError(getString(R.string.no_email));
             return;
         }
 
         //provjerava je li upisana lozinka
         if(TextUtils.isEmpty(Password)){
-            password.setError("Unesite lozinku!");
+            password.setError(getString(R.string.no_password));
             return;
         }
 
         //provjerava sadrži li lozinka najmanje 6 znakova
         if(Password.length() < 6){
-            password.setError("Lozinka mora sadržavati najmanje 6 znakova.");
+            password.setError(getString(R.string.invalid_password));
             return;
         }
 
         //provjerava je li točno upisana ponovljena lozinka
         if(TextUtils.isEmpty(RepeatedPassword) || !RepeatedPassword.equals(Password)){
-            repeatedPassword.setError("Ponovite lozinku.");
+            repeatedPassword.setError(getString(R.string.invalid_password_repeat));
             return;
         }
 
@@ -150,12 +152,14 @@ public class RegistrationStep2 extends AppCompatActivity {
                     korisnik.put("Ime", Ime);
                     korisnik.put("Prezime", Prezime);
                     korisnik.put("E-mail", Email);
+                    korisnik.put("Bodovi", Bodovi);
                     korisnik.put("Korisnicko_ime", KorIme);
                     if(!TextUtils.isEmpty(Slika)) {
                         UploadPicture();
                     }
                     korisnik.put("Profilna_slika_ID", slikaID);
                     korisnik.put("Datum_rodenja", datumRodenja);
+                    korisnik.put("Uloga_ID", UlogaID);
                     documentReference.set(korisnik).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {

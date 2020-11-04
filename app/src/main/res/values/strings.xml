@@ -44,6 +44,14 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
+    <string name="no_name">Please enter your name!</string>
+    <string name="no_surname">Please enter your surname!</string>
+    <string name="no_email">Please enter an e-mail!</string>
+    <string name="no_password">Please enter a password!</string>
+    <string name="invalid_password">Password must be at least 6 characters long containing at least one capital letter and one number!</string>
+    <string name="invalid_email">Email is not valid, please check it!</string>
+    <string name="invalid_password_repeat">Repeated password is incorrect!</string>
+
 
     >>>>>>> feature/registration-design
 </resources>
