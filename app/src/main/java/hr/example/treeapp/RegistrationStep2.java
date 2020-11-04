@@ -24,8 +24,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -41,14 +48,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class RegistrationStep2 extends AppCompatActivity {
     EditText email, korIme, password, repeatedPassword;
     String Ime, Prezime, userID, Slika, slikaID;
     int day,month,year;
     String datumRodenja;
+    public Boolean KorImeZauzeto;
 
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
@@ -117,9 +127,30 @@ public class RegistrationStep2 extends AppCompatActivity {
         Integer Bodovi = 0;
         Integer UlogaID = 2;
 
+
+     //   ProvjeraKorisnickogImena2("Korisnicko_ime", KorIme, new OnSuccessListener<Boolean>() {
+     //       @Override
+     //       public void onSuccess(Boolean aBoolean) {
+     //           if(!aBoolean){
+     //               KorImeZauzeto = true;
+     //           }
+     //       }
+     //   });
+
+     //   if(KorImeZauzeto == true){
+      //      korIme.setError(getString(R.string.username_taken));
+      //      return;
+     //   }
+
         //provjerava je li upisan e-mail
         if(TextUtils.isEmpty(Email)){
             email.setError(getString(R.string.no_email));
+            return;
+        }
+
+        //provjerava je li struktura e-maila točna
+        if((Pattern.compile("^[a-zA-Z0-9.-]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,4}$").matcher(Email).matches()) == false){
+            email.setError(getString(R.string.invalid_email));
             return;
         }
 
@@ -129,11 +160,12 @@ public class RegistrationStep2 extends AppCompatActivity {
             return;
         }
 
-        //provjerava sadrži li lozinka najmanje 6 znakova
-        if(Password.length() < 6){
+        //provjerava sadrži li lozinka između 6 i 20 znakova, barem 1 veliko slovo i jedan broj
+        if((Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,20}$").matcher(Password).matches()) == false){
             password.setError(getString(R.string.invalid_password));
             return;
         }
+
 
         //provjerava je li točno upisana ponovljena lozinka
         if(TextUtils.isEmpty(RepeatedPassword) || !RepeatedPassword.equals(Password)){
@@ -175,6 +207,51 @@ public class RegistrationStep2 extends AppCompatActivity {
 
 
     }
+
+    public void ProvjeraKorisnickogImena(String KorIme){
+       Query query = firebaseFirestore.collection("Korisnici")
+                .whereEqualTo("Korisnicko_ime", KorIme);
+
+       query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+           @Override
+           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+               if(task.getResult().getDocuments() != null){
+                   korIme.setError(getString(R.string.username_taken));
+
+               }
+           }
+       });
+
+    }
+
+    public void ProvjeraKorisnickogImena2(String key, String value, OnSuccessListener<Boolean> onSuccessListener) {
+        firebaseFirestore.collection("Korisnici").whereEqualTo(key, value).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            private boolean isRunOneTime = false;
+
+            @Override
+            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+                if (!isRunOneTime) {
+                    isRunOneTime = true;
+                    List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
+                    if (e != null) {
+                        e.printStackTrace();
+                        String message = e.getMessage();
+                        onSuccessListener.onSuccess(false);
+                        return;
+                    }
+
+                    if (snapshotList.size() > 0) {
+                        //Field is Exist
+                        onSuccessListener.onSuccess(false);
+                    } else {
+                        onSuccessListener.onSuccess(true);
+                    }
+
+                }
+            }
+        });
+    }
+
     public void OpenLogIn(View view){
         Intent open = new Intent(RegistrationStep2.this, MainActivity.class);
         startActivity(open);
