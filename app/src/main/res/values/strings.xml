@@ -30,8 +30,8 @@
     <string name="email_not_sent">Mail not sent?</string>
     <string name="resend_mail">Resend Mail</string>
     <string name="AllDone">All Done!</string>
-    <string name="AccountCreated">Account created succesfully!</string>
-    <string name="PlantATree">Plant a tree, dont be a stump</string>
+    <string name="AccountCreated">Account created successfully!</string>
+    <string name="PlantATree">Plant a tree, don\'t be a stump</string>
     <string name="NewsFeed">News Feed</string>
     <string name="DatePicker">Birth Date:</string>
     <string name="title_activity_login_test">LoginTest</string>
