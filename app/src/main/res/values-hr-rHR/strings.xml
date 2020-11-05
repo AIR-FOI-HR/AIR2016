@@ -33,4 +33,20 @@
     <string name="NewsFeed">Naslovnica</string>
     <string name="DatePicker">Datum rođenja:</string>
 
+    <string name="no_name">Molimo unesite vaše ime!</string>
+    <string name="no_surname">Molimo unesite vaše prezime!</string>
+    <string name="no_email">Molimo unesite e-mail!</string>
+    <string name="username_taken">Korisničko ime je zauzeto!</string>
+    <string name="no_password">Molimo unesite lozinku!</string>
+    <string name="invalid_password">Lozinka mora biti duga barem 6 znakova, sadržavati barem jedno veliko slovo i jedan broj!</string>
+    <string name="invalid_email">Uneseni e-mail nije ispravan, molimo provjerite ga!</string>
+    <string name="invalid_password_repeat">Ponovljena lozinka nije ispravna!</string>
+    <string name="password_reset">Reset lozinke</string>
+    <string name="reset_msg">Link za reset lozinke je poslan na Vaš email!</string>
+    <string name="step3_next_button">Dalje</string>
+    <string name="email_unconfirmed">Email nije potvrđen.</string>
+    <string name="authentication_failed">Autentifikiacija neuspješna!</string>
+    <string name="invalid_password_login">Neispravna lozinka!</string>
+
+
 </resources>

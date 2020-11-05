@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -87,7 +88,16 @@ public class RegistrationStep1 extends AppCompatActivity {
             open.putExtra("year_key", year);
 
         }
-        startActivity(open);
+
+        if(TextUtils.isEmpty(Name)){
+            name.setError(getString(R.string.no_name));
+        }
+        else if(TextUtils.isEmpty(Surname)){
+            surname.setError(getString(R.string.no_surname));
+        }
+        else {
+            startActivity(open);
+        }
    //     open.putExtra("date_key", date1);
 
 

@@ -9,9 +9,12 @@
     <string name="login">Log in</string>
     <string name="sign_up">Sign up</string>
     <string name="continue_as_a_guest">Continue as a guest</string>
-
-
->>>>>>> 512dae518b1901f8ae4a72739a40f614df43328c
+    <string name="password_reset">Password reset</string>
+    <string name="reset_msg">Reset link was sent to your email!</string>
+    <string name="email_unconfirmed">Email is not confirmed.</string>
+    <string name="authentication_failed">Authentication failed!</string>
+    <string name="invalid_password_login">Invalid password!</string>
+    >>>>>>> 512dae518b1901f8ae4a72739a40f614df43328c
 
     //Registration
 
@@ -22,6 +25,7 @@
     <string name="profilepicture">Upload profile picture \n (Optional)</string>
     <string name="step1_next_button">Account Details</string>
     <string name="step2_next_button">Email Confirmation</string>
+    <string name="step3_next_button">Next</string>
     <string name="repeat_password">Repeat Password</string>
     <string name="username">Username</string>
     <string name="please_confirm">Please confirm your email address</string>
@@ -30,11 +34,29 @@
     <string name="email_not_sent">Mail not sent?</string>
     <string name="resend_mail">Resend Mail</string>
     <string name="AllDone">All Done!</string>
-    <string name="AccountCreated">Account created succesfully!</string>
-    <string name="PlantATree">Plant a tree, dont be a stump</string>
+    <string name="AccountCreated">Account created successfully!</string>
+    <string name="PlantATree">Plant a tree, don\'t be a stump</string>
     <string name="NewsFeed">News Feed</string>
     <string name="DatePicker">Birth Date:</string>
+    <string name="title_activity_login_test">LoginTest</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <string name="no_name">Please enter your name!</string>
+    <string name="no_surname">Please enter your surname!</string>
+    <string name="no_email">Please enter an e-mail!</string>
+    <string name="username_taken">This username is already taken!</string>
+    <string name="no_password">Please enter a password!</string>
+    <string name="invalid_password">Password must be at least 6 characters long containing at least one capital letter and one number!</string>
+    <string name="invalid_email">Email is not valid, please check it!</string>
+    <string name="invalid_password_repeat">Repeated password is incorrect!</string>
 
 
->>>>>>> feature/registration-design
+    >>>>>>> feature/registration-design
 </resources>
