@@ -43,6 +43,7 @@
     <string name="invalid_password_repeat">Ponovljena lozinka nije ispravna!</string>
     <string name="password_reset">Reset lozinke</string>
     <string name="reset_msg">Link za reset lozinke je poslan na Vaš email!</string>
+    <string name="step3_next_button">Dalje</string>
 
 
 </resources>

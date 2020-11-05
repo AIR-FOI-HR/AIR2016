@@ -113,6 +113,7 @@ public class RegistrationStep2 extends AppCompatActivity {
         storageReference = firebaseStorage.getReference();
 
     }
+
     public void OpenRegistrationStep1(View view) {
         Intent open = new Intent(RegistrationStep2.this, RegistrationStep1.class);
         startActivity(open);
@@ -196,6 +197,7 @@ public class RegistrationStep2 extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Intent open = new Intent(RegistrationStep2.this, RegistrationStep3.class);
+                            open.putExtra("email_key", Email);
                             startActivity(open);
                         }
                     });

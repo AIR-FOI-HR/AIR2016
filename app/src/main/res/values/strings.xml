@@ -25,6 +25,7 @@
     <string name="profilepicture">Upload profile picture \n (Optional)</string>
     <string name="step1_next_button">Account Details</string>
     <string name="step2_next_button">Email Confirmation</string>
+    <string name="step3_next_button">Next</string>
     <string name="repeat_password">Repeat Password</string>
     <string name="username">Username</string>
     <string name="please_confirm">Please confirm your email address</string>
