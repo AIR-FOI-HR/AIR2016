@@ -133,6 +133,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(open);
     }
 
+    public void OpenReset(View view){
+        Intent open= new Intent(MainActivity.this,PassReset.class);
+        startActivity(open);
+    }
+
 
     private boolean inputValidation(String emailVal, String passwordVal){
         if(TextUtils.isEmpty(emailVal)){

@@ -41,6 +41,8 @@
     <string name="invalid_password">Lozinka mora biti duga barem 6 znakova, sadržavati barem jedno veliko slovo i jedan broj!</string>
     <string name="invalid_email">Uneseni e-mail nije ispravan, molimo provjerite ga!</string>
     <string name="invalid_password_repeat">Ponovljena lozinka nije ispravna!</string>
+    <string name="password_reset">Reset lozinke</string>
+    <string name="reset_msg">Link za reset lozinke je poslan na Vaš email!</string>
 
 
 </resources>

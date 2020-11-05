@@ -9,6 +9,9 @@
     <string name="login">Log in</string>
     <string name="sign_up">Sign up</string>
     <string name="continue_as_a_guest">Continue as a guest</string>
+    <string name="password_reset">Password reset</string>
+    <string name="reset_msg">Reset link was sent to your email!</string>
+
 
 
     >>>>>>> 512dae518b1901f8ae4a72739a40f614df43328c
