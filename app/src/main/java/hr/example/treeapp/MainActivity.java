@@ -113,13 +113,19 @@ public class MainActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         // Sign in success
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        if(!user.isEmailVerified()) {
+                            email.setError("Email nije potvrđen.");
+                            password.getText().clear();
+                            return;
+                        }
                         startActivity(new Intent(getApplicationContext(), LoginTest.class));
                         finish();
                     } else {
                         // Sign in fail
                         Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                        email.getText().clear();
                         password.getText().clear();
+                        password.setError("Neispravna lozinka");
                     }
                 }
             });
