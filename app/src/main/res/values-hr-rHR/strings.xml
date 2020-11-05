@@ -44,6 +44,9 @@
     <string name="password_reset">Reset lozinke</string>
     <string name="reset_msg">Link za reset lozinke je poslan na Vaš email!</string>
     <string name="step3_next_button">Dalje</string>
+    <string name="email_unconfirmed">Email nije potvrđen.</string>
+    <string name="authentication_failed">Autentifikiacija neuspješna!</string>
+    <string name="invalid_password_login">Neispravna lozinka!</string>
 
 
 </resources>

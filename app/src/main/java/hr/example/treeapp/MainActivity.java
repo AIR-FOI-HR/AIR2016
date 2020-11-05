@@ -1,8 +1,10 @@
 package hr.example.treeapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -16,12 +18,24 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
     EditText email, password;
     FirebaseAuth firebaseAuth;
     private GoogleSignInClient mGoogleSignInClient;
+    FirebaseFirestore firebaseFirestore;
+    GoogleSignInAccount account;
+    FirebaseStorage firebaseStorage;
+    StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
         email=(EditText)findViewById(R.id.txtEmail3);
         password=(EditText)findViewById(R.id.txtPassword3);
         firebaseAuth = FirebaseAuth.getInstance();
-
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
         createRequest();
     }
     @Override
@@ -73,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = task.getResult(ApiException.class);
+                account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
@@ -92,11 +112,31 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = firebaseAuth.getCurrentUser();
+                            if(account!=null){
+                                DocumentReference documentReference = firebaseFirestore.collection("Korisnici").document(user.getUid());
+                                Map<String, Object> korisnik = new HashMap<>();
+                                korisnik.put("Ime", account.getGivenName());
+                                korisnik.put("Prezime", account.getFamilyName());
+                                korisnik.put("E-mail", account.getEmail());
+                                korisnik.put("Bodovi", 0);
+                                korisnik.put("Uloga_ID", 2);
+                                korisnik.put("Datum_rodenja", null);
+                                String googleEmail=account.getEmail();
+                                korisnik.put("Korisnicko_ime", googleEmail.split("@")[0]);
+                                Uri photoUri= account.getPhotoUrl();
+                                korisnik.put("Profilna_slika_ID", photoUri.toString());
+                                documentReference.set(korisnik).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                    }
+                                });
+                            }
                             startActivity(new Intent(getApplicationContext(), LoginTest.class));
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, getText(R.string.authentication_failed), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -115,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                         // Sign in success
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         if(!user.isEmailVerified()) {
-                            email.setError("Email nije potvrđen.");
+                            email.setError(getString(R.string.email_unconfirmed));
                             password.getText().clear();
                             return;
                         }
@@ -123,9 +163,8 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     } else {
                         // Sign in fail
-                        Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         password.getText().clear();
-                        password.setError("Neispravna lozinka");
+                        password.setError(getText(R.string.invalid_password_login));
                     }
                 }
             });
@@ -147,10 +186,10 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean inputValidation(String emailVal, String passwordVal){
         if(TextUtils.isEmpty(emailVal)){
-            email.setError("Unesite email!");
+            email.setError(getString(R.string.no_email));
         }
         if(TextUtils.isEmpty(passwordVal)){
-            password.setError("Unesite lozinku!");
+            password.setError(getString(R.string.no_password));
         }
         return !TextUtils.isEmpty(emailVal) && !TextUtils.isEmpty(passwordVal);
     }
@@ -168,8 +207,8 @@ public class MainActivity extends AppCompatActivity {
                             finish();
                         } else {
                             // Sign in fail
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, getText(R.string.authentication_failed),
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
                 });
