@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -44,6 +45,7 @@ import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -56,7 +58,7 @@ import java.util.regex.Pattern;
 public class RegistrationStep2 extends AppCompatActivity {
     EditText email, korIme, password, repeatedPassword;
     String Ime, Prezime, userID, Slika, slikaID;
-    int day,month,year;
+    int day, month, year;
     String datumRodenja;
     public Boolean KorImeZauzeto;
 
@@ -70,7 +72,7 @@ public class RegistrationStep2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_step2);
 
-        Intent intent=getIntent();
+        Intent intent = getIntent();
         Ime = intent.getStringExtra("name_key");
         Prezime = intent.getStringExtra("surname_key");
 
@@ -82,12 +84,11 @@ public class RegistrationStep2 extends AppCompatActivity {
         datumRodenja = String.valueOf(day) + "/" + String.valueOf(month) + "/" + String.valueOf(year);
 
         String extraStr = extras.getString("image_key");
-        if(extraStr==null){
+        if (extraStr == null) {
             Log.d("Poruka", "Nema slike");
-        }
-        else{
+        } else {
             Log.d("Poruka", "Ima slike");
-            Slika=extraStr;
+            Slika = extraStr;
             Log.d("Poruka", Slika);
         }
 
@@ -99,12 +100,11 @@ public class RegistrationStep2 extends AppCompatActivity {
         Log.d("Poruka", String.valueOf(year));
 
 
-
         //dohvacanje upisanih podataka kao objekte
-        email = (EditText)findViewById(R.id.txtBoxStep2Email);
-        korIme = (EditText)findViewById(R.id.txtBoxStep2Username);
-        password = (EditText)findViewById(R.id.txtBoxStep2Password);
-        repeatedPassword = (EditText)findViewById(R.id.txtBoxStep2PasswordRepeat);
+        email = (EditText) findViewById(R.id.txtBoxStep2Email);
+        korIme = (EditText) findViewById(R.id.txtBoxStep2Username);
+        password = (EditText) findViewById(R.id.txtBoxStep2Password);
+        repeatedPassword = (EditText) findViewById(R.id.txtBoxStep2PasswordRepeat);
 
         //kreiranje instance Firebase autentikacije
         firebaseAuth = FirebaseAuth.getInstance();
@@ -117,8 +117,9 @@ public class RegistrationStep2 extends AppCompatActivity {
     public void OpenRegistrationStep1(View view) {
         Intent open = new Intent(RegistrationStep2.this, RegistrationStep1.class);
         startActivity(open);
-        overridePendingTransition(R.anim.slideleft,R.anim.stayinplace);
+        overridePendingTransition(R.anim.slideleft, R.anim.stayinplace);
     }
+
     public void OpenRegistrationStep3(View view) {
         //kreiranje stringova upisanih podataka
         String Email = email.getText().toString().trim();
@@ -129,47 +130,47 @@ public class RegistrationStep2 extends AppCompatActivity {
         Integer UlogaID = 2;
 
 
-     //   ProvjeraKorisnickogImena2("Korisnicko_ime", KorIme, new OnSuccessListener<Boolean>() {
-     //       @Override
-     //       public void onSuccess(Boolean aBoolean) {
-     //           if(!aBoolean){
-     //               KorImeZauzeto = true;
-     //           }
-     //       }
-     //   });
+        //   ProvjeraKorisnickogImena2("Korisnicko_ime", KorIme, new OnSuccessListener<Boolean>() {
+        //       @Override
+        //       public void onSuccess(Boolean aBoolean) {
+        //           if(!aBoolean){
+        //               KorImeZauzeto = true;
+        //           }
+        //       }
+        //   });
 
-     //   if(KorImeZauzeto == true){
-      //      korIme.setError(getString(R.string.username_taken));
-      //      return;
-     //   }
+        //   if(KorImeZauzeto == true){
+        //      korIme.setError(getString(R.string.username_taken));
+        //      return;
+        //   }
 
         //provjerava je li upisan e-mail
-        if(TextUtils.isEmpty(Email)){
+        if (TextUtils.isEmpty(Email)) {
             email.setError(getString(R.string.no_email));
             return;
         }
 
         //provjerava je li struktura e-maila točna
-        if((Pattern.compile("^[a-zA-Z0-9.-]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,4}$").matcher(Email).matches()) == false){
+        if ((Pattern.compile("^[a-zA-Z0-9.-]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,4}$").matcher(Email).matches()) == false) {
             email.setError(getString(R.string.invalid_email));
             return;
         }
 
         //provjerava je li upisana lozinka
-        if(TextUtils.isEmpty(Password)){
+        if (TextUtils.isEmpty(Password)) {
             password.setError(getString(R.string.no_password));
             return;
         }
 
         //provjerava sadrži li lozinka između 6 i 20 znakova, barem 1 veliko slovo i jedan broj
-        if((Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,20}$").matcher(Password).matches()) == false){
+        if ((Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,20}$").matcher(Password).matches()) == false) {
             password.setError(getString(R.string.invalid_password));
             return;
         }
 
 
         //provjerava je li točno upisana ponovljena lozinka
-        if(TextUtils.isEmpty(RepeatedPassword) || !RepeatedPassword.equals(Password)){
+        if (TextUtils.isEmpty(RepeatedPassword) || !RepeatedPassword.equals(Password)) {
             repeatedPassword.setError(getString(R.string.invalid_password_repeat));
             return;
         }
@@ -187,7 +188,7 @@ public class RegistrationStep2 extends AppCompatActivity {
                     korisnik.put("E-mail", Email);
                     korisnik.put("Bodovi", Bodovi);
                     korisnik.put("Korisnicko_ime", KorIme);
-                    if(!TextUtils.isEmpty(Slika)) {
+                    if (!TextUtils.isEmpty(Slika)) {
                         UploadPicture();
                     }
                     korisnik.put("Profilna_slika_ID", slikaID);
@@ -201,7 +202,7 @@ public class RegistrationStep2 extends AppCompatActivity {
                             startActivity(open);
                         }
                     });
-                }else{
+                } else {
 
                 }
             }
@@ -210,19 +211,19 @@ public class RegistrationStep2 extends AppCompatActivity {
 
     }
 
-    public void ProvjeraKorisnickogImena(String KorIme){
-       Query query = firebaseFirestore.collection("Korisnici")
+    public void ProvjeraKorisnickogImena(String KorIme) {
+        Query query = firebaseFirestore.collection("Korisnici")
                 .whereEqualTo("Korisnicko_ime", KorIme);
 
-       query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-           @Override
-           public void onComplete(@NonNull Task<QuerySnapshot> task) {
-               if(task.getResult().getDocuments() != null){
-                   korIme.setError(getString(R.string.username_taken));
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.getResult().getDocuments() != null) {
+                    korIme.setError(getString(R.string.username_taken));
 
-               }
-           }
-       });
+                }
+            }
+        });
 
     }
 
@@ -254,20 +255,44 @@ public class RegistrationStep2 extends AppCompatActivity {
         });
     }
 
-    public void OpenLogIn(View view){
+    public void OpenLogIn(View view) {
         Intent open = new Intent(RegistrationStep2.this, MainActivity.class);
         startActivity(open);
-        overridePendingTransition(R.anim.slideleft,R.anim.stayinplace);
+        overridePendingTransition(R.anim.slideleft, R.anim.stayinplace);
     }
 
-    private void UploadPicture(){
+    private void UploadPicture() {
 
         slikaID = UUID.randomUUID().toString();
         StorageReference riversRef = storageReference.child("Profilne_slike/" + slikaID);
 
         Uri myUri = Uri.parse(Slika);
-
-        riversRef.putFile(myUri)
+        //smanjivanje slike profila
+        Bitmap bmp = null;
+        try {
+            bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), myUri);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+        byte[] data = baos.toByteArray();
+        riversRef.putBytes(data)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Snackbar.make(findViewById(android.R.id.content), "Slika uploadana.", Snackbar.LENGTH_LONG).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Slika nije uploadana.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+}
+/**
+        riversRef.putBytes(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -282,3 +307,4 @@ public class RegistrationStep2 extends AppCompatActivity {
                 });
     }
 }
+*/
