@@ -115,7 +115,7 @@ public class RegistrationStep1 extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
-
+    //TODO: nisam siguran baš, ali dio ovog bi mogao u poslovnu logiku pa se tu samo provjerava je li sve uspješno napravljeno
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

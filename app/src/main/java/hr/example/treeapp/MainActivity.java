@@ -56,16 +56,18 @@ public class MainActivity extends AppCompatActivity {
 
         email=(EditText)findViewById(R.id.txtEmail3);
         password=(EditText)findViewById(R.id.txtPassword3);
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference();
+        firebaseAuth = FirebaseAuth.getInstance(); // TODO: ide u database
+        firebaseFirestore = FirebaseFirestore.getInstance(); //TODO: ide u database
+        firebaseStorage = FirebaseStorage.getInstance();//TODO: ide u database
+        storageReference = firebaseStorage.getReference();//TODO: ide u database
         createRequest();
     }
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null)
+        //treba li ovaj dio ako imamo splash screen gdje se to provjerava?
+        //TODO: napraviti metodu tipa FirebaseUser getCurrentUser koja će vraćati logiranog korisnika, naopraviti ju database
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if(currentUser!=null){
             startActivity(new Intent(getApplicationContext(), LoginTest.class));
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void createRequest() {
         // Configure Google Sign In
+        // TODO: ovo ispod može ići u database i tamo se pozivati (napraviti void getGoogleToken u kojem će ovo biti)
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -96,13 +99,15 @@ public class MainActivity extends AppCompatActivity {
                 account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
+                // TODO: tu treba handlati error, najbolje možda ovaj dio u database -> proslijediti error u logiku i prikazati ga u UI
                 // Google Sign In failed, update UI appropriately
                 // ...
                 //Toast.makeText(this, "Error:  " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }
-
+//TODO: ova cijela metoda može u database (tu se kreira novi korisnik preko Google SignIn), idToken dohvaća se od getGoogleToken iz database, a ulazni parametri mogu biti tipa user ili stringovi s podacima o korisniku.
+    //tu će se samo pozvati metoda iz database i proslijediti podaci o korisniku ili
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         firebaseAuth.signInWithCredential(credential)
@@ -122,11 +127,13 @@ public class MainActivity extends AppCompatActivity {
                                 korisnik.put("Uloga_ID", 2);
                                 korisnik.put("Datum_rodenja", null);
                                 String googleEmail=account.getEmail();
+                                //za ovaj dio možda ne bi bilo loše napraviti popup prozor u koji korisnik može upisati kor ime, da mu ne namećemo kor ime
                                 korisnik.put("Korisnicko_ime", googleEmail.split("@")[0]);
                                 Uri photoUri= account.getPhotoUrl();
                                 korisnik.put("Profilna_slika_ID", photoUri.toString());
                                 documentReference.set(korisnik).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
+                                    //ne razumijem za što služi ovaj void, ako nema svrhu treba ga ukloniti
                                     public void onSuccess(Void aVoid) {
 
                                     }
@@ -136,13 +143,15 @@ public class MainActivity extends AppCompatActivity {
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
+                            //TODO: toast ostaje u UI, ali se pokreće temeljem bool GoogleLogInSuccess koji je true ako je sve oke, a false ako nije
                             Toast.makeText(MainActivity.this, getText(R.string.authentication_failed), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
     }
 
-
+//TODO: void login je u poslovnoj logici, tu ostaje dohvaćanje emaila i passworda koji se prosljeđuju u sloj poslovne logike, a ono što je direktno povezano s bazom ide u database. IF (inputValidation)-> login iz poslovne logike
+    //možda napraviti metodu u poslovnoj logici koja poziva firebaseAuth
     public void login(View view) {
         String emailVal=email.getText().toString().trim();
         String passwordVal=password.getText().toString();
@@ -196,6 +205,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void guest(View view) {
+        //TODO: terba napraviti da se ne radi novi korisnik svaki put nakon što se korisnik odjavi i prijavi kao guset, isti id treba ostati sve dok korisnik ima aplikaciju na uređaju
+        //pokreće se metoda u poslovnoj logici koja poziva metodu iz database gdje se kreira anonym korisnik, a dio s provjerom se hendla u poslovnoj logici
         firebaseAuth.signInAnonymously()
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
