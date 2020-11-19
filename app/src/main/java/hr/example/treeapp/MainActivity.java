@@ -36,18 +36,17 @@ import com.google.firebase.storage.UploadTask;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Executor;
+
+import auth.AuthRepository;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    //ostaje
     private static final int RC_SIGN_IN = 123;
     EditText email, password;
-    FirebaseAuth firebaseAuth;
-    private GoogleSignInClient mGoogleSignInClient;
-    FirebaseFirestore firebaseFirestore;
-    GoogleSignInAccount account;
-    FirebaseStorage firebaseStorage;
-    StorageReference storageReference;
+    AuthRepository authRepository= new AuthRepository(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,56 +55,31 @@ public class MainActivity extends AppCompatActivity {
 
         email=(EditText)findViewById(R.id.txtEmail3);
         password=(EditText)findViewById(R.id.txtPassword3);
-        firebaseAuth = FirebaseAuth.getInstance(); // TODO: ide u database
-        firebaseFirestore = FirebaseFirestore.getInstance(); //TODO: ide u database
-        firebaseStorage = FirebaseStorage.getInstance();//TODO: ide u database
-        storageReference = firebaseStorage.getReference();//TODO: ide u database
-        createRequest();
+        authRepository.createRequest();
     }
+
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null)
-        //treba li ovaj dio ako imamo splash screen gdje se to provjerava?
-        //TODO: napraviti metodu tipa FirebaseUser getCurrentUser koja će vraćati logiranog korisnika, naopraviti ju database
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if(currentUser!=null){
-            startActivity(new Intent(getApplicationContext(), LoginTest.class));
-        }
-    }
-    private void createRequest() {
-        // Configure Google Sign In
-        // TODO: ovo ispod može ići u database i tamo se pozivati (napraviti void getGoogleToken u kojem će ovo biti)
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
     public void signIn(View view) {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        Intent signInIntent = authRepository.getSignInIntent();
+        startActivityForResult(signInIntent, authRepository.RC_SIGN_IN);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account.getIdToken());
-            } catch (ApiException e) {
-                // TODO: tu treba handlati error, najbolje možda ovaj dio u database -> proslijediti error u logiku i prikazati ga u UI
-                // Google Sign In failed, update UI appropriately
-                // ...
-                //Toast.makeText(this, "Error:  " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+        try {
+            authRepository.requestCheck(requestCode,data);
+        }
+        catch (ApiException e){
+            Toast.makeText(this, "Error:  " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+    /**
 //TODO: ova cijela metoda može u database (tu se kreira novi korisnik preko Google SignIn), idToken dohvaća se od getGoogleToken iz database, a ulazni parametri mogu biti tipa user ili stringovi s podacima o korisniku.
     //tu će se samo pozvati metoda iz database i proslijediti podaci o korisniku ili
     private void firebaseAuthWithGoogle(String idToken) {
@@ -149,13 +123,33 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+     **/
 
-//TODO: void login je u poslovnoj logici, tu ostaje dohvaćanje emaila i passworda koji se prosljeđuju u sloj poslovne logike, a ono što je direktno povezano s bazom ide u database. IF (inputValidation)-> login iz poslovne logike
-    //možda napraviti metodu u poslovnoj logici koja poziva firebaseAuth
     public void login(View view) {
         String emailVal=email.getText().toString().trim();
         String passwordVal=password.getText().toString();
 
+        String checkValue="";
+
+
+        if(inputValidation(emailVal,passwordVal)){
+            checkValue=authRepository.login(emailVal,passwordVal);
+        }
+
+
+        if(checkValue=="ok"){
+            startActivity(new Intent(getApplicationContext(), LoginTest.class));
+            finish();
+        }
+        else if(checkValue=="notVerified"){
+            email.setError(getString(R.string.email_unconfirmed));
+            password.getText().clear();
+        }
+        else{
+            password.getText().clear();
+            password.setError(getText(R.string.invalid_password_login));
+        }
+        /**
         if(inputValidation(emailVal, passwordVal)) {
             firebaseAuth.signInWithEmailAndPassword(emailVal, passwordVal).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
@@ -168,16 +162,14 @@ public class MainActivity extends AppCompatActivity {
                             password.getText().clear();
                             return;
                         }
-                        startActivity(new Intent(getApplicationContext(), LoginTest.class));
-                        finish();
+
                     } else {
                         // Sign in fail
                         password.getText().clear();
                         password.setError(getText(R.string.invalid_password_login));
                     }
                 }
-            });
-        }
+            });*/
     }
 
 
@@ -205,7 +197,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void guest(View view) {
-        //TODO: terba napraviti da se ne radi novi korisnik svaki put nakon što se korisnik odjavi i prijavi kao guset, isti id treba ostati sve dok korisnik ima aplikaciju na uređaju
+        /**
+         * //TODO: terba napraviti da se ne radi novi korisnik svaki put nakon što se korisnik odjavi i prijavi kao guset, isti id treba ostati sve dok korisnik ima aplikaciju na uređaju
         //pokreće se metoda u poslovnoj logici koja poziva metodu iz database gdje se kreira anonym korisnik, a dio s provjerom se hendla u poslovnoj logici
         firebaseAuth.signInAnonymously()
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -222,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.LENGTH_LONG).show();
                         }
                     }
-                });
+                });*/
+        authRepository.guest((Executor) this);
     }
 }
