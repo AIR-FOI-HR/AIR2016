@@ -1,8 +1,10 @@
 package auth;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -43,7 +45,6 @@ public class AuthRepository {
     public static FirebaseUser user;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
-    private StorageReference storageReference;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private GoogleSignInAccount account;
@@ -51,6 +52,7 @@ public class AuthRepository {
     private Context context;
 
     private boolean googleSignin=false;
+    public String returnValue;
 
     public AuthRepository (Context context){
         this.context=context;
@@ -78,14 +80,16 @@ public class AuthRepository {
             }
         }
     }
+
     public Intent getSignInIntent(){
         return mGoogleSignInClient.getSignInIntent();
     }
+
     public void firebaseAuthWithGoogle(String idToken) {
         //kod this, executor je bacalo grešku
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -124,35 +128,46 @@ public class AuthRepository {
 
 
     public String login(String emailVal, String passwordVal) {
-        final String[] returnValue = {""};
-            firebaseAuth.signInWithEmailAndPassword(emailVal, passwordVal).addOnCompleteListener((Executor) this,new OnCompleteListener<AuthResult>() {
+
+            firebaseAuth.signInWithEmailAndPassword(emailVal, passwordVal).addOnCompleteListener((Activity) context,new OnCompleteListener<AuthResult>() {
+
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         // Sign in success
                         user = firebaseAuth.getCurrentUser();
                         if(!user.isEmailVerified()) {
-                            returnValue[1]="notVerified";
+                            setValueMethod("notVerified");
 
                         }
                         else{
-                            returnValue[1]="ok";
+                            setValueMethod("ok");
                         }
 
                     } else {
                         // Sign in fail
-                        returnValue[1]="error";
+                        setValueMethod("error");
                     }
 
                 }
 
             });
-        return returnValue[1];
+        String returnMe  = returnValueMethod();
+        return returnMe;
     }
-    public void guest(Executor executor) {
+
+    public void setValueMethod(String value){
+        returnValue = value;
+    }
+
+    public String returnValueMethod(){
+        return returnValue;
+    }
+
+    public void guest() {
 
         firebaseAuth.signInAnonymously()
-                .addOnCompleteListener(executor, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
