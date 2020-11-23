@@ -40,6 +40,7 @@ import java.util.UUID;
 import java.util.concurrent.Executor;
 
 import auth.AuthRepository;
+import auth.LogInStatusCallback;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -79,32 +80,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void login(View view) {
+
+
+    public void login(View view) throws InterruptedException {
         email=(EditText)findViewById(R.id.txtEmail3);
         password=(EditText)findViewById(R.id.txtPassword3);
 
         String emailVal=email.getText().toString().trim();
         String passwordVal=password.getText().toString();
 
-        String checkValue = "";
-
         if(inputValidation(emailVal,passwordVal)) {
-            checkValue = authRepository.login(emailVal, passwordVal);
+            authRepository.login(emailVal, passwordVal, new LogInStatusCallback() {
+                @Override
+                public void onCallback(String value) {
+                    if (value == "ok") {
+                        startActivity(new Intent(getApplicationContext(), LoginTest.class));
+                        finish();
+                    } else if (value == "notVerified") {
+                        email.setError(getString(R.string.email_unconfirmed));
+                        password.getText().clear();
+                    } else {
+                        password.getText().clear();
+                        password.setError(getText(R.string.invalid_password_login));
+
+                    }
+                }
+            });
 
         }
-
-            if (checkValue == "ok") {
-                startActivity(new Intent(getApplicationContext(), LoginTest.class));
-                finish();
-            } else if (checkValue == "notVerified") {
-                email.setError(getString(R.string.email_unconfirmed));
-                password.getText().clear();
-            } else {
-                password.getText().clear();
-                password.setError(getText(R.string.invalid_password_login));
-            }
-
     }
+
 
     public void OpenRegistration(View view) {
         Intent open = new Intent(MainActivity.this, RegistrationStep1.class);

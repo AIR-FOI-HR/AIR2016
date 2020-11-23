@@ -127,33 +127,28 @@ public class AuthRepository {
 
 
 
-    public String login(String emailVal, String passwordVal) {
-
+    public void login(String emailVal, String passwordVal, final LogInStatusCallback loginCallback) {
+        String value;
             firebaseAuth.signInWithEmailAndPassword(emailVal, passwordVal).addOnCompleteListener((Activity) context,new OnCompleteListener<AuthResult>() {
-
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         // Sign in success
                         user = firebaseAuth.getCurrentUser();
-                        if(!user.isEmailVerified()) {
+                        if (!user.isEmailVerified()) {
                             setValueMethod("notVerified");
-
-                        }
-                        else{
+                        } else {
                             setValueMethod("ok");
                         }
-
+                        loginCallback.onCallback(returnValue);
                     } else {
                         // Sign in fail
                         setValueMethod("error");
+                        loginCallback.onCallback(returnValue);
                     }
 
                 }
-
             });
-        String returnMe  = returnValueMethod();
-        return returnMe;
     }
 
     public void setValueMethod(String value){
