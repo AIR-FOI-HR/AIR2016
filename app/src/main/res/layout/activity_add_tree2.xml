@@ -6,4 +6,93 @@
     android:layout_height="match_parent"
     tools:context=".AddTree">
 
+    <ImageView
+        android:id="@+id/banner_add_tree"
+        android:layout_width="416dp"
+        android:layout_height="96dp"
+        android:contentDescription="Banner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/back_add_treee" />
+
+    <ImageButton
+        android:id="@+id/image_load"
+        android:layout_width="411dp"
+        android:layout_height="198dp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/banner_add_tree"
+        app:srcCompat="@drawable/image_load_icon" />
+
+    <ImageView
+        android:id="@+id/separator_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="1.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_load"
+        app:srcCompat="@drawable/line_plus_h" />
+
+    <TextView
+        android:id="@+id/story_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto_light"
+        android:text="@string/about_tree"
+        android:textColor="@color/tree_green"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/separator_line" />
+
+    <EditText
+        android:id="@+id/treeDescriptionText"
+        android:layout_width="371dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/story_text" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/treeLocationMapView"
+        android:layout_width="413dp"
+        android:layout_height="156dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/discardTreeButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/plantTreeButton"
+        android:layout_width="165dp"
+        android:layout_height="65dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/plant_tree"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/discardTreeButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="165dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/discard"
+        android:textColor="@color/tree_green"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="@color/tree_green"
+        app:strokeWidth="2pt" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

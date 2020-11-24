@@ -19,6 +19,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="Theme.TreeApp.Secondary">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/tree_green</item>
+
+    </style>
+
     <style name="Theme.TreeApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.TreeApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

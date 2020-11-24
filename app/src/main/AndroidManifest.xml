@@ -14,7 +14,8 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/Theme.TreeApp">
-        <activity android:name=".PassReset"></activity>
+        <activity android:name=".AddTree"></activity>
+        <activity android:name=".PassReset" />
         <activity android:name=".LoginTest" />
         <activity android:name=".RegistrationStep4" />
         <activity android:name=".RegistrationStep3" />
