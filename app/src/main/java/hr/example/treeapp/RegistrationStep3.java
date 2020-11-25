@@ -20,17 +20,18 @@ public class RegistrationStep3 extends AppCompatActivity {
     private static final String TAG = "";
     String email;
     FirebaseAuth auth = FirebaseAuth.getInstance();
-    FirebaseUser user = auth.getCurrentUser();
+    FirebaseUser user;
+    //user  = auth.getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_step3);
-        Intent intent = getIntent();
-        IspisEmaila();
-        sendEmailVerificationWithContinueUrl();
+       // Intent intent = getIntent();
+      //  IspisEmaila();
+       // sendEmailVerificationWithContinueUrl();
     }
-
+/*
     public void IspisEmaila() {
         TextView lblEmail = findViewById(R.id.lblStep3Email);
         lblEmail.setText(user.getEmail());
@@ -72,7 +73,7 @@ public class RegistrationStep3 extends AppCompatActivity {
                     }
                 });
         auth.useAppLanguage();
-    }
+    }*/
 }
 
 

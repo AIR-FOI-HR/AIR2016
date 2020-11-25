@@ -15,6 +15,10 @@ public class User {
 
     public User(){}
 
+    User(String korime){
+        this.korisnickoIme = korime;
+    }
+
     User(String uid, String ime, String prezime, String email,
     String profilnaSlika, int uloga, String korisnickoIme, Date datumRodenja, int bodovi)
     {

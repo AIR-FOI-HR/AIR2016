@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -26,7 +27,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import hr.example.treeapp.R;
@@ -147,25 +150,30 @@ public class AuthRepository {
     }
 
     public String dostupno;
+    List<String> listaKorisnickihImena = new ArrayList<String>();
+    int i = 0;
 
     public void checkUsernameAvailability(String korime, final UsernameAvailabilityCallback usernameAvailabilityCallback) {
-        String imeKolekcije = "Korisnici";
-        String polje = "Korisnicko_ime";
-        firebaseFirestore.collection(imeKolekcije)
+        firebaseFirestore.collection("Korisnici")
+                .whereEqualTo("Korisnicko_ime", korime)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                String izBaze = document.getString(polje).toString().trim().toString();
-                                String zaBazu = korime.toString().trim().toString();
-                                if(zaBazu.equals(izBaze)){
-                                    dostupno = "Dostupno";
+                                listaKorisnickihImena.add(document.get("Korisnicko_ime").toString());
+                                i++;
+                                if(i==3){
+                                    break;
                                 }
-                                else{
-                                    dostupno = "Zauzeto";
-                                }
+                            }
+                            if(listaKorisnickihImena.contains(korime)){
+                                dostupno = "Zauzeto";
+                                usernameAvailabilityCallback.onCallback(dostupno);
+                            }
+                            else{
+                                dostupno = "Dostupno";
                                 usernameAvailabilityCallback.onCallback(dostupno);
                             }
                         } else {

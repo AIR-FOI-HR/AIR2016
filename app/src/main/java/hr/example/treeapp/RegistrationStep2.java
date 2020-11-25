@@ -106,37 +106,7 @@ public class RegistrationStep2 extends AppCompatActivity {
         overridePendingTransition(R.anim.slideleft, R.anim.stayinplace);
     }
 
-    public boolean dostupno = false;
-
-    public boolean provjeriUsername(String usernameToCompare) {
-        firebaseFirestore.collection("Korisnici")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                if(document.get("Korisnicko_ime").equals(usernameToCompare)){
-                                    dostupno = false;
-                                }
-                                else{
-                                    dostupno = true;
-                                }
-                            }
-                        } else {
-                            //Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-        return dostupno;
-    }
-
-    String dostupno2;
-
-    public void ispisiPoruku(String poruka){
-        Toast.makeText(this, poruka, Toast.LENGTH_SHORT).show();
-
-    }
+    public boolean korimeDostupno;
 
     public void OpenRegistrationStep3(View view) {
      /*   //kreiranje stringova upisanih podataka
@@ -148,64 +118,21 @@ public class RegistrationStep2 extends AppCompatActivity {
             @Override
             public void onCallback(String value) {
                 if (value == "Dostupno") {
-                    ispisiPoruku("Dostupno");
-                } else if (value == "Zauzeto") {
-                    ispisiPoruku("Zauzeto");
-                } else {
-                    ispisiPoruku("Greska");
-
+                    korimeDostupno = true;
+                    OtvoriRegistrationStep3();
+                }
+                else{
+                    korimeDostupno = false;
+                    korIme.setError(getString(R.string.username_taken));
                 }
             }
         });
-
-
-
-       /* if(provjeriUsername(KorIme)){
-            Toast.makeText(this, "Korime JE dostupno", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            Toast.makeText(this, "Korime N I J E dostupno", Toast.LENGTH_SHORT).show();
-
-        }*/
-
-       /* firebaseFirestore.collection("Korisnici")
-                .get()
-                .addOnCompleteListener(this, new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String izBaze = document.getString("Korisnicko_ime").toString().trim().toString();
-                                String zaBazu = KorIme.toString().trim().toString();
-                                if(zaBazu.equals(izBaze)){
-                                    dostupno = false;
-                                }
-                                else{
-                                    dostupno = true;
-                                }
-                            }
-                        } else {
-                            dostupno = false;
-                        }
-                    }
-                });
-
-        if(dostupno){
-            Toast.makeText(this, "Korime JE dostupno", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            Toast.makeText(this, "Korime N I J E dostupno", Toast.LENGTH_SHORT).show();
-
-        }*/
 
 
       /*  String Password = password.getText().toString().trim();
         String RepeatedPassword = repeatedPassword.getText().toString().trim();
         Integer Bodovi = 0;
         Integer UlogaID = 2;
-
-
-
 
         //   if(KorImeZauzeto == true){
         //      korIme.setError(getString(R.string.username_taken));
@@ -280,6 +207,11 @@ public class RegistrationStep2 extends AppCompatActivity {
         });*/
 
 
+    }
+
+    public void OtvoriRegistrationStep3(){
+        Intent open = new Intent(RegistrationStep2.this, RegistrationStep3.class);
+        startActivity(open);
     }
 
     public void OpenLogIn(View view) {
