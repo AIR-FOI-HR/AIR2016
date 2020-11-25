@@ -4,13 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.SystemClock;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -26,17 +21,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executor;
 
-import hr.example.treeapp.LoginTest;
-import hr.example.treeapp.MainActivity;
 import hr.example.treeapp.R;
 
 public class AuthRepository {
@@ -44,18 +36,18 @@ public class AuthRepository {
     public static final int RC_SIGN_IN = 123;
     public static FirebaseUser user;
     private GoogleSignInClient mGoogleSignInClient;
-    private FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
+    private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private GoogleSignInAccount account;
     private FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
     private Context context;
 
-    private boolean googleSignin=false;
+    private boolean googleSignin = false;
     public String returnValue;
 
-    public AuthRepository (Context context){
-        this.context=context;
+    public AuthRepository(Context context) {
+        this.context = context;
     }
 
     public void createRequest() {
@@ -81,7 +73,7 @@ public class AuthRepository {
         }
     }
 
-    public Intent getSignInIntent(){
+    public Intent getSignInIntent() {
         return mGoogleSignInClient.getSignInIntent();
     }
 
@@ -95,7 +87,7 @@ public class AuthRepository {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = firebaseAuth.getCurrentUser();
-                            if(account!=null){
+                            if (account != null) {
                                 DocumentReference documentReference = firebaseFirestore.collection("Korisnici").document(user.getUid());
                                 Map<String, Object> korisnik = new HashMap<>();
                                 korisnik.put("Ime", account.getGivenName());
@@ -104,10 +96,10 @@ public class AuthRepository {
                                 korisnik.put("Bodovi", 0);
                                 korisnik.put("Uloga_ID", 2);
                                 korisnik.put("Datum_rodenja", null);
-                                String googleEmail=account.getEmail();
+                                String googleEmail = account.getEmail();
                                 //za ovaj dio možda ne bi bilo loše napraviti popup prozor u koji korisnik može upisati kor ime, da mu ne namećemo kor ime
                                 korisnik.put("Korisnicko_ime", googleEmail.split("@")[0]);
-                                Uri photoUri= account.getPhotoUrl();
+                                Uri photoUri = account.getPhotoUrl();
                                 korisnik.put("Profilna_slika_ID", photoUri.toString());
                                 documentReference.set(korisnik).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -119,44 +111,68 @@ public class AuthRepository {
                             }
                         } else {
                             // If sign in fails, display a message to the user.
-                                                        //Toast.makeText(MainActivity.this, getText(R.string.authentication_failed), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(MainActivity.this, getText(R.string.authentication_failed), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
     }
 
 
-
     public void login(String emailVal, String passwordVal, final LogInStatusCallback loginCallback) {
         String value;
-            firebaseAuth.signInWithEmailAndPassword(emailVal, passwordVal).addOnCompleteListener((Activity) context,new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        // Sign in success
-                        user = firebaseAuth.getCurrentUser();
-                        if (!user.isEmailVerified()) {
-                            setValueMethod("notVerified");
-                        } else {
-                            setValueMethod("ok");
-                        }
-                        loginCallback.onCallback(returnValue);
+        firebaseAuth.signInWithEmailAndPassword(emailVal, passwordVal).addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    // Sign in success
+                    user = firebaseAuth.getCurrentUser();
+                    if (!user.isEmailVerified()) {
+                        setValueMethod("notVerified");
                     } else {
-                        // Sign in fail
-                        setValueMethod("error");
-                        loginCallback.onCallback(returnValue);
+                        setValueMethod("ok");
                     }
-
+                    loginCallback.onCallback(returnValue);
+                } else {
+                    // Sign in fail
+                    setValueMethod("error");
+                    loginCallback.onCallback(returnValue);
                 }
-            });
+
+            }
+        });
     }
 
-    public void setValueMethod(String value){
+    public void setValueMethod(String value) {
         returnValue = value;
     }
 
-    public String returnValueMethod(){
-        return returnValue;
+    public String dostupno;
+
+    public void checkUsernameAvailability(String korime, final UsernameAvailabilityCallback usernameAvailabilityCallback) {
+        String imeKolekcije = "Korisnici";
+        String polje = "Korisnicko_ime";
+        firebaseFirestore.collection(imeKolekcije)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String izBaze = document.getString(polje).toString().trim().toString();
+                                String zaBazu = korime.toString().trim().toString();
+                                if(zaBazu.equals(izBaze)){
+                                    dostupno = "Dostupno";
+                                }
+                                else{
+                                    dostupno = "Zauzeto";
+                                }
+                                usernameAvailabilityCallback.onCallback(dostupno);
+                            }
+                        } else {
+                            usernameAvailabilityCallback.onCallback(dostupno);
+                        }
+                    }
+                });
     }
 
     public void guest() {
@@ -176,4 +192,6 @@ public class AuthRepository {
                     }
                 });
     }
+
+
 }

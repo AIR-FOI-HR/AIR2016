@@ -2,20 +2,17 @@ package hr.example.treeapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import auth.AuthRepository;
+import auth.UsernameAvailabilityCallback;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,10 +20,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,25 +29,13 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.protobuf.DescriptorProtos;
-import com.google.type.DateTime;
-
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 public class RegistrationStep2 extends AppCompatActivity {
     EditText email, korIme, password, repeatedPassword;
@@ -66,11 +48,15 @@ public class RegistrationStep2 extends AppCompatActivity {
     FirebaseFirestore firebaseFirestore;
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
+    AuthRepository authRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_step2);
+
+        authRepository= new AuthRepository(this);
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
         Intent intent = getIntent();
         Ime = intent.getStringExtra("name_key");
@@ -120,24 +106,106 @@ public class RegistrationStep2 extends AppCompatActivity {
         overridePendingTransition(R.anim.slideleft, R.anim.stayinplace);
     }
 
+    public boolean dostupno = false;
+
+    public boolean provjeriUsername(String usernameToCompare) {
+        firebaseFirestore.collection("Korisnici")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if(document.get("Korisnicko_ime").equals(usernameToCompare)){
+                                    dostupno = false;
+                                }
+                                else{
+                                    dostupno = true;
+                                }
+                            }
+                        } else {
+                            //Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+        return dostupno;
+    }
+
+    String dostupno2;
+
+    public void ispisiPoruku(String poruka){
+        Toast.makeText(this, poruka, Toast.LENGTH_SHORT).show();
+
+    }
+
     public void OpenRegistrationStep3(View view) {
-        //kreiranje stringova upisanih podataka
-        String Email = email.getText().toString().trim();
+     /*   //kreiranje stringova upisanih podataka
+        String Email = email.getText().toString().trim();*/
+
         String KorIme = korIme.getText().toString().trim();
-        String Password = password.getText().toString().trim();
+
+        authRepository.checkUsernameAvailability(KorIme, new UsernameAvailabilityCallback() {
+            @Override
+            public void onCallback(String value) {
+                if (value == "Dostupno") {
+                    ispisiPoruku("Dostupno");
+                } else if (value == "Zauzeto") {
+                    ispisiPoruku("Zauzeto");
+                } else {
+                    ispisiPoruku("Greska");
+
+                }
+            }
+        });
+
+
+
+       /* if(provjeriUsername(KorIme)){
+            Toast.makeText(this, "Korime JE dostupno", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(this, "Korime N I J E dostupno", Toast.LENGTH_SHORT).show();
+
+        }*/
+
+       /* firebaseFirestore.collection("Korisnici")
+                .get()
+                .addOnCompleteListener(this, new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String izBaze = document.getString("Korisnicko_ime").toString().trim().toString();
+                                String zaBazu = KorIme.toString().trim().toString();
+                                if(zaBazu.equals(izBaze)){
+                                    dostupno = false;
+                                }
+                                else{
+                                    dostupno = true;
+                                }
+                            }
+                        } else {
+                            dostupno = false;
+                        }
+                    }
+                });
+
+        if(dostupno){
+            Toast.makeText(this, "Korime JE dostupno", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(this, "Korime N I J E dostupno", Toast.LENGTH_SHORT).show();
+
+        }*/
+
+
+      /*  String Password = password.getText().toString().trim();
         String RepeatedPassword = repeatedPassword.getText().toString().trim();
         Integer Bodovi = 0;
         Integer UlogaID = 2;
 
 
-        //   ProvjeraKorisnickogImena2("Korisnicko_ime", KorIme, new OnSuccessListener<Boolean>() {
-        //       @Override
-        //       public void onSuccess(Boolean aBoolean) {
-        //           if(!aBoolean){
-        //               KorImeZauzeto = true;
-        //           }
-        //       }
-        //   });
+
 
         //   if(KorImeZauzeto == true){
         //      korIme.setError(getString(R.string.username_taken));
@@ -209,53 +277,9 @@ public class RegistrationStep2 extends AppCompatActivity {
                     //TODO: čemu služi ovaj else, maknuti ga ako ne treba (možemo složiti i da se kod korisnika koji ne postave sliku uploada neka default slika)
                 }
             }
-        });
+        });*/
 
 
-    }
-    //TODO: premjestiti ovu metodu u database, a pozvati ju u poslovnoj logici
-    public void ProvjeraKorisnickogImena(String KorIme) {
-        Query query = firebaseFirestore.collection("Korisnici")
-                .whereEqualTo("Korisnicko_ime", KorIme);
-
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.getResult().getDocuments() != null) {
-                    korIme.setError(getString(R.string.username_taken));
-
-                }
-            }
-        });
-
-    }
-    //TODO: isto tako i ova kao i prethodna, provjeriti koja radi dobro ili napraviti funkcionalnu
-    public void ProvjeraKorisnickogImena2(String key, String value, OnSuccessListener<Boolean> onSuccessListener) {
-        firebaseFirestore.collection("Korisnici").whereEqualTo(key, value).addSnapshotListener(new EventListener<QuerySnapshot>() {
-            private boolean isRunOneTime = false;
-
-            @Override
-            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
-                if (!isRunOneTime) {
-                    isRunOneTime = true;
-                    List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
-                    if (e != null) {
-                        e.printStackTrace();
-                        String message = e.getMessage();
-                        onSuccessListener.onSuccess(false);
-                        return;
-                    }
-
-                    if (snapshotList.size() > 0) {
-                        //Field is Exist
-                        onSuccessListener.onSuccess(false);
-                    } else {
-                        onSuccessListener.onSuccess(true);
-                    }
-
-                }
-            }
-        });
     }
 
     public void OpenLogIn(View view) {
