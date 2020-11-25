@@ -56,7 +56,7 @@ public class AuthRepository {
     public void createRequest() {
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(String.valueOf(R.string.default_web_client_id))
+                .requestIdToken(String.valueOf("207643504221-mtkrdhkctrvcpq18cr7n8m8a0vldi4a1.apps.googleusercontent.com"))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(context, gso);
