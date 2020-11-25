@@ -151,6 +151,7 @@ public class RegistrationStep2 extends AppCompatActivity {
         }
 
         //provjerava je li struktura e-maila točna
+        //TODO: ovaj dio provjere se treba obavljati u poslovnoj logici bool emailIsOk (string email)
         if ((Pattern.compile("^[a-zA-Z0-9.-]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,4}$").matcher(Email).matches()) == false) {
             email.setError(getString(R.string.invalid_email));
             return;
@@ -163,6 +164,7 @@ public class RegistrationStep2 extends AppCompatActivity {
         }
 
         //provjerava sadrži li lozinka između 6 i 20 znakova, barem 1 veliko slovo i jedan broj
+        //TODO: ovaj dio provjere se treba obavljati u poslovnoj logici bool passwordIsOk (string password)
         if ((Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,20}$").matcher(Password).matches()) == false) {
             password.setError(getString(R.string.invalid_password));
             return;
@@ -176,6 +178,7 @@ public class RegistrationStep2 extends AppCompatActivity {
         }
 
         //upisuje korisnika u Authentication i Database kolekciju korisnici ukoliko nema pogreške
+        //TODO: ova metoda bi trebala biti u database ( barem onaj dio gdje se kreira korisnik, njoj se prosljeđuju podaci o korisniku iz sloja poslovne logike gdje će se metoda pozvati)
         firebaseAuth.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -203,14 +206,14 @@ public class RegistrationStep2 extends AppCompatActivity {
                         }
                     });
                 } else {
-
+                    //TODO: čemu služi ovaj else, maknuti ga ako ne treba (možemo složiti i da se kod korisnika koji ne postave sliku uploada neka default slika)
                 }
             }
         });
 
 
     }
-
+    //TODO: premjestiti ovu metodu u database, a pozvati ju u poslovnoj logici
     public void ProvjeraKorisnickogImena(String KorIme) {
         Query query = firebaseFirestore.collection("Korisnici")
                 .whereEqualTo("Korisnicko_ime", KorIme);
@@ -226,7 +229,7 @@ public class RegistrationStep2 extends AppCompatActivity {
         });
 
     }
-
+    //TODO: isto tako i ova kao i prethodna, provjeriti koja radi dobro ili napraviti funkcionalnu
     public void ProvjeraKorisnickogImena2(String key, String value, OnSuccessListener<Boolean> onSuccessListener) {
         firebaseFirestore.collection("Korisnici").whereEqualTo(key, value).addSnapshotListener(new EventListener<QuerySnapshot>() {
             private boolean isRunOneTime = false;
@@ -260,7 +263,7 @@ public class RegistrationStep2 extends AppCompatActivity {
         startActivity(open);
         overridePendingTransition(R.anim.slideleft, R.anim.stayinplace);
     }
-
+    //TODO: ovaj dio bi trebao u sloj database i ta metoda bi se pozivala prije pohrane slike
     private void UploadPicture() {
 
         slikaID = UUID.randomUUID().toString();
@@ -292,6 +295,7 @@ public class RegistrationStep2 extends AppCompatActivity {
     }
 }
 /**
+ * AKO NIJE POTREBNO MOŽEMO OBRISATI
         riversRef.putBytes(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override

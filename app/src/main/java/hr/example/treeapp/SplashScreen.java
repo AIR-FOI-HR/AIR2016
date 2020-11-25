@@ -15,7 +15,7 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-
+        //TODO: ovaj dio ide u poslovnu logiku bool userIsLogedIn i poziva getCurrentUser iz database (ako je getCurrentUser null onda se vraća false, ako ne onda je true), tu se
         firebaseAuth=FirebaseAuth.getInstance(); //dohvaca se instanca firebase-a
 
         Handler handler = new Handler();
@@ -30,7 +30,7 @@ public class SplashScreen extends AppCompatActivity {
                 }
                 else
                 {
-                    //ne postoji pokreće se login scren
+                    //ne postoji pokreće se login screen
                     startActivity(new Intent(getApplicationContext(),MainActivity.class));
                 }
                 finish();

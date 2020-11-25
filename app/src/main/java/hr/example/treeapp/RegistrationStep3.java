@@ -60,7 +60,7 @@ public class RegistrationStep3 extends AppCompatActivity {
         startActivity(open);
         overridePendingTransition(R.anim.slideleft, R.anim.stayinplace);
     }
-
+    //TODO: ovaj dio bi se trebao prebaciti u sloj poslovne logike i pozvati se u ovom koraku
     public void sendEmailVerificationWithContinueUrl() {
         user.sendEmailVerification()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {

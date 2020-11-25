@@ -25,7 +25,7 @@ public class PassReset extends AppCompatActivity {
         email=(EditText)findViewById(R.id.txtBoxEmailReset);
 
     }
-
+        //TODO: ovaj dio se treba prebaciti u sloj poslovne logike, tu se poziva void passwordResetiz poslovne logike, unutar njega se poziva void sendPasswordReset iz database
         public void sendPasswordReset(View view) {
             FirebaseAuth auth = FirebaseAuth.getInstance();
             String emailAddress = email.getText().toString().trim();

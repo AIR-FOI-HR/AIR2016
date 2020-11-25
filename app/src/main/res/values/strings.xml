@@ -57,6 +57,8 @@
     <string name="invalid_email">Email is not valid, please check it!</string>
     <string name="invalid_password_repeat">Repeated password is incorrect!</string>
 
-
+    <string name="about_tree">Tell the story about the tree:</string>
+    <string name="plant_tree">PLANT TREE</string>
+    <string name="discard">DISCARD</string>
     >>>>>>> feature/registration-design
 </resources>

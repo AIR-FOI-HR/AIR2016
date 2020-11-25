@@ -47,6 +47,9 @@
     <string name="email_unconfirmed">Email nije potvrđen.</string>
     <string name="authentication_failed">Autentifikiacija neuspješna!</string>
     <string name="invalid_password_login">Neispravna lozinka!</string>
+    <string name="about_tree">Ispričaj priču o stablu:</string>
+    <string name="plant_tree">POSADI DRVO</string>
+    <string name="discard">ODUSTANI</string>
 
 
 </resources>
