@@ -8,33 +8,36 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import auth.CurrentUserCallback;
+import auth.RegistrationRepository;
+import auth.UsernameAvailabilityCallback;
 
 
 public class RegistrationStep3 extends AppCompatActivity {
     private static final String TAG = "";
     String email;
-    FirebaseAuth auth = FirebaseAuth.getInstance();
-    FirebaseUser user;
-    //user  = auth.getCurrentUser();
+    RegistrationRepository registrationRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_step3);
-       // Intent intent = getIntent();
-      //  IspisEmaila();
-       // sendEmailVerificationWithContinueUrl();
+        registrationRepository=new RegistrationRepository(this);
+        Intent intent = getIntent();
+        email = intent.getStringExtra("email");
+        IspisEmaila();
     }
-/*
+
     public void IspisEmaila() {
         TextView lblEmail = findViewById(R.id.lblStep3Email);
-        lblEmail.setText(user.getEmail());
+        lblEmail.setText(email);
     }
 
     public void OpenRegistrationStep1(View view) {
@@ -49,11 +52,7 @@ public class RegistrationStep3 extends AppCompatActivity {
     }
 
     public void OpenRegistrationStep4(View view) {
-        user.reload();
-        if(user.isEmailVerified()==true) {
-            Intent open = new Intent(RegistrationStep3.this, RegistrationStep4.class);
-            startActivity(open);
-        }
+
     }
 
     public void OpenLogIn(View view) {
@@ -61,19 +60,6 @@ public class RegistrationStep3 extends AppCompatActivity {
         startActivity(open);
         overridePendingTransition(R.anim.slideleft, R.anim.stayinplace);
     }
-    //TODO: ovaj dio bi se trebao prebaciti u sloj poslovne logike i pozvati se u ovom koraku
-    public void sendEmailVerificationWithContinueUrl() {
-        user.sendEmailVerification()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Email sent.");
-                        }
-                    }
-                });
-        auth.useAppLanguage();
-    }*/
 }
 
 

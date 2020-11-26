@@ -50,6 +50,7 @@
     <string name="about_tree">Ispričaj priču o stablu:</string>
     <string name="plant_tree">POSADI DRVO</string>
     <string name="discard">ODUSTANI</string>
+    <string name="emailverified">Email nije verificiran!</string>
 
 
 </resources>
