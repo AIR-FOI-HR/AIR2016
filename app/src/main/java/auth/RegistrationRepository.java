@@ -124,5 +124,4 @@ public class RegistrationRepository {
         byte[] data = baos.toByteArray();
         riversRef.putBytes(data);
     }
-
 }
