@@ -3,6 +3,7 @@ package hr.example.treeapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import auth.AuthRepository;
+import auth.Registration;
 import auth.UsernameAvailabilityCallback;
 
 import android.content.Intent;
@@ -49,6 +50,7 @@ public class RegistrationStep2 extends AppCompatActivity {
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
     AuthRepository authRepository;
+    Registration registration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class RegistrationStep2 extends AppCompatActivity {
 
         authRepository= new AuthRepository(this);
         firebaseFirestore = FirebaseFirestore.getInstance();
+        registration = new Registration();
 
         Intent intent = getIntent();
         Ime = intent.getStringExtra("name_key");
@@ -114,7 +117,7 @@ public class RegistrationStep2 extends AppCompatActivity {
 
         String KorIme = korIme.getText().toString().trim();
 
-        authRepository.checkUsernameAvailability(KorIme, new UsernameAvailabilityCallback() {
+        registration.checkUsernameAvailability(KorIme, new UsernameAvailabilityCallback() {
             @Override
             public void onCallback(String value) {
                 if (value == "Dostupno") {

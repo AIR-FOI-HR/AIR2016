@@ -149,40 +149,6 @@ public class AuthRepository {
         returnValue = value;
     }
 
-    public String dostupno;
-    List<String> listaKorisnickihImena = new ArrayList<String>();
-    int i = 0;
-
-    public void checkUsernameAvailability(String korime, final UsernameAvailabilityCallback usernameAvailabilityCallback) {
-        firebaseFirestore.collection("Korisnici")
-                .whereEqualTo("Korisnicko_ime", korime)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                listaKorisnickihImena.add(document.get("Korisnicko_ime").toString());
-                                i++;
-                                if(i==3){
-                                    break;
-                                }
-                            }
-                            if(listaKorisnickihImena.contains(korime)){
-                                dostupno = "Zauzeto";
-                                usernameAvailabilityCallback.onCallback(dostupno);
-                            }
-                            else{
-                                dostupno = "Dostupno";
-                                usernameAvailabilityCallback.onCallback(dostupno);
-                            }
-                        } else {
-                            usernameAvailabilityCallback.onCallback(dostupno);
-                        }
-                    }
-                });
-    }
-
     public void guest() {
 
         firebaseAuth.signInAnonymously()
