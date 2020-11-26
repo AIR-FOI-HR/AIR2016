@@ -21,7 +21,6 @@ public class Registration {
 
     public String dostupno;
     List<String> listaKorisnickihImena = new ArrayList<String>();
-    int i = 0;
 
     public void checkUsernameAvailability(String korime, final UsernameAvailabilityCallback usernameAvailabilityCallback) {
         firebaseFirestore.collection("Korisnici")
@@ -33,10 +32,6 @@ public class Registration {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 listaKorisnickihImena.add(document.get("Korisnicko_ime").toString());
-                                i++;
-                                if(i==3){
-                                    break;
-                                }
                             }
                             if(listaKorisnickihImena.contains(korime)){
                                 dostupno = "Zauzeto";
