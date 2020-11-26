@@ -50,6 +50,12 @@
     <string name="about_tree">Ispričaj priču o stablu:</string>
     <string name="plant_tree">POSADI DRVO</string>
     <string name="discard">ODUSTANI</string>
+    <string name="type_hear">Dodajte priču o stablu...</string>
+    <string name="put_on_map">Postavite lokaciju</string>
+    <string name="take_photo">Fotografiraj</string>
+    <string name="cancel">Odustani</string>
+    <string name="choose_photo_from_gallery">Odaberi iz galerije</string>
+    <string name="add_photo">Dodaj fotografiju!</string>
 
 
 </resources>

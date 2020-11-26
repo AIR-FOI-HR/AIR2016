@@ -29,4 +29,17 @@
         android:text="UserID"
         app:layout_constraintBottom_toTopOf="@+id/btnLogoutTest"
         tools:layout_editor_absoluteX="173dp" />
+
+    <Button
+        android:id="@+id/testAddTreeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="addTree"
+        android:text="Add tree"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLogoutTest"
+        app:layout_constraintVertical_bias="0.183" />
 </androidx.constraintlayout.widget.ConstraintLayout>

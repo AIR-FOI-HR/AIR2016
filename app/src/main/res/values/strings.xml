@@ -60,5 +60,11 @@
     <string name="about_tree">Tell the story about the tree:</string>
     <string name="plant_tree">PLANT TREE</string>
     <string name="discard">DISCARD</string>
+    <string name="type_hear">Add story about the tree...</string>
+    <string name="put_on_map">Set location</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose_photo_from_gallery">Choose from Gallery</string>
+    <string name="add_photo">Add Photo!</string>
     >>>>>>> feature/registration-design
 </resources>

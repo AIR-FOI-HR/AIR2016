@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddTree">
+    tools:context=".addTree.AddTree">
 
     <ImageView
         android:id="@+id/banner_add_tree"
@@ -12,19 +12,20 @@
         android:layout_height="96dp"
         android:contentDescription="Banner"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
         app:srcCompat="@drawable/back_add_treee" />
 
     <ImageButton
-        android:id="@+id/image_load"
-        android:layout_width="411dp"
-        android:layout_height="198dp"
+        android:id="@+id/imageLoadButton"
+        android:layout_width="match_parent"
+        android:layout_height="201dp"
         android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/banner_add_tree"
+        app:layout_constraintTop_toTopOf="@+id/banner_add_tree"
         app:srcCompat="@drawable/image_load_icon" />
 
     <ImageView
@@ -34,7 +35,7 @@
         android:scaleX="1.5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_load"
+        app:layout_constraintTop_toBottomOf="@+id/imageLoadButton"
         app:srcCompat="@drawable/line_plus_h" />
 
     <TextView
@@ -46,53 +47,94 @@
         android:fontFamily="@font/roboto_light"
         android:text="@string/about_tree"
         android:textColor="@color/tree_green"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/treeDescriptionText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/separator_line" />
+        app:layout_constraintTop_toBottomOf="@+id/treeImageView" />
 
     <EditText
         android:id="@+id/treeDescriptionText"
-        android:layout_width="371dp"
-        android:layout_height="130dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="354dp"
+        android:layout_height="111dp"
+        android:autofillHints=""
+        android:backgroundTint="@color/white"
         android:ems="10"
         android:gravity="start|top"
+        android:hint="@string/type_hear"
         android:inputType="textMultiLine"
+        app:layout_constraintBottom_toTopOf="@+id/mapText"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/story_text" />
+        app:layout_constraintTop_toBottomOf="@+id/story_text"
+        app:layout_constraintVertical_bias="0.146" />
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/treeLocationMapView"
-        android:layout_width="413dp"
+
+    <fragment
+        android:id="@+id/map"
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
         android:layout_height="156dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/discardTreeButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
-
     <Button
         android:id="@+id/plantTreeButton"
         android:layout_width="165dp"
         android:layout_height="65dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:text="@string/plant_tree"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/discardTreeButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/discardTreeButton"
+        app:layout_constraintTop_toTopOf="@+id/discardTreeButton"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/discardTreeButton"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="165dp"
         android:layout_height="65dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:onClick="discard"
         android:text="@string/discard"
         android:textColor="@color/tree_green"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/plantTreeButton"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
+
         app:strokeColor="@color/tree_green"
         app:strokeWidth="2pt" />
+
+    <ImageView
+        android:id="@+id/treeImageView"
+        android:layout_width="match_parent"
+        android:layout_height="197dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/story_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/banner_add_tree"
+        app:srcCompat="@drawable/image_load_icon" />
+
+    <TextView
+        android:id="@+id/mapText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="5dp"
+        android:fontFamily="@font/roboto_light"
+        android:text="@string/put_on_map"
+        android:textColor="@color/tree_green"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/map"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/treeDescriptionText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
