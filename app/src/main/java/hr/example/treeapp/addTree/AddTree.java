@@ -1,5 +1,6 @@
 package hr.example.treeapp.addTree;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +16,10 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.Html;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -26,8 +32,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.yalantis.ucrop.UCrop;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import hr.example.treeapp.R;
 
@@ -43,6 +56,8 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     GoogleMap map;
     Marker marker;
 
+    List<String> hashtags;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,17 +72,45 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
             @Override
             public void onClick(View v) {
                 selectImage();
+                treeDescription.setText(Html.fromHtml(colorHastags()));
             }
         });
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectImage();
+                treeDescription.setText(Html.fromHtml(colorHastags()));
+            }
+        });
+
+        treeDescription.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                treeDescription.setText(Html.fromHtml(colorHastags()));
             }
         });
 
     }
 
+    public String colorHastags (){
+        String text = treeDescription.getText().toString();
+        String regexPattern = "(#\\w+)";
+        List<String> lstTag = new ArrayList<String>();
+        Pattern p = Pattern.compile(regexPattern);
+        Matcher m = p.matcher(text);
+        while (m.find()) {
+            String hashtag = m.group(1);
+            lstTag.add(hashtag);
+        }
+        String modifiedText=text;
+        for (int i =0; i<lstTag.size(); i++){
+            String replaceWith ="<span style='color:#2DB180'>"+lstTag.get(i)+"</span>";
+            modifiedText=modifiedText.replaceAll(lstTag.get(i),replaceWith);
+        }
+        hashtags=lstTag;
+        return modifiedText;
+
+    }
     private void mapInitialization() {
         imageView = (ImageView) findViewById(R.id.treeImageView);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -137,22 +180,43 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         super.onActivityResult(requestCode, resultCode, data);
         //resize i postavljanje slike fotoaparata
         if (requestCode == 100) {
+            filePath=data.getData();
+
             Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
-            setImageInView(capturedImage);
+            if (getImageUri(this,capturedImage)!=null) startCrop(getImageUri(this,capturedImage));
+            //setImageInView(capturedImage);
         }
         //resize i postavljanje slike iz galerije
         if (requestCode == 200 && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             filePath = data.getData();
+
+            if (filePath!=null) {
+                startCrop(filePath);
+
+            }
+
             try {
 
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                setImageInView(bitmap);
+                //setImageInView(bitmap);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        if (requestCode==UCrop.REQUEST_CROP && resultCode==RESULT_OK){
+            Uri imageResultCropp = UCrop.getOutput(data);
+            if (imageResultCropp!=null){
+                setImage(imageResultCropp);
+            }
+        }
+    }
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        //ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        //inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
     //popunjavanje image view-a
     private void setImageInView(Bitmap bitmap) {
@@ -161,6 +225,12 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         Bitmap image = imageManipulation.getResizedBitmap(bitmap,800);
         imageFinal = image;
         imageView.setImageBitmap(image);
+    }
+
+    private void setImage(Uri uri){
+        imageLoad.setVisibility(View.INVISIBLE);
+        imageView.setVisibility(View.VISIBLE);
+        imageView.setImageURI(uri);
     }
     //image resize
 
@@ -203,10 +273,38 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         map.getUiSettings().setMyLocationButtonEnabled(true);
 
     }
-
+    private final String SAMPLE_CROPPED_IMG_NAME = "SampleCroppImg";
     private LatLng getPinedLocation (){
         LatLng latLng = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
         return latLng;
     }
+    private void startCrop(@NonNull Uri uri){
+        String destinationFileName = SAMPLE_CROPPED_IMG_NAME;
+        destinationFileName +=".jpg";
 
+        UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(),destinationFileName)));
+
+        uCrop.withAspectRatio(16,9);
+
+        uCrop.withOptions(getcroppOptions());
+
+        uCrop.start(AddTree.this);
+    }
+
+    private UCrop.Options getcroppOptions(){
+        UCrop.Options options = new UCrop.Options();
+
+        options.setCompressionQuality(70);
+        options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+
+        options.setHideBottomControls(false);
+        options.setFreeStyleCropEnabled(true);
+
+        options.setStatusBarColor(getResources().getColor(R.color.tree_green));
+        options.setToolbarColor(getResources().getColor(R.color.tree_green));
+
+        options.setToolbarTitle("Cropp image");
+
+        return options;
+    }
 }
