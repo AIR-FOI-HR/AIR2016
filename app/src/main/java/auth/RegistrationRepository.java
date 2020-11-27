@@ -46,7 +46,7 @@ public class RegistrationRepository {
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private StorageReference storageReference = firebaseStorage.getReference();
-
+    public FirebaseUser user;
     public String dostupno, userID, slikaID;
     List<String> listaKorisnickihImena = new ArrayList<String>();
     private Context context;
@@ -101,6 +101,8 @@ public class RegistrationRepository {
                     korisnik.put("Datum_rodenja", datumRodenja);
                     korisnik.put("Uloga_ID", UlogaID);
                     documentReference.set(korisnik);
+                    user=firebaseAuth.getCurrentUser();
+                    user.sendEmailVerification();
                 } else {
                     //TODO: čemu služi ovaj else, maknuti ga ako ne treba (možemo složiti i da se kod korisnika koji ne postave sliku uploada neka default slika)
                 }

@@ -122,7 +122,6 @@ public class RegistrationStep2 extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     public void OtvoriRegistrationStep3(String KorIme){
