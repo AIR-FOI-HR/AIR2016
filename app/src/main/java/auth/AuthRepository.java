@@ -1,12 +1,17 @@
 package auth;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
@@ -33,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import hr.example.treeapp.R;
 
@@ -49,6 +55,8 @@ public class AuthRepository {
     private Context context;
 
     private boolean googleSignin = false;
+    String googleSignInUsername;
+    String googleSignInUsernameCheck;
     public String returnValue;
     public AuthRepository(Context context) {
         this.context = context;
@@ -92,6 +100,7 @@ public class AuthRepository {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             if (account != null) {
+                                googleSignInUserNameInput();
                                 DocumentReference documentReference = firebaseFirestore.collection("Korisnici").document(user.getUid());
                                 Map<String, Object> korisnik = new HashMap<>();
                                 korisnik.put("Ime", account.getGivenName());
@@ -102,7 +111,8 @@ public class AuthRepository {
                                 korisnik.put("Datum_rodenja", null);
                                 String googleEmail = account.getEmail();
                                 //za ovaj dio možda ne bi bilo loše napraviti popup prozor u koji korisnik može upisati kor ime, da mu ne namećemo kor ime
-                                korisnik.put("Korisnicko_ime", googleEmail.split("@")[0]);
+                                korisnik.put("Korisnicko_ime", googleSignInUsername);
+                                //korisnik.put("Korisnicko_ime", googleEmail.split("@")[0]);
                                 Uri photoUri = account.getPhotoUrl();
                                 korisnik.put("Profilna_slika_ID", photoUri.toString());
                                 documentReference.set(korisnik).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -118,9 +128,29 @@ public class AuthRepository {
                             //Toast.makeText(MainActivity.this, getText(R.string.authentication_failed), Toast.LENGTH_LONG).show();
                         }
                     }
+
+
                 });
     }
+    public void googleSignInUserNameInput(){
+        googleSignInUsernameCheck="";
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Username");
+        final EditText input=new EditText(context);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        builder.setView(input);
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                    googleSignInUsername=input.getText().toString();
 
+                    //RegistrationRepository registrationRepository = new RegistrationRepository(context);
+                    //TOOD: provjera ispravnosti unosa i dostupnosti korisnickog imena
+
+                }
+        });
+        builder.show();
+    }
 
     public void login(String emailVal, String passwordVal, final LogInStatusCallback loginCallback) {
         String value;
