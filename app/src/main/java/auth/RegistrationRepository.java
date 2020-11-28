@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 
 import androidx.annotation.NonNull;
@@ -125,5 +126,61 @@ public class RegistrationRepository {
         bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
         byte[] data = baos.toByteArray();
         riversRef.putBytes(data);
+    }
+
+    public boolean nameEmpty(String Name){
+        if(TextUtils.isEmpty(Name)){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean surnameEmpty(String Surname){
+        if(TextUtils.isEmpty(Surname)){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean usernameEmpty(String Username){
+        if(TextUtils.isEmpty(Username)){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean emailEmpty(String Email){
+        if(TextUtils.isEmpty(Email)){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean emailNotCorrectFormat(String Email){
+        if ((Pattern.compile("^[a-zA-Z0-9.-]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,4}$").matcher(Email).matches()) == false){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean passwordEmpty(String Password){
+        if(TextUtils.isEmpty(Password)){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean passwordNotCorrectFormat(String Password){
+        if ((Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,20}$").matcher(Password).matches()) == false) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean repeatedPasswordEmptyOrIncorrect(String Password, String RepeatedPassword){
+        if(TextUtils.isEmpty(RepeatedPassword) || !RepeatedPassword.equals(Password)){
+            return true;
+        }
+        return false;
     }
 }

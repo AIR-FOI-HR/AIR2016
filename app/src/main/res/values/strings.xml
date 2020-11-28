@@ -50,6 +50,7 @@
 
     <string name="no_name">Please enter your name!</string>
     <string name="no_surname">Please enter your surname!</string>
+    <string name="no_username">Please enter your username!</string>
     <string name="no_email">Please enter an e-mail!</string>
     <string name="username_taken">This username is already taken!</string>
     <string name="no_password">Please enter a password!</string>

@@ -35,6 +35,7 @@
 
     <string name="no_name">Molimo unesite vaše ime!</string>
     <string name="no_surname">Molimo unesite vaše prezime!</string>
+    <string name="no_username">Molimo unesite korisničko ime!</string>
     <string name="no_email">Molimo unesite e-mail!</string>
     <string name="username_taken">Korisničko ime je zauzeto!</string>
     <string name="no_password">Molimo unesite lozinku!</string>

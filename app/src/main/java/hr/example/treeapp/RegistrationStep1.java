@@ -1,6 +1,7 @@
 package hr.example.treeapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import auth.RegistrationRepository;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -32,12 +33,13 @@ public class RegistrationStep1 extends AppCompatActivity {
     ImageView imageView;
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST=71;
-
+    RegistrationRepository registrationRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_step1);
+        registrationRepository = new RegistrationRepository(this);
         imageView=(ImageView) findViewById(R.id.imgProfile);
 
         imageView.setOnClickListener(new View.OnClickListener(){
@@ -89,10 +91,10 @@ public class RegistrationStep1 extends AppCompatActivity {
 
         }
 
-        if(TextUtils.isEmpty(Name)){
+        if(registrationRepository.nameEmpty(Name)){
             name.setError(getString(R.string.no_name));
         }
-        else if(TextUtils.isEmpty(Surname)){
+        else if(registrationRepository.surnameEmpty(Surname)){
             surname.setError(getString(R.string.no_surname));
         }
         else {

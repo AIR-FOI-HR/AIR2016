@@ -34,15 +34,10 @@ import java.util.regex.Pattern;
 
 public class RegistrationStep2 extends AppCompatActivity {
     EditText email, korIme, password, repeatedPassword;
-    String Ime, Prezime, userID, Slika, slikaID;
+    String Ime, Prezime, Slika;
     int day, month, year;
     String datumRodenja;
-    public Boolean KorImeZauzeto;
 
-    FirebaseAuth firebaseAuth;
-    FirebaseFirestore firebaseFirestore;
-    FirebaseStorage firebaseStorage;
-    StorageReference storageReference;
     AuthRepository authRepository;
     RegistrationRepository registrationRepository;
 
@@ -52,7 +47,6 @@ public class RegistrationStep2 extends AppCompatActivity {
         setContentView(R.layout.activity_registration_step2);
 
         authRepository= new AuthRepository(this);
-        firebaseFirestore = FirebaseFirestore.getInstance();
         registrationRepository = new RegistrationRepository(this);
 
         Intent intent = getIntent();
@@ -89,12 +83,6 @@ public class RegistrationStep2 extends AppCompatActivity {
         password = (EditText) findViewById(R.id.txtBoxStep2Password);
         repeatedPassword = (EditText) findViewById(R.id.txtBoxStep2PasswordRepeat);
 
-        //kreiranje instance Firebase autentikacije
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference();
-
     }
 
     public void OpenRegistrationStep1(View view) {
@@ -106,8 +94,12 @@ public class RegistrationStep2 extends AppCompatActivity {
     public boolean korimeDostupno;
 
     public void OpenRegistrationStep3(View view) {
-     //kreiranje stringova upisanih podataka
         String KorIme = korIme.getText().toString().trim();
+
+        if (registrationRepository.usernameEmpty(KorIme)) {
+            korIme.setError(getString(R.string.no_username));
+            return;
+        }
 
         registrationRepository.checkUsernameAvailability(KorIme, new UsernameAvailabilityCallback() {
             @Override
@@ -133,35 +125,32 @@ public class RegistrationStep2 extends AppCompatActivity {
 
 
         //provjerava je li upisan e-mail
-
-        if (TextUtils.isEmpty(Email)) {
+        if (registrationRepository.emailEmpty(Email)) {
             email.setError(getString(R.string.no_email));
             return;
         }
 
         //provjerava je li struktura e-maila točna
-        //TODO: ovaj dio provjere se treba obavljati u poslovnoj logici bool emailIsOk (string email)
-        if ((Pattern.compile("^[a-zA-Z0-9.-]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,4}$").matcher(Email).matches()) == false) {
+        if (registrationRepository.emailNotCorrectFormat(Email)) {
             email.setError(getString(R.string.invalid_email));
             return;
         }
 
         //provjerava je li upisana lozinka
-        if (TextUtils.isEmpty(Password)) {
+        if (registrationRepository.passwordEmpty(Password)) {
             password.setError(getString(R.string.no_password));
             return;
         }
 
         //provjerava sadrži li lozinka između 6 i 20 znakova, barem 1 veliko slovo i jedan broj
-        //TODO: ovaj dio provjere se treba obavljati u poslovnoj logici bool passwordIsOk (string password)
-        if ((Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,20}$").matcher(Password).matches()) == false) {
+        if (registrationRepository.passwordNotCorrectFormat(Password)) {
             password.setError(getString(R.string.invalid_password));
             return;
         }
 
 
         //provjerava je li točno upisana ponovljena lozinka
-        if (TextUtils.isEmpty(RepeatedPassword) || !RepeatedPassword.equals(Password)) {
+        if (registrationRepository.repeatedPasswordEmptyOrIncorrect(Password, RepeatedPassword)) {
             repeatedPassword.setError(getString(R.string.invalid_password_repeat));
             return;
         }
