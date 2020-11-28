@@ -3,7 +3,9 @@ package auth;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -48,7 +50,6 @@ public class AuthRepository {
 
     private boolean googleSignin = false;
     public String returnValue;
-
     public AuthRepository(Context context) {
         this.context = context;
     }
@@ -149,8 +150,9 @@ public class AuthRepository {
         returnValue = value;
     }
 
-    public void guest() {
-
+    public void guest(SharedPreferences sharedPreferences, final LogInStatusCallback loginCallback) {
+        String guest_uid=sharedPreferences.getString("guest_uid", "undefined");
+        Log.i("citanje", guest_uid);
         firebaseAuth.signInAnonymously()
                 .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -158,13 +160,19 @@ public class AuthRepository {
                         if (task.isSuccessful()) {
                             // Sign in success
                             user = firebaseAuth.getCurrentUser();
-
+                            SharedPreferences.Editor editor=sharedPreferences.edit();
+                            editor.putString("guest_uid", user.getUid());
+                            editor.apply();
+                            setValueMethod("ok");
+                            loginCallback.onCallback(returnValue);
                         } else {
                             // Sign in fail
-
+                            setValueMethod("error");
+                            loginCallback.onCallback(returnValue);
                         }
                     }
                 });
+
     }
 
 

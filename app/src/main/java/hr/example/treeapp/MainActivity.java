@@ -1,6 +1,8 @@
 package hr.example.treeapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,8 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     EditText email, password;
     AuthRepository authRepository;
-
-
+    SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         authRepository= new AuthRepository(this);
         authRepository.createRequest();
+        sharedPreferences=this.getPreferences(Context.MODE_PRIVATE);
     }
 
     @Override
@@ -107,6 +109,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void guest(View view) {
-        authRepository.guest();
+        authRepository.guest(sharedPreferences, new LogInStatusCallback(){
+            @Override
+            public void onCallback(String value) {
+                if(value=="ok") {
+                    startActivity(new Intent(getApplicationContext(), LoginTest.class));
+                    finish();
+                }
+                else{
+                    Toast.makeText(MainActivity.this, getText(R.string.authentication_failed), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }
