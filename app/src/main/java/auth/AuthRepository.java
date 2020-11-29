@@ -125,8 +125,9 @@ public class AuthRepository {
                                                     public void onCallback(String value) {
                                                         if(value=="ok"){
                                                             korisnik.put("Korisnicko_ime", googleSignInUsername);
+                                                            googleSignInFirebaseInsertUser(documentReference, korisnik);
                                                         }
-                                                        googleSignInFirebaseInsertUser(documentReference, korisnik);
+
                                                     }
                                                 });
                                             }
@@ -197,14 +198,15 @@ public class AuthRepository {
                             googleSignInUserNameAvailable = false;
                             input.setError(context.getResources().getString(R.string.username_taken));
                         }
-                        if(googleSignInUserNameAvailable){
+                        if(inputVal.isEmpty()) input.setError(context.getResources().getString(R.string.no_username));
+                        else if(!googleSignInUserNameAvailable){
+                            setValueMethod("not_available");
+                            logInStatusCallback.onCallback(returnValue);
+                        }
+                        else{
                             setValueMethod("ok");
                             logInStatusCallback.onCallback(returnValue);
                             dialog.dismiss();
-                        }
-                        else{
-                            setValueMethod("not_available");
-                            logInStatusCallback.onCallback(returnValue);
                         }
                     }
                 });
