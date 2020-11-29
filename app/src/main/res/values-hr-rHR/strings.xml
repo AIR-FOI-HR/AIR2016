@@ -52,6 +52,7 @@
     <string name="plant_tree">POSADI DRVO</string>
     <string name="discard">ODUSTANI</string>
     <string name="emailverified">Email nije verificiran!</string>
+    <string name="enter_username">Unesite vaše novo korisničko ime</string>
 
 
 </resources>

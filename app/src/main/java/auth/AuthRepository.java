@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -40,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import hr.example.treeapp.LoginTest;
 import hr.example.treeapp.R;
 
 public class AuthRepository {
@@ -54,9 +57,8 @@ public class AuthRepository {
     private FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
     private Context context;
 
-    private boolean googleSignin = false;
-    String googleSignInUsername;
-    String googleSignInUsernameCheck;
+    public String googleSignInUsername;
+    public boolean googleSignInUserNameAvailable;
     public String returnValue;
     public AuthRepository(Context context) {
         this.context = context;
@@ -79,6 +81,7 @@ public class AuthRepository {
                 // Google Sign In was successful, authenticate with Firebase
                 account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account.getIdToken());
+
             } catch (ApiException e) {
                 throw e;
             }
@@ -86,11 +89,12 @@ public class AuthRepository {
     }
 
     public Intent getSignInIntent() {
+        mGoogleSignInClient.signOut();
         return mGoogleSignInClient.getSignInIntent();
+
     }
 
     public void firebaseAuthWithGoogle(String idToken) {
-        //kod this, executor je bacalo grešku
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
@@ -100,7 +104,6 @@ public class AuthRepository {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             if (account != null) {
-                                googleSignInUserNameInput();
                                 DocumentReference documentReference = firebaseFirestore.collection("Korisnici").document(user.getUid());
                                 Map<String, Object> korisnik = new HashMap<>();
                                 korisnik.put("Ime", account.getGivenName());
@@ -109,17 +112,28 @@ public class AuthRepository {
                                 korisnik.put("Bodovi", 0);
                                 korisnik.put("Uloga_ID", 2);
                                 korisnik.put("Datum_rodenja", null);
-                                String googleEmail = account.getEmail();
-                                //za ovaj dio možda ne bi bilo loše napraviti popup prozor u koji korisnik može upisati kor ime, da mu ne namećemo kor ime
-                                korisnik.put("Korisnicko_ime", googleSignInUsername);
-                                //korisnik.put("Korisnicko_ime", googleEmail.split("@")[0]);
                                 Uri photoUri = account.getPhotoUrl();
                                 korisnik.put("Profilna_slika_ID", photoUri.toString());
-                                documentReference.set(korisnik).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
-                                    //ne razumijem za što služi ovaj void, ako nema svrhu treba ga ukloniti
-                                    public void onSuccess(Void aVoid) {
-
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document = task.getResult();
+                                            if (!document.exists()) {
+                                                googleSignInUserNameInput(new LogInStatusCallback() {
+                                                    @Override
+                                                    public void onCallback(String value) {
+                                                        if(value=="ok"){
+                                                            korisnik.put("Korisnicko_ime", googleSignInUsername);
+                                                        }
+                                                        googleSignInFirebaseInsertUser(documentReference, korisnik);
+                                                    }
+                                                });
+                                            }
+                                            else{
+                                                googleSignInFirebaseUpdateUser(documentReference, korisnik);
+                                            }
+                                        }
                                     }
                                 });
                             }
@@ -132,24 +146,71 @@ public class AuthRepository {
 
                 });
     }
-    public void googleSignInUserNameInput(){
-        googleSignInUsernameCheck="";
+
+    private void googleSignInFirebaseInsertUser(DocumentReference documentReference, Map<String, Object> korisnik) {
+        documentReference.set(korisnik).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.i("info123", "Uspjesno upisano!");
+            }
+        });
+    }
+    private void googleSignInFirebaseUpdateUser(DocumentReference documentReference, Map<String, Object> korisnik) {
+        documentReference.update("Ime", korisnik.get("Ime"));
+        documentReference.update("Prezime", korisnik.get("Prezime"));
+        documentReference.update("Profilna_slika_id", korisnik.get("Slika_slika_ID"));
+        documentReference.update("Datum_rodenja", korisnik.get("Datum_rodenja"));
+        Log.i("info123", "Uspjesno azurirano!");
+    }
+
+    public void googleSignInUserNameInput(final LogInStatusCallback logInStatusCallback){
+        googleSignInUsername="";
+        googleSignInUserNameAvailable=false;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Username");
+        builder.setTitle(context.getResources().getString(R.string.enter_username));
         final EditText input=new EditText(context);
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
         builder.setView(input);
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                    googleSignInUsername=input.getText().toString();
-
-                    //RegistrationRepository registrationRepository = new RegistrationRepository(context);
-                    //TOOD: provjera ispravnosti unosa i dostupnosti korisnickog imena
-
-                }
+                //Do nothing here because we override this button later to change the close behaviour.
+                //However, we still need this because on older versions of Android unless we
+                //pass a handler the button doesn't get instantiated
+            }
         });
-        builder.show();
+        AlertDialog dialog=builder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String inputVal=input.getText().toString();
+                RegistrationRepository registrationRepository = new RegistrationRepository(context);
+                registrationRepository.checkUsernameAvailability(inputVal, new UsernameAvailabilityCallback() {
+                    @Override
+                    public void onCallback(String value) {
+                        if (value == "Dostupno") {
+                            googleSignInUserNameAvailable = true;
+                            googleSignInUsername=inputVal;
+                        }
+                        else{
+                            googleSignInUserNameAvailable = false;
+                            input.setError(context.getResources().getString(R.string.username_taken));
+                        }
+                        if(googleSignInUserNameAvailable){
+                            setValueMethod("ok");
+                            logInStatusCallback.onCallback(returnValue);
+                            dialog.dismiss();
+                        }
+                        else{
+                            setValueMethod("not_available");
+                            logInStatusCallback.onCallback(returnValue);
+                        }
+                    }
+                });
+
+            }
+        });
     }
 
     public void login(String emailVal, String passwordVal, final LogInStatusCallback loginCallback) {
