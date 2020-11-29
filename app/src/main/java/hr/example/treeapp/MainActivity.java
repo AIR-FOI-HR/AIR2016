@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         String emailVal=email.getText().toString().trim();
         String passwordVal=password.getText().toString();
 
-        if(inputValidation(emailVal,passwordVal)) {
+        if(authRepository.inputValidation(emailVal,passwordVal)) {
             authRepository.login(emailVal, passwordVal, new LogInStatusCallback() {
                 @Override
                 public void onCallback(String value) {
@@ -84,6 +84,12 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }
+        if(TextUtils.isEmpty(emailVal)){
+            email.setError(getString(R.string.no_email));
+        }
+        if(TextUtils.isEmpty(passwordVal)){
+            password.setError(getString(R.string.no_password));
+        }
     }
 
 
@@ -95,17 +101,6 @@ public class MainActivity extends AppCompatActivity {
     public void OpenReset(View view){
         Intent open= new Intent(MainActivity.this, PassReset.class);
         startActivity(open);
-    }
-
-
-    private boolean inputValidation(String emailVal, String passwordVal){
-        if(TextUtils.isEmpty(emailVal)){
-            email.setError(getString(R.string.no_email));
-        }
-        if(TextUtils.isEmpty(passwordVal)){
-            password.setError(getString(R.string.no_password));
-        }
-        return !TextUtils.isEmpty(emailVal) && !TextUtils.isEmpty(passwordVal);
     }
 
 

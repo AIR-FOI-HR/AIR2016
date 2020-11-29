@@ -280,5 +280,9 @@ public class AuthRepository {
             logInCallback.onCallback(returnValue);
         }
     }
+    public boolean inputValidation(String emailVal, String passwordVal){
+        return !TextUtils.isEmpty(emailVal) && !TextUtils.isEmpty(passwordVal);
+    }
 }
+
 
