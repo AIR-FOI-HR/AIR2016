@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -43,6 +44,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import hr.example.treeapp.LoginTest;
+import hr.example.treeapp.MainActivity;
 import hr.example.treeapp.R;
 
 public class AuthRepository {
@@ -267,6 +269,16 @@ public class AuthRepository {
                 });
 
     }
-
-
+    public void checkIfUserIsLoggedIn(final LogInStatusCallback logInCallback) {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if(user!=null){
+            setValueMethod("user_is_logged_in");
+            logInCallback.onCallback(returnValue);
+        }
+        else{
+            setValueMethod("user_is_not_logged_in");
+            logInCallback.onCallback(returnValue);
+        }
+    }
 }
+
