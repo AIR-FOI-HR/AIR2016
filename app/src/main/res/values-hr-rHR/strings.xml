@@ -56,6 +56,14 @@
     <string name="cancel">Odustani</string>
     <string name="choose_photo_from_gallery">Odaberi iz galerije</string>
     <string name="add_photo">Dodaj fotografiju!</string>
+    <string name="later">Kasnije</string>
+    <string name="dont_ask_again">Ne pitaj više!</string>
+    <string name="later_pressed_time">Kasnije</string>
+    <string name="dialoge_desc">Opis</string>
+    <string name="we_request_again">Ponovni zahtjev</string>
+    <string name="give_permissions">Daj dopuštenje</string>
+    <string name="permissions_required">Potrebno dopuštenje</string>
+    <string name="crop_image">Uredi fotografiju</string>
 
 
 </resources>
