@@ -162,7 +162,11 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                 ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED){
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            if (locationManager != null) {
+                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                }
+            }
             //refreshMarkerLive();
         }
 
@@ -251,9 +255,14 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                 alertDialoge();
                 refreshMarkerNoLocation();
             }
-            else{
+            else {
+
                 locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                if (locationManager != null) {
+                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                    }
+                }
             }
         }
     }
