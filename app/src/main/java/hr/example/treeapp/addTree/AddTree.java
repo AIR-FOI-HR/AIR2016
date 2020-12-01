@@ -106,6 +106,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
 
     private final String[] permissions = {"Camera", "Media & Storage"};
     private boolean cameraPermsOk=false;
+    private boolean locationPremsOk=false;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -167,14 +168,15 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                         == PackageManager.PERMISSION_GRANTED){
                     //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                     //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, this);
-                /**locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                 if (locationManager != null) {
                     if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                        locationPremsOk=true;
                     }
-                }*/
-            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                }
+            //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         }
 
         if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CAMERA)
@@ -259,13 +261,14 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                 refreshMarkerNoLocation();
             }
             else {
-                /**if (locationManager != null) {
+                if (locationManager != null) {
                     if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                        locationPremsOk=true;
                     }
-                }*/
-                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                }
+                //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
             }
         }
     }
@@ -341,6 +344,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                 Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
                 cameraPermsOk=true;
+                locationPremsOk=true;
             }
         }
     }
@@ -511,11 +515,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                         startLocation.longitude);
         Float zoomLvl = (float)5.5;
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(mapsLatLng,zoomLvl));
-        if (isGpsOn())
-            refreshMarkerLive();
-        else
-            refreshMarkerNoLocation();
-
+        refreshMarkerNoLocation();
     }
     private final String SAMPLE_CROPPED_IMG_NAME = "SampleCroppImg";
 
@@ -565,7 +565,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
      */
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        if(location.getAccuracy()<1000 && counter==0 && location!=null){
+        if(location.getAccuracy()<1000 && counter==0 && location!=null && locationPremsOk){
             latitude=location.getLatitude();
             longitude=location.getLongitude();
             refreshMarkerLive();
