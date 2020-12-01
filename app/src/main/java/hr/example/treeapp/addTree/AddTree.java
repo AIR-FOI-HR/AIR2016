@@ -1,7 +1,6 @@
 package hr.example.treeapp.addTree;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -9,66 +8,38 @@ import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.text.Editable;
 import android.text.Html;
-import android.text.TextWatcher;
-import android.util.Base64;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.api.GoogleApi;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.yalantis.ucrop.UCrop;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import hr.example.treeapp.R;
-
-import static android.os.Environment.getExternalStoragePublicDirectory;
 
 public class AddTree extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, LocationListener {
     TextView treeDescription;
@@ -81,23 +52,14 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     GoogleMap map;
     Marker marker;
 
-
-
     List<String> hashtags;
 
-    //user location
     protected LocationManager locationManager;
     protected Context context;
     protected double latitude, longitude;
     private int counter=0;
 
-
-    private String Document_img1="";
-
-    private final String TAG = AddTree.class.getSimpleName();
-
     private AlertDialog.Builder builder;
-    private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
 
     private boolean pressedLater;
@@ -107,6 +69,11 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     private final String[] permissions = {"Camera", "Media & Storage"};
     private boolean cameraPermsOk=false;
     private boolean locationPremsOk=false;
+    private PermissionsChecks permissionsChecks;
+
+    private ImageManipulation imageManipulation;
+    private MapsLogic mapsLogic;
+    private final HashtagsLogic hashtagsLogic = new HashtagsLogic();
 
     @SuppressLint("MissingPermission")
     @Override
@@ -116,29 +83,54 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
 
         treeDescription = findViewById(R.id.treeDescriptionText);
         imageView = findViewById(R.id.treeImageView);
-
-        // creating builder object for alert dialoges
         builder = new AlertDialog.Builder(AddTree.this);
+        imageManipulation = new ImageManipulation(this);
+        permissionsChecks = new PermissionsChecks(this);
 
-        // calling sharedpreferences and getting sharedpreferences values
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        setUpPermissionsRequest();
+
+        checkPermissionsOnStartup();
+
+        mapInitialization();
+
+        verifyPermissions();
+
+        startingListeners();
+
+    }
+
+    private void setUpPermissionsRequest() {
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         pressedLater = sharedPref.getBoolean(getResources().getString(R.string.later), false);
         pressedDontAskAgain = sharedPref.getBoolean(getResources().getString(R.string.dont_ask_again), false);
+        //tu radi problem nakon deinstalacije ako se kod davanja dopuštenja stisne kasnije, crasha se kod sljedećeg pokretanja
         laterPressedTime = sharedPref.getLong(getResources().getString(R.string.later_pressed_time), 0);
+    }
 
-        // Check if all the permissions were been granted
-        // If not granted show a dialog requesting permissions from the user.
-        if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
+    @SuppressLint("MissingPermission")
+    private void verifyPermissions() {
+        if (permissionsChecks.checkLocationPermissions()){
+                    //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, this);
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                if (locationManager != null) {
+                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, this);
+                        locationPremsOk=true;
+                    }
+                }
+            //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
+
+        if (permissionsChecks.checkCameraAndStoragePermissions()){
+            cameraPermsOk=true;
+        }
+    }
+
+    private void checkPermissionsOnStartup() {
+        if (!permissionsChecks.checkAllPermissions()) {
             alertDialogeForAskingPermissions();
 
             // check if pressedLater variable is been true
@@ -159,84 +151,17 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
             // If pressed don't ask again the app should bot request permissions again.
         } else if (!pressedDontAskAgain)
             requestPermission();
-
-        mapInitialization();
-
-        if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED){
-                    //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, this);
-                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                if (locationManager != null) {
-                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-                        locationPremsOk=true;
-                    }
-                }
-            //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        }
-
-        if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED){
-            cameraPermsOk=true;
-        }
-        listeners();
-        //checkLocation();
-        //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-
     }
 
-    private void listeners(){
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImage();
-                treeDescription.setText(Html.fromHtml(colorHastags()));
-            }
+    private void startingListeners(){
+        imageView.setOnClickListener(v -> {
+            selectImage();
+            treeDescription.setText(Html.fromHtml(hashtagsLogic.colorHastags(treeDescription)));
         });
-
-        treeDescription.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                treeDescription.setText(Html.fromHtml(colorHastags()));
-            }
-        });
-
+        treeDescription.setOnFocusChangeListener((v, hasFocus) -> treeDescription.setText(Html.fromHtml(hashtagsLogic.colorHastags(treeDescription))));
     }
 
-    private boolean isGpsOn(){
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
-
-    public String colorHastags (){
-        String text = treeDescription.getText().toString();
-        String regexPattern = "(#\\w+)";
-        List<String> lstTag = new ArrayList<String>();
-        Pattern p = Pattern.compile(regexPattern);
-        Matcher m = p.matcher(text);
-        while (m.find()) {
-            String hashtag = m.group(1);
-            lstTag.add(hashtag);
-        }
-        String modifiedText=text;
-        for (int i =0; i<lstTag.size(); i++){
-            String replaceWith ="<span style='color:#2DB180'>"+lstTag.get(i)+"</span>";
-            modifiedText=modifiedText.replaceAll(lstTag.get(i),replaceWith);
-        }
-        hashtags=lstTag;
-        return modifiedText;
-
-    }
     private void mapInitialization() {
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -248,22 +173,17 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == 101) {
-            if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CAMERA)
-                    != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                            != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                            != PackageManager.PERMISSION_GRANTED) {
+            if (!permissionsChecks.checkAnyCameraAndStoragePermission()) {
 
                 //few important permissions were not been granted
                 // ask the user again.
                 alertDialoge();
-                refreshMarkerNoLocation();
+                mapsLogic.refreshMarkerNoLocation();
             }
             else {
                 if (locationManager != null) {
                     if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, this);
                         locationPremsOk=true;
                     }
                 }
@@ -328,17 +248,8 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         alert.show();
     }
     private void requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CAMERA)
-                    != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                            != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                            != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED) {
+        if (permissionsChecks.checkBuildVersion()) {
+            if (!permissionsChecks.checkAnyImportantPermission()) {
                 ActivityCompat.requestPermissions(AddTree.this,
                         new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -364,10 +275,10 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         File f = null;
                         try{
-                            f=createImageFile();
+                            f=imageManipulation.createImageFile();
                         }
                         catch (IOException ex){
-                            Toast.makeText(AddTree.this, "Error at file create", Toast.LENGTH_LONG);
+                            Toast.makeText(AddTree.this, "Error at file create", Toast.LENGTH_LONG).show();
                         }
                         if (f != null) {
                             Uri photoURI = FileProvider.getUriForFile(AddTree.this,
@@ -389,86 +300,40 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                 else
                     alertDialoge();
             }
-
         });
         builder.show();
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
-                File f = new File(currentPhotoPath);
+                File f = new File(imageManipulation.currentPhotoPath);
                 Uri urif = Uri.fromFile(f);
-                if (urif!=null)
-                    startCrop(urif);
+                if (urif!=null);
+                    imageManipulation.startCrop(urif);
             }
 
             else if (requestCode == 2) {
                 filePath = data.getData();
-                if (filePath!=null)
-                    startCrop(filePath);
+                if (filePath!=null);
+                    imageManipulation.startCrop(filePath);
             }
         }
         if (requestCode==UCrop.REQUEST_CROP && resultCode==RESULT_OK){
             Uri path=UCrop.getOutput(data);
             finalImageUri=path;
             if(path!=null)
-                setImage(path);
+                setImageToView(path);
         }
-    }
-    public String BitMapToString(Bitmap userImage1) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        userImage1.compress(Bitmap.CompressFormat.PNG, 60, baos);
-        byte[] b = baos.toByteArray();
-        Document_img1 = Base64.encodeToString(b, Base64.DEFAULT);
-        return Document_img1;
-    }
-
-    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        float bitmapRatio = (float)width / (float) height;
-        if (bitmapRatio > 1) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
-        }
-        return Bitmap.createScaledBitmap(image, width, height, true);
-    }
-
-    /**
-     * Metoda služi za kreiranje .jpg file-a u memoriji uređaja
-     * @String currentPhotoPath sadrži lokaciju .jpg u memoriji uređaja
-     */
-    String currentPhotoPath;
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
     }
 
     /**
      * metoda preuzima Uri slike, uklanja okvir s ikonom i postavlja novi okvir gdje se slika prikazuje s dohvaćenim URI
      * @param uri - uri slike,  iz fotogalerije ili iz fotoaparata
      */
-    private void setImage(Uri uri){
-
+    private void setImageToView(Uri uri){
         imageView.setImageBitmap(null);
         imageView.setImageURI(uri);
     }
@@ -515,46 +380,17 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                         startLocation.longitude);
         Float zoomLvl = (float)5.5;
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(mapsLatLng,zoomLvl));
-        refreshMarkerNoLocation();
+        mapsLogic = new MapsLogic(marker, map);
+        mapsLogic.refreshMarkerNoLocation();
+        marker = mapsLogic.getCurrentMarker();
     }
-    private final String SAMPLE_CROPPED_IMG_NAME = "SampleCroppImg";
 
     /**
-     *
      * @return - vraća LatLng - Latitude i Longitude koordinate na kojima je postavljen pin
      */
     private LatLng getPinedLocation (){
         LatLng latLng = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
         return latLng;
-    }
-    private void startCrop(@NonNull Uri uri){
-        String destinationFileName = SAMPLE_CROPPED_IMG_NAME;
-        destinationFileName +=".jpg";
-
-        UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(),destinationFileName)));
-
-        uCrop.withAspectRatio(1,1); //omjer fotografije
-
-        uCrop.withOptions(getcroppOptions());
-
-        uCrop.start(AddTree.this);
-    }
-
-    private UCrop.Options getcroppOptions(){
-        UCrop.Options options = new UCrop.Options();
-
-        options.setCompressionQuality(70); //kompresija fotografije
-        options.setCompressionFormat(Bitmap.CompressFormat.JPEG); //format fotografije
-
-        options.setHideBottomControls(false);
-        options.setFreeStyleCropEnabled(true); //zaklučan omjer
-
-        options.setStatusBarColor(getResources().getColor(R.color.tree_green));
-        options.setToolbarColor(getResources().getColor(R.color.tree_green));
-
-        options.setToolbarTitle(getString(R.string.crop_image));
-
-        return options;
     }
 
     /**
@@ -568,46 +404,8 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         if(location.getAccuracy()<1000 && counter==0 && location!=null && locationPremsOk){
             latitude=location.getLatitude();
             longitude=location.getLongitude();
-            refreshMarkerLive();
+            mapsLogic.refreshMarkerLive(latitude,longitude);
             counter++;
         }
     }
-
-    /**
-     * Metoda koja postavlja marker na korisnikovu lokaciju, ako je korisnik dopustio pristup lokaciji
-     */
-    private void refreshMarkerLive(){
-        final LatLng startLocation = new LatLng(latitude, longitude);
-
-        final com.google.android.gms.maps.model.LatLng mapsLatLng =
-                new com.google.android.gms.maps.model.LatLng(startLocation.latitude,
-                        startLocation.longitude);
-        if(marker!=null)
-            marker.remove();
-        marker = map.addMarker(new MarkerOptions()
-                .position(mapsLatLng)
-                .draggable(true)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker)));
-        Float zoomLvl = (float)15;
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(mapsLatLng,zoomLvl));
-    }
-
-    /**
-     * Metoda koja marker postavlja na default lokaciju kada korisnik ne dozvoli pristup svojoj lokaciji ili nema upaljen gps
-     */
-    private void refreshMarkerNoLocation(){
-        final LatLng startLocation = new LatLng(44.601505, 16.440230);
-
-        final com.google.android.gms.maps.model.LatLng mapsLatLng =
-                new com.google.android.gms.maps.model.LatLng(startLocation.latitude,
-                        startLocation.longitude);
-        if(marker!=null)
-            marker.remove();
-        marker = map.addMarker(new MarkerOptions()
-                .position(mapsLatLng)
-                .draggable(true)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker)));
-
-    }
-
 }
