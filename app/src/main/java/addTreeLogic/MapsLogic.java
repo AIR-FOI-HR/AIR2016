@@ -1,16 +1,12 @@
-package hr.example.treeapp.addTree;
-
-import android.app.Activity;
-import android.content.Context;
+package addTreeLogic;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import addTreeLogic.LatLng;
 import hr.example.treeapp.R;
 
 public class MapsLogic{

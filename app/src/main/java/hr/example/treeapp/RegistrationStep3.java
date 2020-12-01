@@ -46,7 +46,7 @@ public class RegistrationStep3 extends AppCompatActivity {
     }
 
     public void OpenLogIn(View view) {
-        Intent open = new Intent(RegistrationStep3.this, MainActivity.class);
+        Intent open = new Intent(RegistrationStep3.this, LoginActivity.class);
         startActivity(open);
         overridePendingTransition(R.anim.slideleft, R.anim.stayinplace);
     }

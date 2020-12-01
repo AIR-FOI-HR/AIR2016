@@ -1,4 +1,4 @@
-package hr.example.treeapp.addTree;
+package addTreeLogic;
 
 public class LatLng {
     public Double latitude;

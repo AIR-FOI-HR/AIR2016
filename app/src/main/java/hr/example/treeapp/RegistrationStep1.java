@@ -8,23 +8,14 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 
-import com.google.firebase.auth.FirebaseAuth;
-
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 
 public class RegistrationStep1 extends AppCompatActivity {
@@ -106,7 +97,7 @@ public class RegistrationStep1 extends AppCompatActivity {
 
     }
     public void OpenLogIn(View view){
-        Intent open = new Intent(RegistrationStep1.this, MainActivity.class);
+        Intent open = new Intent(RegistrationStep1.this, LoginActivity.class);
         startActivity(open);
         overridePendingTransition(R.anim.slideleft,R.anim.stayinplace);
     }

@@ -1,36 +1,15 @@
 package hr.example.treeapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import auth.AuthRepository;
 import auth.RegistrationRepository;
 import auth.UsernameAvailabilityCallback;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.UUID;
-import java.util.regex.Pattern;
 
 public class RegistrationStep2 extends AppCompatActivity {
     EditText email, korIme, password, repeatedPassword;
@@ -163,7 +142,7 @@ public class RegistrationStep2 extends AppCompatActivity {
     }
 
     public void OpenLogIn(View view) {
-        Intent open = new Intent(RegistrationStep2.this, MainActivity.class);
+        Intent open = new Intent(RegistrationStep2.this, LoginActivity.class);
         startActivity(open);
         overridePendingTransition(R.anim.slideleft, R.anim.stayinplace);
     }
