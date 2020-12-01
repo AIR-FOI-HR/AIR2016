@@ -39,9 +39,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.api.GoogleApi;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -78,6 +82,8 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     GoogleMap map;
     Marker marker;
 
+
+
     List<String> hashtags;
 
     //user location
@@ -110,7 +116,6 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         imageLoad = findViewById(R.id.imageLoadButton);
         treeDescription = findViewById(R.id.treeDescriptionText);
         imageView = findViewById(R.id.treeImageView);
-
 
         // creating builder object for alert dialoges
         builder = new AlertDialog.Builder(AddTree.this);
@@ -161,9 +166,10 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                 == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED){
-            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-            //refreshMarkerLive();
+                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, this);
+
+                    //refreshMarkerLive();
         }
 
         if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CAMERA)
@@ -173,10 +179,9 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                 ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
                         == PackageManager.PERMISSION_GRANTED){
             cameraPermsOk=true;
-            //refreshMarkerLive();
         }
         listeners();
-
+        //checkLocation();
         //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
@@ -205,6 +210,10 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
             }
         });
 
+    }
+
+    private boolean isGpsOn(){
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     public String colorHastags (){
@@ -254,6 +263,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
             else{
                 locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
             }
         }
     }
@@ -296,7 +306,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                         //Saving later boolean value as true, also saving time of pressed later
                         Date dateObj = new Date();
                         long timeNow = dateObj.getTime();
-                        refreshMarkerNoLocation();
+                        //refreshMarkerNoLocation();
                         editor.putLong(getResources().getString(R.string.later_pressed_time), timeNow);
                         editor.putBoolean(getResources().getString(R.string.later), true);
                         editor.commit();
@@ -502,6 +512,10 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                         startLocation.longitude);
         Float zoomLvl = (float)5.5;
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(mapsLatLng,zoomLvl));
+        if (isGpsOn())
+            refreshMarkerLive();
+        else
+            refreshMarkerNoLocation();
 
     }
     private final String SAMPLE_CROPPED_IMG_NAME = "SampleCroppImg";
@@ -552,7 +566,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
      */
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        if(location.getAccuracy()<1000 && counter==0){
+        if(location.getAccuracy()<1000 && counter==0 && location!=null){
             latitude=location.getLatitude();
             longitude=location.getLongitude();
             refreshMarkerLive();
@@ -580,7 +594,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     }
 
     /**
-     * Metoda koja marker postavlja na default lokaciju kada korisnik ne dozvoli pristup svojoj lokaciji
+     * Metoda koja marker postavlja na default lokaciju kada korisnik ne dozvoli pristup svojoj lokaciji ili nema upaljen gps
      */
     private void refreshMarkerNoLocation(){
         final LatLng startLocation = new LatLng(44.601505, 16.440230);
