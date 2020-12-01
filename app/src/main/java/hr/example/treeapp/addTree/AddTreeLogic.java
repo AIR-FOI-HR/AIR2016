@@ -33,7 +33,7 @@ public class AddTreeLogic {
 
     Date currentTime = Calendar.getInstance().getTime();
 
-    AddTreeLogic(Context context){
+    public AddTreeLogic(Context context){
         this.context = context;
     }
 

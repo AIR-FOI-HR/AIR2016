@@ -41,6 +41,7 @@ import addTreeLogic.ImageManipulation;
 import addTreeLogic.LatLng;
 import addTreeLogic.MapsLogic;
 import addTreeLogic.PermissionsChecks;
+import hr.example.treeapp.addTree.AddTreeLogic;
 
 public class AddTree extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, LocationListener {
     TextView treeDescription;
