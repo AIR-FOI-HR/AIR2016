@@ -109,6 +109,7 @@
                     android:fontFamily="@font/roboto_medium"
                     android:insetLeft="6dp"
                     android:insetRight="6dp"
+                    android:onClick="uploadNewPost"
                     android:text="@string/plant_tree" />
 
             </LinearLayout>

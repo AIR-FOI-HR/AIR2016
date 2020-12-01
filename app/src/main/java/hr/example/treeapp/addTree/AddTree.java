@@ -75,6 +75,8 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     private MapsLogic mapsLogic;
     private final HashtagsLogic hashtagsLogic = new HashtagsLogic();
 
+    AddTreeLogic addTreeLogic;
+
     @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         builder = new AlertDialog.Builder(AddTree.this);
         imageManipulation = new ImageManipulation(this);
         permissionsChecks = new PermissionsChecks(this);
+        addTreeLogic = new AddTreeLogic(this);
 
         setUpPermissionsRequest();
 
@@ -349,14 +352,16 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     /**
      * U ovoj metodi se poziva sloj poslovne logike preko kojeg se objava pohranjuje u Firebase
      */
-    public void uploadImage() {
+    public void uploadNewPost(View v) {
         LatLng treeLocation = getPinedLocation(); //lokacija pin-a
         Uri image= finalImageUri; //uri of a cropped image
-        String treeDesc = treeDescription.toString().trim();
+        String treeDesc = treeDescription.getText().toString().trim();
         List<String> treeTagsList = hashtags;
         Double treeLat = treeLocation.latitude;
         Double treeLng = treeLocation.longitude;
         //uzmi Uri image i pozovi metodu za upload
+
+        addTreeLogic.uploadPost(image, treeLat, treeLng, treeDesc);
     }
 
     @Override

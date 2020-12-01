@@ -90,6 +90,7 @@ public class RegistrationRepository {
                     userID = firebaseAuth.getCurrentUser().getUid();
                     DocumentReference documentReference = firebaseFirestore.collection("Korisnici").document(userID);
                     Map<String, Object> korisnik = new HashMap<>();
+                    korisnik.put("Korisnik_ID", userID);
                     korisnik.put("Ime", Ime);
                     korisnik.put("Prezime", Prezime);
                     korisnik.put("E-mail", Email);

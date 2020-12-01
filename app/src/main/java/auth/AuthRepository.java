@@ -108,6 +108,7 @@ public class AuthRepository {
                             if (account != null) {
                                 DocumentReference documentReference = firebaseFirestore.collection("Korisnici").document(user.getUid());
                                 Map<String, Object> korisnik = new HashMap<>();
+                                korisnik.put("Korisnik_ID", user.getUid());
                                 korisnik.put("Ime", account.getGivenName());
                                 korisnik.put("Prezime", account.getFamilyName());
                                 korisnik.put("E-mail", account.getEmail());
