@@ -25,14 +25,10 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/Theme.TreeApp">
-<<<<<<< HEAD
-        <activity android:name=".AddTree"></activity>
+
         <activity android:name="auth.PassReset" />
-=======
         <activity android:name=".addTree.CroppActivity" />
         <activity android:name=".addTree.AddTree" />
-        <activity android:name=".PassReset" />
->>>>>>> feature/AddTree-design
         <activity android:name=".LoginTest" />
         <activity android:name=".RegistrationStep4" />
         <activity android:name=".RegistrationStep3" />

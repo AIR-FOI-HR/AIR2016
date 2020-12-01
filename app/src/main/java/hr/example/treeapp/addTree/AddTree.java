@@ -354,6 +354,8 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         Uri image= finalImageUri; //uri of a cropped image
         String treeDesc = treeDescription.toString().trim();
         List<String> treeTagsList = hashtags;
+        Double treeLat = treeLocation.latitude;
+        Double treeLng = treeLocation.longitude;
         //uzmi Uri image i pozovi metodu za upload
     }
 
@@ -372,6 +374,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
 
         map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         map.getUiSettings().setMyLocationButtonEnabled(true);
+        map.getUiSettings().setScrollGesturesEnabled(false);
 
         final LatLng startLocation = new LatLng(44.478513, 16.577829);
 

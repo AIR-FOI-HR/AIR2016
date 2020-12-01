@@ -51,10 +51,10 @@
     <string name="about_tree">Ispričaj priču o stablu:</string>
     <string name="plant_tree">POSADI DRVO</string>
     <string name="discard">ODUSTANI</string>
-<<<<<<< HEAD
+
     <string name="emailverified">Email nije verificiran!</string>
     <string name="enter_username">Unesite vaše novo korisničko ime</string>
-=======
+
     <string name="type_hear">Dodajte priču o stablu...</string>
     <string name="put_on_map">Postavite lokaciju</string>
     <string name="take_photo">Fotografiraj</string>
@@ -69,7 +69,7 @@
     <string name="give_permissions">Daj dopuštenje</string>
     <string name="permissions_required">Potrebno dopuštenje</string>
     <string name="crop_image">Uredi fotografiju</string>
->>>>>>> feature/AddTree-design
+
 
 
 </resources>
