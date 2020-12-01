@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import hr.example.treeapp.addTree.AddTree;
+
 public class LoginTest extends AppCompatActivity {
     TextView userID;
     @Override
@@ -25,5 +27,10 @@ public class LoginTest extends AppCompatActivity {
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();
+    }
+
+    public void addTree (View view){
+        Intent open = new Intent(LoginTest.this, AddTree.class);
+        startActivity(open);
     }
 }

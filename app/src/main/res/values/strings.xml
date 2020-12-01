@@ -63,5 +63,19 @@
     <string name="about_tree">Tell the story about the tree:</string>
     <string name="plant_tree">PLANT TREE</string>
     <string name="discard">DISCARD</string>
+    <string name="type_hear">Add story about the tree...</string>
+    <string name="put_on_map">Set location</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose_photo_from_gallery">Choose from Gallery</string>
+    <string name="add_photo">Add Photo!</string>
+    <string name="later">Later</string>
+    <string name="dont_ask_again">Don\'t ask again!</string>
+    <string name="later_pressed_time">Later pressed time</string>
+    <string name="dialoge_desc">Dialogue description</string>
+    <string name="we_request_again">Request again</string>
+    <string name="give_permissions">Give permissions</string>
+    <string name="permissions_required">Permission required</string>
+    <string name="crop_image">Crop image</string>
     >>>>>>> feature/registration-design
 </resources>
