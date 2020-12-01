@@ -75,7 +75,6 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
 
     ImageView imageView;
     Uri filePath;
-    ImageButton imageLoad;
 
     Uri finalImageUri;
 
@@ -113,7 +112,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_tree2);
-        imageLoad = findViewById(R.id.imageLoadButton);
+
         treeDescription = findViewById(R.id.treeDescriptionText);
         imageView = findViewById(R.id.treeImageView);
 
@@ -194,13 +193,6 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     }
 
     private void listeners(){
-        imageLoad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImage();
-                treeDescription.setText(Html.fromHtml(colorHastags()));
-            }
-        });
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -472,10 +464,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
      * @param uri - uri slike,  iz fotogalerije ili iz fotoaparata
      */
     private void setImage(Uri uri){
-        if(imageLoad.getVisibility()==View.VISIBLE){
-            imageLoad.setVisibility(View.INVISIBLE);
-            imageView.setVisibility(View.VISIBLE);
-        }
+
         imageView.setImageBitmap(null);
         imageView.setImageURI(uri);
     }
@@ -544,7 +533,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
 
         UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(),destinationFileName)));
 
-        uCrop.withAspectRatio(16,9); //omjer fotografije
+        uCrop.withAspectRatio(1,1); //omjer fotografije
 
         uCrop.withOptions(getcroppOptions());
 
@@ -558,7 +547,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         options.setCompressionFormat(Bitmap.CompressFormat.JPEG); //format fotografije
 
         options.setHideBottomControls(false);
-        options.setFreeStyleCropEnabled(false); //zaklučan omjer
+        options.setFreeStyleCropEnabled(true); //zaklučan omjer
 
         options.setStatusBarColor(getResources().getColor(R.color.tree_green));
         options.setToolbarColor(getResources().getColor(R.color.tree_green));
