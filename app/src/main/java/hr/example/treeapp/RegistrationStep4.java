@@ -14,7 +14,7 @@ public class RegistrationStep4 extends AppCompatActivity {
         setContentView(R.layout.activity_registration_step4);
     }
     public void OpenLogIn(View view) {
-        Intent open = new Intent(RegistrationStep4.this, MainActivity.class);
+        Intent open = new Intent(RegistrationStep4.this, LoginActivity.class);
         startActivity(open);
     }
 }

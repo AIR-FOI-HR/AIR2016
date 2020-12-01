@@ -11,14 +11,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 
 import auth.AuthRepository;
 import auth.LogInStatusCallback;
 import auth.PassReset;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     EditText email, password;
     AuthRepository authRepository;
@@ -94,12 +93,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void OpenRegistration(View view) {
-        Intent open = new Intent(MainActivity.this, RegistrationStep1.class);
+        Intent open = new Intent(LoginActivity.this, RegistrationStep1.class);
         startActivity(open);
     }
 
     public void OpenReset(View view){
-        Intent open= new Intent(MainActivity.this, PassReset.class);
+        Intent open= new Intent(LoginActivity.this, PassReset.class);
         startActivity(open);
     }
 
@@ -113,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                 }
                 else{
-                    Toast.makeText(MainActivity.this, getText(R.string.authentication_failed), Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, getText(R.string.authentication_failed), Toast.LENGTH_LONG).show();
                 }
             }
         });

@@ -1,4 +1,4 @@
-package hr.example.treeapp.addTree;
+package addTreeLogic;
 
 import androidx.appcompat.app.AppCompatActivity;
 

@@ -5,10 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import auth.AuthRepository;
 import auth.LogInStatusCallback;
@@ -31,7 +29,7 @@ public class SplashScreen extends AppCompatActivity {
                         if (value == "user_is_logged_in") {
                             startActivity(new Intent(getApplicationContext(), LoginTest.class));
                         } else {
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         }
                     }
                 });

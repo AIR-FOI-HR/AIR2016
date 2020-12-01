@@ -1,9 +1,8 @@
-package hr.example.treeapp.addTree;
+package hr.example.treeapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
@@ -13,12 +12,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Html;
@@ -39,7 +36,11 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import hr.example.treeapp.R;
+import addTreeLogic.HashtagsLogic;
+import addTreeLogic.ImageManipulation;
+import addTreeLogic.LatLng;
+import addTreeLogic.MapsLogic;
+import addTreeLogic.PermissionsChecks;
 
 public class AddTree extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, LocationListener {
     TextView treeDescription;

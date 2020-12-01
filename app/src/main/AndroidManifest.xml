@@ -27,14 +27,14 @@
         android:theme="@style/Theme.TreeApp">
 
         <activity android:name="auth.PassReset" />
-        <activity android:name=".addTree.CroppActivity" />
-        <activity android:name=".addTree.AddTree" />
+        <activity android:name="addTreeLogic.CroppActivity" />
+        <activity android:name=".AddTree" />
         <activity android:name=".LoginTest" />
         <activity android:name=".RegistrationStep4" />
         <activity android:name=".RegistrationStep3" />
         <activity android:name=".RegistrationStep2" />
         <activity android:name=".RegistrationStep1" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".LoginActivity" />
         <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
