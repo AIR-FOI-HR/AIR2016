@@ -166,20 +166,16 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                 == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED){
-<<<<<<< HEAD
-                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, this);
-
-                    //refreshMarkerLive();
-=======
+                    //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, this);
+                /**locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                if (locationManager != null) {
+                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                    }
+                }*/
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            if (locationManager != null) {
-                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-                }
-            }
-            //refreshMarkerLive();
->>>>>>> 3e807c7b947aa6f72a41acd137d05fc484647e56
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         }
 
         if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CAMERA)
@@ -271,18 +267,13 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                 refreshMarkerNoLocation();
             }
             else {
-
-                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-<<<<<<< HEAD
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-
-=======
-                if (locationManager != null) {
+                /**if (locationManager != null) {
                     if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
                     }
-                }
->>>>>>> 3e807c7b947aa6f72a41acd137d05fc484647e56
+                }*/
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
             }
         }
     }
