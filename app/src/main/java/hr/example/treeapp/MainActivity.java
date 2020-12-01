@@ -1,53 +1,28 @@
 package hr.example.treeapp;
 
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.Executor;
 
 import auth.AuthRepository;
 import auth.LogInStatusCallback;
+import auth.PassReset;
 
 public class MainActivity extends AppCompatActivity {
 
     EditText email, password;
     AuthRepository authRepository;
-
-
+    SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         authRepository= new AuthRepository(this);
         authRepository.createRequest();
+        sharedPreferences=this.getPreferences(Context.MODE_PRIVATE);
     }
 
     @Override
@@ -89,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         String emailVal=email.getText().toString().trim();
         String passwordVal=password.getText().toString();
 
-        if(inputValidation(emailVal,passwordVal)) {
+        if(authRepository.inputValidation(emailVal,passwordVal)) {
             authRepository.login(emailVal, passwordVal, new LogInStatusCallback() {
                 @Override
                 public void onCallback(String value) {
@@ -108,6 +84,12 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }
+        if(TextUtils.isEmpty(emailVal)){
+            email.setError(getString(R.string.no_email));
+        }
+        if(TextUtils.isEmpty(passwordVal)){
+            password.setError(getString(R.string.no_password));
+        }
     }
 
 
@@ -117,23 +99,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void OpenReset(View view){
-        Intent open= new Intent(MainActivity.this,PassReset.class);
+        Intent open= new Intent(MainActivity.this, PassReset.class);
         startActivity(open);
     }
 
 
-    private boolean inputValidation(String emailVal, String passwordVal){
-        if(TextUtils.isEmpty(emailVal)){
-            email.setError(getString(R.string.no_email));
-        }
-        if(TextUtils.isEmpty(passwordVal)){
-            password.setError(getString(R.string.no_password));
-        }
-        return !TextUtils.isEmpty(emailVal) && !TextUtils.isEmpty(passwordVal);
-    }
-
-
     public void guest(View view) {
-        authRepository.guest();
+        authRepository.guest(sharedPreferences, new LogInStatusCallback(){
+            @Override
+            public void onCallback(String value) {
+                if(value=="ok") {
+                    startActivity(new Intent(getApplicationContext(), LoginTest.class));
+                    finish();
+                }
+                else{
+                    Toast.makeText(MainActivity.this, getText(R.string.authentication_failed), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }

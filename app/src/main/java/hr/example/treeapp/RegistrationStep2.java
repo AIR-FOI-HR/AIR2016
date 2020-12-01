@@ -2,75 +2,52 @@ package hr.example.treeapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import auth.AuthRepository;
+import auth.RegistrationRepository;
+import auth.UsernameAvailabilityCallback;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.protobuf.DescriptorProtos;
-import com.google.type.DateTime;
-
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class RegistrationStep2 extends AppCompatActivity {
     EditText email, korIme, password, repeatedPassword;
-    String Ime, Prezime, userID, Slika, slikaID;
+    String Ime, Prezime, Slika;
     int day, month, year;
     String datumRodenja;
-    public Boolean KorImeZauzeto;
 
-    FirebaseAuth firebaseAuth;
-    FirebaseFirestore firebaseFirestore;
-    FirebaseStorage firebaseStorage;
-    StorageReference storageReference;
+    AuthRepository authRepository;
+    RegistrationRepository registrationRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_step2);
+
+        authRepository= new AuthRepository(this);
+        registrationRepository = new RegistrationRepository(this);
 
         Intent intent = getIntent();
         Ime = intent.getStringExtra("name_key");
@@ -106,12 +83,6 @@ public class RegistrationStep2 extends AppCompatActivity {
         password = (EditText) findViewById(R.id.txtBoxStep2Password);
         repeatedPassword = (EditText) findViewById(R.id.txtBoxStep2PasswordRepeat);
 
-        //kreiranje instance Firebase autentikacije
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference();
-
     }
 
     public void OpenRegistrationStep1(View view) {
@@ -120,142 +91,75 @@ public class RegistrationStep2 extends AppCompatActivity {
         overridePendingTransition(R.anim.slideleft, R.anim.stayinplace);
     }
 
+    public boolean korimeDostupno;
+
     public void OpenRegistrationStep3(View view) {
-        //kreiranje stringova upisanih podataka
-        String Email = email.getText().toString().trim();
         String KorIme = korIme.getText().toString().trim();
+
+        if (registrationRepository.usernameEmpty(KorIme)) {
+            korIme.setError(getString(R.string.no_username));
+            return;
+        }
+
+        registrationRepository.checkUsernameAvailability(KorIme, new UsernameAvailabilityCallback() {
+            @Override
+            public void onCallback(String value) {
+                if (value == "Dostupno") {
+                    korimeDostupno = true;
+                    OtvoriRegistrationStep3(KorIme);
+                }
+                else{
+                    korimeDostupno = false;
+                    korIme.setError(getString(R.string.username_taken));
+                }
+            }
+        });
+    }
+
+    public void OtvoriRegistrationStep3(String KorIme){
+        String Email = email.getText().toString().trim();
         String Password = password.getText().toString().trim();
         String RepeatedPassword = repeatedPassword.getText().toString().trim();
         Integer Bodovi = 0;
         Integer UlogaID = 2;
 
 
-        //   ProvjeraKorisnickogImena2("Korisnicko_ime", KorIme, new OnSuccessListener<Boolean>() {
-        //       @Override
-        //       public void onSuccess(Boolean aBoolean) {
-        //           if(!aBoolean){
-        //               KorImeZauzeto = true;
-        //           }
-        //       }
-        //   });
-
-        //   if(KorImeZauzeto == true){
-        //      korIme.setError(getString(R.string.username_taken));
-        //      return;
-        //   }
-
         //provjerava je li upisan e-mail
-        if (TextUtils.isEmpty(Email)) {
+        if (registrationRepository.emailEmpty(Email)) {
             email.setError(getString(R.string.no_email));
             return;
         }
 
         //provjerava je li struktura e-maila točna
-        //TODO: ovaj dio provjere se treba obavljati u poslovnoj logici bool emailIsOk (string email)
-        if ((Pattern.compile("^[a-zA-Z0-9.-]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,4}$").matcher(Email).matches()) == false) {
+        if (registrationRepository.emailNotCorrectFormat(Email)) {
             email.setError(getString(R.string.invalid_email));
             return;
         }
 
         //provjerava je li upisana lozinka
-        if (TextUtils.isEmpty(Password)) {
+        if (registrationRepository.passwordEmpty(Password)) {
             password.setError(getString(R.string.no_password));
             return;
         }
 
         //provjerava sadrži li lozinka između 6 i 20 znakova, barem 1 veliko slovo i jedan broj
-        //TODO: ovaj dio provjere se treba obavljati u poslovnoj logici bool passwordIsOk (string password)
-        if ((Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,20}$").matcher(Password).matches()) == false) {
+        if (registrationRepository.passwordNotCorrectFormat(Password)) {
             password.setError(getString(R.string.invalid_password));
             return;
         }
 
 
         //provjerava je li točno upisana ponovljena lozinka
-        if (TextUtils.isEmpty(RepeatedPassword) || !RepeatedPassword.equals(Password)) {
+        if (registrationRepository.repeatedPasswordEmptyOrIncorrect(Password, RepeatedPassword)) {
             repeatedPassword.setError(getString(R.string.invalid_password_repeat));
             return;
         }
 
         //upisuje korisnika u Authentication i Database kolekciju korisnici ukoliko nema pogreške
-        //TODO: ova metoda bi trebala biti u database ( barem onaj dio gdje se kreira korisnik, njoj se prosljeđuju podaci o korisniku iz sloja poslovne logike gdje će se metoda pozvati)
-        firebaseAuth.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    userID = firebaseAuth.getCurrentUser().getUid();
-                    DocumentReference documentReference = firebaseFirestore.collection("Korisnici").document(userID);
-                    Map<String, Object> korisnik = new HashMap<>();
-                    korisnik.put("Ime", Ime);
-                    korisnik.put("Prezime", Prezime);
-                    korisnik.put("E-mail", Email);
-                    korisnik.put("Bodovi", Bodovi);
-                    korisnik.put("Korisnicko_ime", KorIme);
-                    if (!TextUtils.isEmpty(Slika)) {
-                        UploadPicture();
-                    }
-                    korisnik.put("Profilna_slika_ID", slikaID);
-                    korisnik.put("Datum_rodenja", datumRodenja);
-                    korisnik.put("Uloga_ID", UlogaID);
-                    documentReference.set(korisnik).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Intent open = new Intent(RegistrationStep2.this, RegistrationStep3.class);
-                            open.putExtra("email_key", Email);
-                            startActivity(open);
-                        }
-                    });
-                } else {
-                    //TODO: čemu služi ovaj else, maknuti ga ako ne treba (možemo složiti i da se kod korisnika koji ne postave sliku uploada neka default slika)
-                }
-            }
-        });
-
-
-    }
-    //TODO: premjestiti ovu metodu u database, a pozvati ju u poslovnoj logici
-    public void ProvjeraKorisnickogImena(String KorIme) {
-        Query query = firebaseFirestore.collection("Korisnici")
-                .whereEqualTo("Korisnicko_ime", KorIme);
-
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.getResult().getDocuments() != null) {
-                    korIme.setError(getString(R.string.username_taken));
-
-                }
-            }
-        });
-
-    }
-    //TODO: isto tako i ova kao i prethodna, provjeriti koja radi dobro ili napraviti funkcionalnu
-    public void ProvjeraKorisnickogImena2(String key, String value, OnSuccessListener<Boolean> onSuccessListener) {
-        firebaseFirestore.collection("Korisnici").whereEqualTo(key, value).addSnapshotListener(new EventListener<QuerySnapshot>() {
-            private boolean isRunOneTime = false;
-
-            @Override
-            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
-                if (!isRunOneTime) {
-                    isRunOneTime = true;
-                    List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
-                    if (e != null) {
-                        e.printStackTrace();
-                        String message = e.getMessage();
-                        onSuccessListener.onSuccess(false);
-                        return;
-                    }
-
-                    if (snapshotList.size() > 0) {
-                        //Field is Exist
-                        onSuccessListener.onSuccess(false);
-                    } else {
-                        onSuccessListener.onSuccess(true);
-                    }
-
-                }
-            }
-        });
+        registrationRepository.firebaseCreateUser(Email, Password, Ime, Prezime, Bodovi, KorIme, Slika, datumRodenja, UlogaID);
+        Intent open = new Intent(RegistrationStep2.this, RegistrationStep3.class);
+        open.putExtra("email", Email);
+        startActivity(open);
     }
 
     public void OpenLogIn(View view) {
@@ -263,52 +167,4 @@ public class RegistrationStep2 extends AppCompatActivity {
         startActivity(open);
         overridePendingTransition(R.anim.slideleft, R.anim.stayinplace);
     }
-    //TODO: ovaj dio bi trebao u sloj database i ta metoda bi se pozivala prije pohrane slike
-    private void UploadPicture() {
-
-        slikaID = UUID.randomUUID().toString();
-        StorageReference riversRef = storageReference.child("Profilne_slike/" + slikaID);
-
-        Uri myUri = Uri.parse(Slika);
-        //smanjivanje slike profila
-        Bitmap bmp = null;
-        try {
-            bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), myUri);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
-        byte[] data = baos.toByteArray();
-        riversRef.putBytes(data)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Snackbar.make(findViewById(android.R.id.content), "Slika uploadana.", Snackbar.LENGTH_LONG).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Slika nije uploadana.", Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 }
-/**
- * AKO NIJE POTREBNO MOŽEMO OBRISATI
-        riversRef.putBytes(data)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Snackbar.make(findViewById(android.R.id.content), "Slika uploadana.", Snackbar.LENGTH_LONG).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(getApplicationContext(), "Slika nije uploadana.", Toast.LENGTH_LONG).show();
-                    }
-                });
-    }
-}
-*/

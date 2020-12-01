@@ -14,6 +14,7 @@
     <string name="email_unconfirmed">Email is not confirmed.</string>
     <string name="authentication_failed">Authentication failed!</string>
     <string name="invalid_password_login">Invalid password!</string>
+    <string name="enter_username">Enter your new username</string>
     >>>>>>> 512dae518b1901f8ae4a72739a40f614df43328c
 
     //Registration
@@ -50,12 +51,14 @@
 
     <string name="no_name">Please enter your name!</string>
     <string name="no_surname">Please enter your surname!</string>
+    <string name="no_username">Please enter your username!</string>
     <string name="no_email">Please enter an e-mail!</string>
     <string name="username_taken">This username is already taken!</string>
     <string name="no_password">Please enter a password!</string>
     <string name="invalid_password">Password must be at least 6 characters long containing at least one capital letter and one number!</string>
     <string name="invalid_email">Email is not valid, please check it!</string>
     <string name="invalid_password_repeat">Repeated password is incorrect!</string>
+    <string name="emailverified">Email is not verified!</string>
 
     <string name="about_tree">Tell the story about the tree:</string>
     <string name="plant_tree">PLANT TREE</string>

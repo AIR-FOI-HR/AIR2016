@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TreeApp">
         <activity android:name=".AddTree"></activity>
-        <activity android:name=".PassReset" />
+        <activity android:name="auth.PassReset" />
         <activity android:name=".LoginTest" />
         <activity android:name=".RegistrationStep4" />
         <activity android:name=".RegistrationStep3" />
