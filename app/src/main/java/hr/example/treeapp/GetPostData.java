@@ -17,23 +17,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-<<<<<<< HEAD
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
-=======
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
->>>>>>> 5cba1ba0dd54ea6137a2f7cf806731d3c6a53ea9
+
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 
 import addTreeLogic.LatLng;
 
-import static android.content.ContentValues.TAG;
 
 public class GetPostData {
 
@@ -113,8 +105,4 @@ public class GetPostData {
                 });
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 5cba1ba0dd54ea6137a2f7cf806731d3c6a53ea9
 }
