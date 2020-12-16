@@ -1,12 +1,15 @@
 package hr.example.treeapp;
 
 import android.content.Context;
+import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -15,7 +18,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import auth.UsernameAvailabilityCallback;
@@ -28,7 +33,6 @@ public class GetPostData {
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private StorageReference storageReference = firebaseStorage.getReference();
     public FirebaseUser user;
-    private Context context;
 
     List<Comment> listaKomentara = new ArrayList<Comment>();
 
@@ -42,7 +46,7 @@ public class GetPostData {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if(document.exists()){
-                                Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double)document.get("Latitude"), (double)document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (int)document.get("Broj_lajkova"));
+                                Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double)document.get("Latitude"), (double)document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (long)document.get("Broj_lajkova"));
                                 postCallback.onCallback(post);
                             }
                         } else {
@@ -72,4 +76,6 @@ public class GetPostData {
                     }
                 });
     }
+
+
 }
