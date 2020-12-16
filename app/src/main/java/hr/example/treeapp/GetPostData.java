@@ -32,7 +32,6 @@ public class GetPostData {
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private StorageReference storageReference = firebaseStorage.getReference();
     public FirebaseUser user;
-    private Context context;
 
     List<Comment> listaKomentara = new ArrayList<Comment>();
 
@@ -46,7 +45,7 @@ public class GetPostData {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if(document.exists()){
-                                Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double)document.get("Latitude"), (double)document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (int)document.get("Broj_lajkova"));
+                                Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double)document.get("Latitude"), (double)document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (long)document.get("Broj_lajkova"));
                                 postCallback.onCallback(post);
                             }
                         } else {
@@ -56,26 +55,19 @@ public class GetPostData {
                 });
     }
 
-<<<<<<< HEAD
+
     /**
      * Metoda se koristi za dohvaćanje samo dijela podataka o objavi kako bi se smanjilo opterećenje baze
      * @param postCallback
      * @return vraća se lista svih lokacija zajedno s iz objave
      */
-    public void getPostsForMap (final PostLocationcallback postCallback){
+    public void getPostsForMap (final PostLocationcallback postCallback) {
         List<PostLocation> listaLokacija = new ArrayList<>();
         firebaseFirestore.collection("Objave")
-=======
-    public void getPostComments(String postId, final CommentCallback commentCallback) {
-        firebaseFirestore.collection("Objave")
-                .document(postId)
-                .collection("Komentari")
->>>>>>> ff136fa8042e533907bae8c0ba2e080f683ab19c
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-<<<<<<< HEAD
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 LatLng postLatLag = new LatLng((double)document.get("Latitude"), (double)document.get("Longitude"));
@@ -90,18 +82,26 @@ public class GetPostData {
                     }
                 });
 
-=======
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Comment comment = new Comment(document.getId() ,document.getString("Korisnik_ID"), document.getString("Tekst"), document.getString("Datum"));
-                                    listaKomentara.add(comment);
-                                }
-                                commentCallback.onCallback(listaKomentara);
-                            } else {
-                                commentCallback.onCallback(null);
+    }
+    public void getPostComments(String postId, final CommentCallback commentCallback) {
+        firebaseFirestore.collection("Objave")
+                .document(postId)
+                .collection("Komentari")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Comment comment = new Comment(document.getId() ,document.getString("Korisnik_ID"), document.getString("Tekst"), document.getString("Datum"));
+                                listaKomentara.add(comment);
                             }
+                            commentCallback.onCallback(listaKomentara);
+                        } else {
+                            commentCallback.onCallback(null);
+                        }
                     }
                 });
->>>>>>> ff136fa8042e533907bae8c0ba2e080f683ab19c
     }
+
 }

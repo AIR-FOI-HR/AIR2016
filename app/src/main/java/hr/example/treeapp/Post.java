@@ -8,14 +8,10 @@ public class Post {
     double longitute;
     String Opis;
     String URL_slike;
-    int Broj_lajkova;
+    long Broj_lajkova;
 
-<<<<<<< HEAD
-    public Post(){}
-    public Post(String ID_objava, String korisnik_ID, String datum_objave, double latitude, double longitute, String opis, String URL_slike) {
-=======
-    public Post(String ID_objava, String korisnik_ID, String datum_objave, double latitude, double longitute, String opis, String URL_slike, int broj_lajkova) {
->>>>>>> ff136fa8042e533907bae8c0ba2e080f683ab19c
+    public Post(String ID_objava, String korisnik_ID, String datum_objave, double latitude, double longitute, String opis, String URL_slike, long broj_lajkova) {
+
         this.ID_objava = ID_objava;
         Korisnik_ID = korisnik_ID;
         Datum_objave = datum_objave;
@@ -26,11 +22,11 @@ public class Post {
         Broj_lajkova = broj_lajkova;
     }
 
-    public int getBroj_lajkova() {
+    public long getBroj_lajkova() {
         return Broj_lajkova;
     }
 
-    public void setBroj_lajkova(int broj_lajkova) {
+    public void setBroj_lajkova(long broj_lajkova) {
         Broj_lajkova = broj_lajkova;
     }
 
