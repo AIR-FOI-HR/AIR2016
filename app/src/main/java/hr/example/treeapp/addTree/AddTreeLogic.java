@@ -28,6 +28,7 @@ public class AddTreeLogic {
     private StorageReference storageReference = firebaseStorage.getReference();
 
     String slikaID;
+    int Broj_lajkova = 0;
 
     Context context;
 
@@ -52,6 +53,7 @@ public class AddTreeLogic {
             UploadPicture(image);
         }
         objava.put("URL_slike", slikaID);
+        objava.put("Broj_lajkova", Broj_lajkova);
         documentReference.set(objava);
     }
 
