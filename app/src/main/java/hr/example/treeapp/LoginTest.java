@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 import static android.content.ContentValues.TAG;
 
 public class LoginTest extends AppCompatActivity {
@@ -47,6 +49,20 @@ public class LoginTest extends AppCompatActivity {
                 }
                 else{
                     Log.d("dokument", "Nema dokumenta.");
+                }
+            }
+        });
+
+        getPostData.getPostComments("oEyhr7OjvnDKB5vuA8ie", new CommentCallback() {
+            @Override
+            public void onCallback(List<Comment> comment) {
+                if (comment != null) {
+                    for(Comment c : comment){
+                        Log.d("komentar", "komentari:" + c.getTekst());
+                    }
+                }
+                else{
+                    Log.d("komentar", "Nema komentara.");
                 }
             }
         });

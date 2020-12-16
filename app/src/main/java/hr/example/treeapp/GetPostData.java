@@ -30,6 +30,8 @@ public class GetPostData {
     public FirebaseUser user;
     private Context context;
 
+    List<Comment> listaKomentara = new ArrayList<Comment>();
+
     public void getPost(String postId, final PostCallback postCallback) {
         firebaseFirestore.collection("Objave")
                 .document(postId)
@@ -46,6 +48,27 @@ public class GetPostData {
                         } else {
                             postCallback.onCallback(null);
                         }
+                    }
+                });
+    }
+
+    public void getPostComments(String postId, final CommentCallback commentCallback) {
+        firebaseFirestore.collection("Objave")
+                .document(postId)
+                .collection("Komentari")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Comment comment = new Comment(document.getId() ,document.getString("Korisnik_ID"), document.getString("Tekst"));
+                                    listaKomentara.add(comment);
+                                }
+                                commentCallback.onCallback(listaKomentara);
+                            } else {
+                                commentCallback.onCallback(null);
+                            }
                     }
                 });
     }
