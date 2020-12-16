@@ -7,7 +7,6 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -18,12 +17,21 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+<<<<<<< HEAD
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+=======
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+>>>>>>> 5cba1ba0dd54ea6137a2f7cf806731d3c6a53ea9
 
 import androidx.annotation.NonNull;
-import auth.UsernameAvailabilityCallback;
+import androidx.annotation.Nullable;
+
+import addTreeLogic.LatLng;
 
 import static android.content.ContentValues.TAG;
 
@@ -56,6 +64,34 @@ public class GetPostData {
                 });
     }
 
+
+    /**
+     * Metoda se koristi za dohvaćanje samo dijela podataka o objavi kako bi se smanjilo opterećenje baze
+     * @param postCallback
+     * @return vraća se lista svih lokacija zajedno s iz objave
+     */
+    public void getPostsForMap (final PostLocationcallback postCallback) {
+        List<PostLocation> listaLokacija = new ArrayList<>();
+        firebaseFirestore.collection("Objave")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                LatLng postLatLag = new LatLng((double)document.get("Latitude"), (double)document.get("Longitude"));
+                                String postId = document.get("ID_objava").toString();
+                                PostLocation postLocation= new PostLocation(postLatLag, postId);
+                                listaLokacija.add(postLocation);
+                            }
+                            postCallback.onCallbackList(listaLokacija);
+                        } else {
+                            postCallback.onCallbackList(null);
+                        }
+                    }
+                });
+
+    }
     public void getPostComments(String postId, final CommentCallback commentCallback) {
         firebaseFirestore.collection("Objave")
                 .document(postId)
@@ -64,18 +100,21 @@ public class GetPostData {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Comment comment = new Comment(document.getId() ,document.getString("Korisnik_ID"), document.getString("Tekst"), document.getString("Datum"));
-                                    listaKomentara.add(comment);
-                                }
-                                commentCallback.onCallback(listaKomentara);
-                            } else {
-                                commentCallback.onCallback(null);
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Comment comment = new Comment(document.getId() ,document.getString("Korisnik_ID"), document.getString("Tekst"), document.getString("Datum"));
+                                listaKomentara.add(comment);
                             }
+                            commentCallback.onCallback(listaKomentara);
+                        } else {
+                            commentCallback.onCallback(null);
+                        }
                     }
                 });
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5cba1ba0dd54ea6137a2f7cf806731d3c6a53ea9
 }

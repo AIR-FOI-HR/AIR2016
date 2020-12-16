@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.MapView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -39,32 +40,41 @@ public class LoginTest extends AppCompatActivity {
 
     public void addTree (View view){
         /*Intent open = new Intent(LoginTest.this, AddTree.class);
-        startActivity(open);*/
+            startActivity(open);*/
 
-        getPostData.getPost("oEyhr7OjvnDKB5vuA8ie", new PostCallback() {
-            @Override
-            public void onCallback(Post post) {
-                if (post != null) {
-                    Log.d("dokument", "Opis dokumenta" + post.getOpis());
-                }
-                else{
-                    Log.d("dokument", "Nema dokumenta.");
-                }
-            }
-        });
-
-        getPostData.getPostComments("oEyhr7OjvnDKB5vuA8ie", new CommentCallback() {
-            @Override
-            public void onCallback(List<Comment> comment) {
-                if (comment != null) {
-                    for(Comment c : comment){
-                        Log.d("komentar", "komentari:" + c.getTekst());
+            getPostData.getPost("oEyhr7OjvnDKB5vuA8ie", new PostCallback() {
+                @Override
+                public void onCallback(Post post) {
+                    if (post != null) {
+                        Log.d("dokument", "Opis dokumenta" + post.getOpis());
+                    }
+                    else{
+                        Log.d("dokument", "Nema dokumenta.");
                     }
                 }
-                else{
-                    Log.d("komentar", "Nema komentara.");
+            });
+
+            getPostData.getPostComments("oEyhr7OjvnDKB5vuA8ie", new CommentCallback() {
+                @Override
+                public void onCallback(List<Comment> comment) {
+                    if (comment != null) {
+                        for(Comment c : comment){
+                            Log.d("komentar", "komentari:" + c.getTekst());
+                        }
+                    }
+                    else{
+                        Log.d("komentar", "Nema komentara.");
+                    }
                 }
-            }
-        });
+            });
+    }
+
+
+    public void mapView (View view){
+        Intent openMapview = new Intent(
+                LoginTest.this,
+                PostMapView.class
+        );
+        startActivity(openMapview);
     }
 }
