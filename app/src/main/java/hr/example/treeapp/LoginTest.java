@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.MapView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -50,5 +51,12 @@ public class LoginTest extends AppCompatActivity {
                 }
             }
         });
+    }
+    public void mapView (View view){
+        Intent openMapview = new Intent(
+                LoginTest.this,
+                PostMapView.class
+        );
+        startActivity(openMapview);
     }
 }

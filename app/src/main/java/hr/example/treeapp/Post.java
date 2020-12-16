@@ -9,6 +9,7 @@ public class Post {
     String Opis;
     String URL_slike;
 
+    public Post(){}
     public Post(String ID_objava, String korisnik_ID, String datum_objave, double latitude, double longitute, String opis, String URL_slike) {
         this.ID_objava = ID_objava;
         Korisnik_ID = korisnik_ID;
