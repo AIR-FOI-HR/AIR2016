@@ -4,11 +4,21 @@ public class Comment {
     String Komentar_ID;
     String Korisnik_ID;
     String Tekst;
+    String Datum;
 
-    public Comment(String komentar_ID, String korisnik_ID, String tekst) {
+    public Comment(String komentar_ID, String korisnik_ID, String tekst, String datum) {
         Komentar_ID = komentar_ID;
         Korisnik_ID = korisnik_ID;
         Tekst = tekst;
+        Datum = datum;
+    }
+
+    public String getDatum() {
+        return Datum;
+    }
+
+    public void setDatum(String datum) {
+        Datum = datum;
     }
 
     public String getKomentar_ID() {

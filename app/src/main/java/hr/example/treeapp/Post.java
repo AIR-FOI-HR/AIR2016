@@ -8,8 +8,9 @@ public class Post {
     double longitute;
     String Opis;
     String URL_slike;
+    int Broj_lajkova;
 
-    public Post(String ID_objava, String korisnik_ID, String datum_objave, double latitude, double longitute, String opis, String URL_slike) {
+    public Post(String ID_objava, String korisnik_ID, String datum_objave, double latitude, double longitute, String opis, String URL_slike, int broj_lajkova) {
         this.ID_objava = ID_objava;
         Korisnik_ID = korisnik_ID;
         Datum_objave = datum_objave;
@@ -17,6 +18,15 @@ public class Post {
         this.longitute = longitute;
         Opis = opis;
         this.URL_slike = URL_slike;
+        Broj_lajkova = broj_lajkova;
+    }
+
+    public int getBroj_lajkova() {
+        return Broj_lajkova;
+    }
+
+    public void setBroj_lajkova(int broj_lajkova) {
+        Broj_lajkova = broj_lajkova;
     }
 
     public String getID_objava() {

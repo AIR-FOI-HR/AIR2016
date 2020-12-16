@@ -42,7 +42,7 @@ public class GetPostData {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if(document.exists()){
-                                Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double)document.get("Latitude"), (double)document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString());
+                                Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double)document.get("Latitude"), (double)document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (int)document.get("Broj_lajkova"));
                                 postCallback.onCallback(post);
                             }
                         } else {
@@ -62,7 +62,7 @@ public class GetPostData {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Comment comment = new Comment(document.getId() ,document.getString("Korisnik_ID"), document.getString("Tekst"));
+                                    Comment comment = new Comment(document.getId() ,document.getString("Korisnik_ID"), document.getString("Tekst"), document.getString("Datum"));
                                     listaKomentara.add(comment);
                                 }
                                 commentCallback.onCallback(listaKomentara);
