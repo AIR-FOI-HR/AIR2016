@@ -48,4 +48,13 @@ dependencies {
 
     //cropp tool
     implementation 'com.github.yalantis:ucrop:2.2.5'
+
+    //recyclewview and cardview
+    def recyclerview_version = "1.0.0"
+    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+    implementation "androidx.recyclerview:recyclerview-selection:$recyclerview_version"
+    implementation "androidx.cardview:cardview:$recyclerview_version"
+
+    //picasso
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 }

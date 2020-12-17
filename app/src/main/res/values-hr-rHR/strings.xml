@@ -69,7 +69,8 @@
     <string name="give_permissions">Daj dopuštenje</string>
     <string name="permissions_required">Potrebno dopuštenje</string>
     <string name="crop_image">Uredi fotografiju</string>
-
+    <string name="username_post">Korisničko ime</string>
+    <string name="post_description_post">Opis objave</string>
 
 
 </resources>

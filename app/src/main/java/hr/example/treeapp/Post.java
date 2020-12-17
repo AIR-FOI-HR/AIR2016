@@ -5,21 +5,32 @@ public class Post {
     String Korisnik_ID;
     String Datum_objave;
     double Latitude;
-    double longitute;
+    double longitude;
     String Opis;
     String URL_slike;
     long Broj_lajkova;
 
 
-    public Post(String ID_objava, String korisnik_ID, String datum_objave, double latitude, double longitute, String opis, String URL_slike, long broj_lajkova) {
+    public Post(String ID_objava, String korisnik_ID, String datum_objave, double latitude, double longitude, String opis, String URL_slike, long broj_lajkova) {
         this.ID_objava = ID_objava;
-        Korisnik_ID = korisnik_ID;
-        Datum_objave = datum_objave;
-        Latitude = latitude;
-        this.longitute = longitute;
-        Opis = opis;
+        this.Korisnik_ID = korisnik_ID;
+        this.Datum_objave = datum_objave;
+        this.Latitude = latitude;
+        this.longitude = longitude;
+        this.Opis = opis;
         this.URL_slike = URL_slike;
-        Broj_lajkova = broj_lajkova;
+        this.Broj_lajkova = broj_lajkova;
+    }
+
+    public Post(Post post) {
+        this.ID_objava = post.ID_objava;
+        this.Korisnik_ID = post.Korisnik_ID;
+        this.Datum_objave = post.Datum_objave;
+        this.Latitude = post.Latitude;
+        this.longitude = post.longitude;
+        this.Opis = post.Opis;
+        this.URL_slike = post.URL_slike;
+        this.Broj_lajkova = post.Broj_lajkova;
     }
 
 
@@ -63,12 +74,12 @@ public class Post {
         Latitude = latitude;
     }
 
-    public double getLongitute() {
-        return longitute;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setLongitute(double longitute) {
-        this.longitute = longitute;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public String getOpis() {
