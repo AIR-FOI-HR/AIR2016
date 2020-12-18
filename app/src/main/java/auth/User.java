@@ -8,10 +8,10 @@ public class User {
     public String prezime;
     public String email;
     public String profilnaSlika;
-    public int uloga;
+    public long uloga;
     public String korisnickoIme;
-    public Date datumRodenja;
-    public int bodovi;
+    public String datumRodenja;
+    public long bodovi;
 
     public User(){}
 
@@ -19,8 +19,8 @@ public class User {
         this.korisnickoIme = korime;
     }
 
-    User(String uid, String ime, String prezime, String email,
-    String profilnaSlika, int uloga, String korisnickoIme, Date datumRodenja, int bodovi)
+    public User(String uid, String ime, String prezime, String email,
+    String profilnaSlika, long uloga, String korisnickoIme, String datumRodenja, long bodovi)
     {
         this.uid=uid;
         this.ime=ime;
