@@ -1,4 +1,4 @@
-package recyclerview;
+package com.example.timeline;
 
 import android.content.Context;
 import android.util.Log;
@@ -6,29 +6,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import auth.User;
-import hr.example.treeapp.Post;
-import hr.example.treeapp.PostCallback;
-import hr.example.treeapp.R;
-import hr.example.treeapp.UserCallback;
-import hr.example.treeapp.UserRepository;
+import com.example.core.entities.User;
+import com.example.core.entities.Post;
 
 public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
     private ArrayList<PostItem> postItemList;
+    private ArrayList<UserItem> userItemList;
     private Context context;
-    UserRepository userRepository;
 
-    public PostRecyclerAdapter(@NonNull List<PostItem> postItemList, Context context) {
+    public PostRecyclerAdapter(@NonNull List<PostItem> postItemList, List<UserItem> userItemList, Context context) {
         this.postItemList = (ArrayList<PostItem>) postItemList;
+        this.userItemList = (ArrayList<UserItem>) userItemList;
         this.context = context;
-        userRepository = new UserRepository();
     }
 
     @NonNull
@@ -43,17 +37,14 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         final Post post = postItemList.get(position);
-        userRepository.getUser(post.getKorisnik_ID(), new UserCallback() {
-            @Override
-            public void onCallback(User user, StorageReference pictureReference) {
-                if (user != null) {
-                    holder.bindToData(post, user, pictureReference);
-                }
-                else{
-                    Log.d("greska", "Nema kreiranja nove objave.");
-                }
-            }
-        });
+        User user = new User();
+
+        for(User u : userItemList){
+            if(u.uid.equals(post.getKorisnik_ID()))
+                user = u;
+        }
+
+        holder.bindToData(post, user);
     }
 
     @Override

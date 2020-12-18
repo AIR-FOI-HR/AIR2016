@@ -1,2 +1,4 @@
+include ':timeline'
+include ':core'
 include ':app'
 rootProject.name = "TreeApp"

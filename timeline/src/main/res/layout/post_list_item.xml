@@ -61,7 +61,7 @@
                     android:id="@+id/post_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/post_description_post"
+                    android:text="@string/post_description"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:layout_marginStart="@dimen/general_margin"
                     android:layout_marginEnd="@dimen/general_margin">

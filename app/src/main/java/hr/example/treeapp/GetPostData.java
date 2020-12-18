@@ -1,14 +1,10 @@
 package hr.example.treeapp;
 
-import android.content.Context;
-import android.net.Uri;
-import android.text.TextUtils;
-import android.util.Log;
-
+import com.example.core.entities.Comment;
+import com.example.core.entities.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -126,4 +122,18 @@ public class GetPostData {
                 });
     }
 
+    //metoda za dohvat komentara jedne objave za prikaz objave
+            /*getPostData.getPostComments("oEyhr7OjvnDKB5vuA8ie", new CommentCallback() {
+            @Override
+            public void onCallback(List<Comment> comment) {
+                if (comment != null) {
+                    for(Comment c : comment){
+                        Log.d("komentar", "komentari:" + c.getTekst());
+                    }
+                }
+                else{
+                    Log.d("komentar", "Nema komentara.");
+                }
+            }
+        });*/
 }

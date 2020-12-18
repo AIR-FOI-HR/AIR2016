@@ -1,4 +1,4 @@
-package auth;
+package com.example.core.entities;
 
 import java.util.Date;
 
@@ -31,6 +31,19 @@ public class User {
         this.bodovi=bodovi;
         this.korisnickoIme=korisnickoIme;
         this.datumRodenja=datumRodenja;
+    }
+
+    public User(User user)
+    {
+        this.uid=user.uid;
+        this.ime=user.ime;
+        this.prezime=user.prezime;
+        this.email=user.email;
+        this.profilnaSlika=user.profilnaSlika;
+        this.uloga=user.uloga;
+        this.bodovi=user.bodovi;
+        this.korisnickoIme=user.korisnickoIme;
+        this.datumRodenja=user.datumRodenja;
     }
 
 }

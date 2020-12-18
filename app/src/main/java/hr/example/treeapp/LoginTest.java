@@ -2,9 +2,10 @@ package hr.example.treeapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-import fragments.PostListFragment;
+import managers.DataPresentersManager;
 
-import android.content.Context;
+import com.example.timeline.PostListFragment;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -41,6 +42,7 @@ public class LoginTest extends AppCompatActivity {
     public void addTree (View view){
         /*Intent open = new Intent(LoginTest.this, AddTree.class);
             startActivity(open);*/
+        DataPresentersManager dataPresentersManager = new DataPresentersManager();
     }
 
 

@@ -1,4 +1,4 @@
-package hr.example.treeapp;
+package com.example.core.entities;
 
 public class Comment {
     String Komentar_ID;

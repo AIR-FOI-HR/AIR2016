@@ -80,5 +80,6 @@
     <string name="title_activity_post_map_view">Map</string>
     <string name="username_post">Username</string>
     <string name="post_description_post">Post description</string>
+    <string name="module_name">Timeline view</string>
     >>>>>>> feature/registration-design
 </resources>
