@@ -57,7 +57,7 @@ public class LoginTest extends AppCompatActivity {
     }
 
     private void loadData(){
-        getPostData.getPost("oEyhr7OjvnDKB5vuA8ie", new PostCallback() {
+      /*  getPostData.getPost("oEyhr7OjvnDKB5vuA8ie", new PostCallback() {
             @Override
             public void onCallback(Post post) {
                 if (post != null) {
@@ -68,6 +68,23 @@ public class LoginTest extends AppCompatActivity {
                     List<PostItem> postItems = new ArrayList<>();
                     for(Post p : postList){
                         postItems.add(new PostItem(post));
+                    }
+                    recyclerView.setAdapter(new PostRecyclerAdapter(postItems, context));
+                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                }
+                else{
+                    Log.d("dokument", "Nema dokumenta objave.");
+                }
+            }
+        });*/
+
+        getPostData.getAllPosts(new AllPostsCallback() {
+            @Override
+            public void onCallback(List<Post> postList) {
+                if (postList != null) {
+                    List<PostItem> postItems = new ArrayList<>();
+                    for(Post p : postList){
+                        postItems.add(new PostItem(p));
                     }
                     recyclerView.setAdapter(new PostRecyclerAdapter(postItems, context));
                     recyclerView.setLayoutManager(new LinearLayoutManager(context));

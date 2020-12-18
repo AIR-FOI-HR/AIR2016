@@ -35,6 +35,7 @@ public class GetPostData {
     public FirebaseUser user;
 
     List<Comment> listaKomentara = new ArrayList<Comment>();
+    List<Post> listaObjava = new ArrayList<>();
 
     public void getPost(String postId, final PostCallback postCallback) {
         firebaseFirestore.collection("Objave")
@@ -100,6 +101,26 @@ public class GetPostData {
                             commentCallback.onCallback(listaKomentara);
                         } else {
                             commentCallback.onCallback(null);
+                        }
+                    }
+                });
+    }
+
+    public void getAllPosts(final AllPostsCallback allPostsCallback) {
+        firebaseFirestore.collection("Objave")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            listaObjava.clear();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double)document.get("Latitude"), (double)document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (long)document.get("Broj_lajkova"));
+                                listaObjava.add(post);
+                            }
+                            allPostsCallback.onCallback(listaObjava);
+                        } else {
+                            allPostsCallback.onCallback(null);
                         }
                     }
                 });
