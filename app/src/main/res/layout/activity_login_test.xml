@@ -56,16 +56,11 @@
         app:layout_constraintTop_toBottomOf="@+id/testAddTreeButton"
         app:layout_constraintVertical_bias="0.052" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/main_recycler"
-        android:layout_width="411dp"
-        android:layout_height="412dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapView">
-
-    </androidx.recyclerview.widget.RecyclerView>
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/mapView"
+        tools:layout_editor_absoluteX="-16dp"></FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
