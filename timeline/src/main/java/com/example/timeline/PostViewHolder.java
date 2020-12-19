@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,12 +31,12 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         username.setText(user.korisnickoIme);
         postDescription.setText(post.getOpis());
 
-        Picasso.with(itemView.getContext())
-                .load(post.getURL_slike())
+        Glide.with(itemView.getContext())
+                .load(post.getSlika())
                 .into(postImage);
 
-        Picasso.with(itemView.getContext())
-                .load(user.profilnaSlika)
+        Glide.with(itemView.getContext())
+                .load(user.getSlika())
                 .into(profileImage);
     }
 }

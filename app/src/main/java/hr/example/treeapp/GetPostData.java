@@ -1,8 +1,11 @@
 package hr.example.treeapp;
 
+import android.graphics.BitmapFactory;
+
 import com.example.core.entities.Comment;
 import com.example.core.entities.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -120,6 +123,16 @@ public class GetPostData {
                         }
                     }
                 });
+    }
+
+    public void getPostImage (String imageID, final PostImageCallback postImageCallback){
+        StorageReference image= storageReference.child("Objave/"+imageID);
+        image.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                postImageCallback.onCallback(BitmapFactory.decodeByteArray(bytes,0, bytes.length));
+            }
+        });
     }
 
     //metoda za dohvat komentara jedne objave za prikaz objave

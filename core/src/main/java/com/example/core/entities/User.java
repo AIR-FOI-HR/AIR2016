@@ -1,5 +1,7 @@
 package com.example.core.entities;
 
+import android.graphics.Bitmap;
+
 import java.util.Date;
 
 public class User {
@@ -12,6 +14,87 @@ public class User {
     public String korisnickoIme;
     public String datumRodenja;
     public long bodovi;
+    Bitmap Slika;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getIme() {
+        return ime;
+    }
+
+    public void setIme(String ime) {
+        this.ime = ime;
+    }
+
+    public String getPrezime() {
+        return prezime;
+    }
+
+    public void setPrezime(String prezime) {
+        this.prezime = prezime;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getProfilnaSlika() {
+        return profilnaSlika;
+    }
+
+    public void setProfilnaSlika(String profilnaSlika) {
+        this.profilnaSlika = profilnaSlika;
+    }
+
+    public long getUloga() {
+        return uloga;
+    }
+
+    public void setUloga(long uloga) {
+        this.uloga = uloga;
+    }
+
+    public String getKorisnickoIme() {
+        return korisnickoIme;
+    }
+
+    public void setKorisnickoIme(String korisnickoIme) {
+        this.korisnickoIme = korisnickoIme;
+    }
+
+    public String getDatumRodenja() {
+        return datumRodenja;
+    }
+
+    public void setDatumRodenja(String datumRodenja) {
+        this.datumRodenja = datumRodenja;
+    }
+
+    public long getBodovi() {
+        return bodovi;
+    }
+
+    public void setBodovi(long bodovi) {
+        this.bodovi = bodovi;
+    }
+
+    public Bitmap getSlika() {
+        return Slika;
+    }
+
+    public void setSlika(Bitmap slika) {
+        Slika = slika;
+    }
 
     public User(){}
 
