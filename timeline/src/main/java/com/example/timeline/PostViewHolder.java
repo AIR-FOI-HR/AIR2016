@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.core.entities.User;
 import com.example.core.entities.Post;
+import com.squareup.picasso.Picasso;
 
 public class PostViewHolder extends RecyclerView.ViewHolder {
     ImageView postImage;
@@ -35,8 +36,14 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
                 .load(post.getSlika())
                 .into(postImage);
 
-        Glide.with(itemView.getContext())
-                .load(user.getSlika())
-                .into(profileImage);
+        if(user.getProfilnaSlika().contains("https://")) {
+            Picasso.with(itemView.getContext())
+                    .load(user.getProfilnaSlika())
+                    .into(profileImage);
+        } else {
+            Glide.with(itemView.getContext())
+                    .load(user.getSlika())
+                    .into(profileImage);
+        }
     }
 }

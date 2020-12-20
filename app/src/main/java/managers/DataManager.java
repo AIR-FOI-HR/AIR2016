@@ -109,9 +109,10 @@ public class DataManager {
 
     private void fillUsersWithBitmaps(){
         for (User u : users) {
-            userRepository.getUserImage(u.getProfilnaSlika(), new UserImageCallback() {
-                @Override
-                public void onCallback(Bitmap slika) {
+            if (!(u.getProfilnaSlika().contains("https://"))) {
+                userRepository.getUserImage(u.getProfilnaSlika(), new UserImageCallback() {
+                    @Override
+                    public void onCallback(Bitmap slika) {
                         u.setSlika(slika);
                         numberOfUsers++;
                         if (numberOfUsers == users.size()) {
@@ -119,8 +120,15 @@ public class DataManager {
                             sendDataToPresenter(presenter, context);
                         }
 
+                    }
+                });
+            } else{
+                numberOfUsers++;
+                if (numberOfUsers == users.size()) {
+                    userBitmapsReady = true;
+                    sendDataToPresenter(presenter, context);
                 }
-            });
+            }
         }
     }
 

@@ -70,8 +70,8 @@ public class UserRepository {
                 });
     }
 
-    public void getUserImage (String userID, final UserImageCallback userImageCallback){
-        StorageReference image= storageReference.child("Profilne_slike/"+userID);
+    public void getUserImage (String imageID, final UserImageCallback userImageCallback){
+        StorageReference image= storageReference.child("Profilne_slike/"+imageID);
         image.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
