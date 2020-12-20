@@ -45,14 +45,15 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
         final Post post = postItemList.get(position);
         userRepository.getUser(post.getKorisnik_ID(), new UserCallback() {
             @Override
-            public void onCallback(User user, StorageReference pictureReference) {
+            public void onCallback(User user) {
                 if (user != null) {
-                    holder.bindToData(post, user, pictureReference);
+                    holder.bindToData(post, user);
                 }
                 else{
                     Log.d("greska", "Nema kreiranja nove objave.");
                 }
             }
+
         });
     }
 

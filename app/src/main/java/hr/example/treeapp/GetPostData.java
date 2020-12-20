@@ -1,11 +1,13 @@
 package hr.example.treeapp;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -105,4 +107,13 @@ public class GetPostData {
                 });
     }
 
+    public void getPostImage (String imageName, final ImageCallback imageCallback){
+        StorageReference image= storageReference.child("Objave/"+imageName);
+        image.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                imageCallback.onCallbackList(BitmapFactory.decodeByteArray(bytes,0, bytes.length));
+            }
+        });
+    }
 }

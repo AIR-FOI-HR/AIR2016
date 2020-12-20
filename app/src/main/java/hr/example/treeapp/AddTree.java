@@ -41,7 +41,6 @@ import addTreeLogic.ImageManipulation;
 import addTreeLogic.LatLng;
 import addTreeLogic.MapsLogic;
 import addTreeLogic.PermissionsChecks;
-import hr.example.treeapp.addTree.AddTreeLogic;
 
 public class AddTree extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, LocationListener {
     TextView treeDescription;
@@ -77,8 +76,6 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     private MapsLogic mapsLogic;
     private final HashtagsLogic hashtagsLogic = new HashtagsLogic();
 
-    AddTreeLogic addTreeLogic;
-
     @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +87,6 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         builder = new AlertDialog.Builder(AddTree.this);
         imageManipulation = new ImageManipulation(this);
         permissionsChecks = new PermissionsChecks(this);
-        addTreeLogic = new AddTreeLogic(this);
 
         setUpPermissionsRequest();
 
@@ -109,22 +105,21 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         editor = sharedPref.edit();
         pressedLater = sharedPref.getBoolean(getResources().getString(R.string.later), false);
         pressedDontAskAgain = sharedPref.getBoolean(getResources().getString(R.string.dont_ask_again), false);
-        //tu radi problem nakon deinstalacije ako se kod davanja dopuštenja stisne kasnije, crasha se kod sljedećeg pokretanja
         laterPressedTime = sharedPref.getLong(getResources().getString(R.string.later_pressed_time), 0);
     }
 
     @SuppressLint("MissingPermission")
     private void verifyPermissions() {
         if (permissionsChecks.checkLocationPermissions()){
-                    //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, this);
-                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                if (locationManager != null) {
-                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, this);
-                        locationPremsOk=true;
-                    }
+            //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, this);
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            if (locationManager != null) {
+                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1000, this);
+                    locationPremsOk=true;
                 }
+            }
             //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         }
@@ -231,7 +226,6 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         builder.setCancelable(false)
                 .setPositiveButton(R.string.later, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
                         // Action for 'Later'
                         //Saving later boolean value as true, also saving time of pressed later
                         Date dateObj = new Date();
@@ -317,13 +311,13 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                 File f = new File(imageManipulation.currentPhotoPath);
                 Uri urif = Uri.fromFile(f);
                 if (urif!=null);
-                    imageManipulation.startCrop(urif);
+                imageManipulation.startCrop(urif);
             }
 
             else if (requestCode == 2) {
                 filePath = data.getData();
                 if (filePath!=null);
-                    imageManipulation.startCrop(filePath);
+                imageManipulation.startCrop(filePath);
             }
         }
         if (requestCode==UCrop.REQUEST_CROP && resultCode==RESULT_OK){
@@ -354,16 +348,14 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     /**
      * U ovoj metodi se poziva sloj poslovne logike preko kojeg se objava pohranjuje u Firebase
      */
-    public void uploadNewPost(View v) {
+    public void uploadImage() {
         LatLng treeLocation = getPinedLocation(); //lokacija pin-a
         Uri image= finalImageUri; //uri of a cropped image
-        String treeDesc = treeDescription.getText().toString().trim();
+        String treeDesc = treeDescription.toString().trim();
         List<String> treeTagsList = hashtags;
         Double treeLat = treeLocation.latitude;
         Double treeLng = treeLocation.longitude;
         //uzmi Uri image i pozovi metodu za upload
-
-        addTreeLogic.uploadPost(image, treeLat, treeLng, treeDesc);
     }
 
     @Override

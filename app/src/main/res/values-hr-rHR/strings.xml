@@ -71,6 +71,12 @@
     <string name="crop_image">Uredi fotografiju</string>
     <string name="username_post">Korisničko ime</string>
     <string name="post_description_post">Opis objave</string>
+    <string name="Error_loading_picture">Došlo je do pogreške prilikom dohvata slike!</string>
+    <string name="Error">Došlo je do pogreške!</string>
+    <string name="tree_description">Više o ovom stablu</string>
+    <string name="comments">Komentari</string>
+    <string name="description">Opis</string>
+    <string name="points">bodova</string>
 
 
 </resources>

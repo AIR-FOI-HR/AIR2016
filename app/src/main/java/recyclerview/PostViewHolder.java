@@ -29,13 +29,13 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         this.itemView = itemView;
     }
 
-    public void bindToData(Post post, User user, StorageReference pictureReference){
+    public void bindToData(Post post, User user){
         username.setText(user.korisnickoIme);
         postDescription.setText(post.getOpis());
 
-        Picasso.with(itemView.getContext())
+        /*Picasso.with(itemView.getContext())
                 .load(String.valueOf(pictureReference))
-                .into(postImage);
+                .into(postImage);*/
 
         Picasso.with(itemView.getContext())
                 .load(user.profilnaSlika)

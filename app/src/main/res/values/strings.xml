@@ -15,7 +15,7 @@
     <string name="authentication_failed">Authentication failed!</string>
     <string name="invalid_password_login">Invalid password!</string>
     <string name="enter_username">Enter your new username</string>
-    >>>>>>> 512dae518b1901f8ae4a72739a40f614df43328c
+
 
     //Registration
 
@@ -80,5 +80,14 @@
     <string name="title_activity_post_map_view">Map</string>
     <string name="username_post">Username</string>
     <string name="post_description_post">Post description</string>
-    >>>>>>> feature/registration-design
+    <string name="title_activity_single_post_view">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="Error">There was an error!</string>
+    <string name="Error_loading_picture">There was an error during image load!</string>
+    <string name="tree_description">More about this tree</string>
+    <string name="comments">Comments</string>
+    <string name="description">Description</string>
+    <string name="points">points</string>
+
 </resources>
