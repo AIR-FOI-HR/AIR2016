@@ -80,6 +80,6 @@ public class PostListFragment extends Fragment implements DataPresenter {
 
     @Override
     public Fragment getFragment() {
-        return null;
+        return this;
     }
 }
