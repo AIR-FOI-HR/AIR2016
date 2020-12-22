@@ -43,15 +43,20 @@ public class PostListFragment extends Fragment implements DataPresenter {
         tryToDisplayData();
 
         //testni podaci
-       /* dataReady = true;
+        dataReady = true;
         posts = new ArrayList<>();
-        posts.add(new Post("fdsdf", "fsdfs", "fsd", 846, 8456, "fsd", "fsd", 8546));
-        posts.add(new Post("aaaa", "fsdfs", "fsd", 846, 8456, "aaaa", "fsd", 8546));
+        posts.add(new Post("fdsdf", "fsdfs", "fsd", 846, 8456, "fsd", "https://i.pinimg.com/564x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg", 8546));
+        posts.add(new Post("aaaa", "fsdfs", "fsd", 846, 8456, "aaaa", "https://i.pinimg.com/564x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg", 8546));
+        posts.add(new Post("aaaa", "fsdfs", "fsd", 846, 8456, "aaaa", "https://i.pinimg.com/564x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg", 8546));
+        posts.add(new Post("aaaa", "fsdfs", "fsd", 846, 8456, "aaaa", "https://i.pinimg.com/564x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg", 8546));
+        posts.add(new Post("aaaa", "fsdfs", "fsd", 846, 8456, "aaaa", "https://i.pinimg.com/564x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg", 8546));
+        posts.add(new Post("aaaa", "fsdfs", "fsd", 846, 8456, "aaaa", "https://i.pinimg.com/564x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg", 8546));
+
 
         users = new ArrayList<>();
-        users.add(new User("fsdfs", "f", "gfd", "gf", "gfd", 48564, "fsdfs", "tr", 45));
-        users.add(new User("aaaaaa", "f", "gfd", "gf", "gfd", 48564, "aaaaa", "tr", 45));
-        tryToDisplayData();*/
+        users.add(new User("fsdfs", "f", "gfd", "gf", "https://i.pinimg.com/564x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg", 48564, "fsdfs", "tr", 45));
+        users.add(new User("aaaaaa", "f", "gfd", "gf", "https://i.pinimg.com/564x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg", 48564, "aaaaa", "tr", 45));
+        tryToDisplayData();
     }
 
     @Override

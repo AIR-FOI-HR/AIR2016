@@ -13,7 +13,8 @@ public class DataPresentersManager {
     DataPresenter currentPresenter = null;
     private Context context;
 
-    public DataPresentersManager(){
+    public DataPresentersManager(Context context){
+        this.context = context;
         loadPresenters();
     }
 

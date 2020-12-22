@@ -1,5 +1,6 @@
 package com.example.timeline;
 
+import android.media.Image;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,9 +33,16 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         username.setText(user.korisnickoIme);
         postDescription.setText(post.getOpis());
 
-        Glide.with(itemView.getContext())
-                .load(post.getSlika())
-                .into(postImage);
+        if(post.getURL_slike().contains("https://")) {
+            Picasso.with(itemView.getContext())
+                    .load(post.getURL_slike())
+                    .into(postImage);
+            postImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        } else {
+            Glide.with(itemView.getContext())
+                    .load(post.getSlika())
+                    .into(postImage);
+        }
 
         if(user.getProfilnaSlika().contains("https://")) {
             Picasso.with(itemView.getContext())
