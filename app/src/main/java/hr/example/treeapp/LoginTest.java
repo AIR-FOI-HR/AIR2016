@@ -55,6 +55,7 @@ public class LoginTest extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.presenters.get(finalI).getFragment()).commit();
+                    dataPresentersManager.loadFragment(finalI);
                 }
             });
             newLayout.addView(button);

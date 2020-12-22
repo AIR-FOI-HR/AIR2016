@@ -29,4 +29,9 @@ public class DataPresentersManager {
         DataManager dataManager = DataManager.getInstance();
         dataManager.loadData(firstPresenter, context);
     }
+
+    public void loadFragment(int i){
+        DataManager dataManager = DataManager.getInstance();
+        dataManager.loadData(presenters.get(i), context);
+    }
 }
