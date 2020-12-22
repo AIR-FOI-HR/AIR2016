@@ -1,5 +1,7 @@
 package com.example.core.entities;
 
+import android.graphics.Bitmap;
+
 public class Post {
     String ID_objava;
     String Korisnik_ID;
@@ -9,7 +11,7 @@ public class Post {
     String Opis;
     String URL_slike;
     long Broj_lajkova;
-
+    Bitmap Slika;
 
     public Post(String ID_objava, String korisnik_ID, String datum_objave, double latitude, double longitude, String opis, String URL_slike, long broj_lajkova) {
         this.ID_objava = ID_objava;
@@ -33,6 +35,13 @@ public class Post {
         this.Broj_lajkova = post.Broj_lajkova;
     }
 
+    public Bitmap getSlika() {
+        return Slika;
+    }
+
+    public void setSlika(Bitmap slika) {
+        Slika = slika;
+    }
 
     public long getBroj_lajkova() {
         return Broj_lajkova;

@@ -152,7 +152,7 @@ public class AuthRepository {
     private void googleSignInFirebaseUpdateUser(DocumentReference documentReference, Map<String, Object> korisnik) {
         documentReference.update("Ime", korisnik.get("Ime"));
         documentReference.update("Prezime", korisnik.get("Prezime"));
-        documentReference.update("Profilna_slika_id", korisnik.get("Slika_slika_ID"));
+        documentReference.update("Profilna_slika_ID", korisnik.get("Profilna_slika_ID"));
         documentReference.update("Datum_rodenja", korisnik.get("Datum_rodenja"));
         Log.i("info123", "Uspjesno azurirano!");
     }

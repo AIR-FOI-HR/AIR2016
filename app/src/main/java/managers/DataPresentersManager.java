@@ -29,6 +29,11 @@ public class DataPresentersManager {
         loadPresenters();
     }
 
+    public DataPresentersManager(Context context){
+        this.context = context;
+        loadPresenters();
+    }
+
     public DataPresentersManager(Context context, NavigationView navigationView, NavController navController) {
         this.context = context;
         this.navigationView = navigationView;

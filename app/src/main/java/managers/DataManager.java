@@ -1,6 +1,7 @@
 package managers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.example.core.DataPresenter;
@@ -17,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import hr.example.treeapp.AllPostsCallback;
 import hr.example.treeapp.AllUsersCallback;
 import hr.example.treeapp.GetPostData;
+import hr.example.treeapp.PostImageCallback;
+import hr.example.treeapp.UserImageCallback;
 import hr.example.treeapp.UserRepository;
 
 public class DataManager {
@@ -31,6 +34,10 @@ public class DataManager {
     private Context context;
     private List<Post> posts = new ArrayList<>();
     private List<User> users = new ArrayList<>();
+    private int numberOfPosts = 0;
+    private int numberOfUsers = 0;
+    private boolean postBitmapsReady = false;
+    private boolean userBitmapsReady = false;
 
     public static DataManager getInstance(){
         return instance;
@@ -39,6 +46,12 @@ public class DataManager {
     public void loadData(DataPresenter presenter, Context context){
         this.presenter = presenter;
         this.context = context;
+        numberOfPosts = 0;
+        numberOfUsers = 0;
+        postBitmapsReady = false;
+        userBitmapsReady = false;
+        postsReady = false;
+        usersReady = false;
 
         getPostData.getAllPosts(new AllPostsCallback() {
             @Override
@@ -46,6 +59,7 @@ public class DataManager {
                 if (postList != null) {
                     posts = postList;
                     postsReady = true;
+                    fillPostsWithBitmaps();
                     sendDataToPresenter(presenter, context);
                 }
                 else{
@@ -60,6 +74,7 @@ public class DataManager {
                 if (userList != null) {
                     users = userList;
                     usersReady = true;
+                    fillUsersWithBitmaps();
                     sendDataToPresenter(presenter, context);
                 }
                 else{
@@ -70,11 +85,52 @@ public class DataManager {
     }
 
     public void sendDataToPresenter(DataPresenter presenter, Context context){
-        if(postsReady && usersReady){
+        if(postsReady && usersReady && postBitmapsReady && userBitmapsReady){
             presenter.setData(posts, users);
         }
     }
 
+    private void fillPostsWithBitmaps(){
+        for (Post p : posts) {
+            getPostData.getPostImage(p.getURL_slike(), new PostImageCallback() {
+                @Override
+                public void onCallback(Bitmap slika) {
+                        p.setSlika(slika);
+                        numberOfPosts++;
+                        if(numberOfPosts == posts.size()) {
+                            postBitmapsReady = true;
+                            sendDataToPresenter(presenter, context);
+                        }
+
+                }
+            });
+        }
+    }
+
+    private void fillUsersWithBitmaps(){
+        for (User u : users) {
+            if (!(u.getProfilnaSlika().contains("https://"))) {
+                userRepository.getUserImage(u.getProfilnaSlika(), new UserImageCallback() {
+                    @Override
+                    public void onCallback(Bitmap slika) {
+                        u.setSlika(slika);
+                        numberOfUsers++;
+                        if (numberOfUsers == users.size()) {
+                            userBitmapsReady = true;
+                            sendDataToPresenter(presenter, context);
+                        }
+
+                    }
+                });
+            } else{
+                numberOfUsers++;
+                if (numberOfUsers == users.size()) {
+                    userBitmapsReady = true;
+                    sendDataToPresenter(presenter, context);
+                }
+            }
+        }
+    }
 
 
 }

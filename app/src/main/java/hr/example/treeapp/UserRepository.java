@@ -1,7 +1,10 @@
 package hr.example.treeapp;
 
+import android.graphics.BitmapFactory;
+
 import com.example.core.entities.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -37,7 +40,6 @@ public class UserRepository {
                             DocumentSnapshot document = task.getResult();
                             if(document.exists()){
                                 User user = new User(document.getId(), document.get("Ime").toString(), document.get("Prezime").toString(), document.get("E-mail").toString(), document.getString("Profilna_slika_ID"), (long)document.get("Uloga_ID"), document.get("Korisnicko_ime").toString(), document.get("Datum_rodenja").toString(), (long)document.get("Bodovi"));
-                                StorageReference pictureReference = firebaseStorage.getReferenceFromUrl("gs://air2016-firebase.appspot.com/Profilne_slike/" + document.get("Profilna_slika_ID").toString());
                                 userCallback.onCallback(user);
                             }
                         } else {
@@ -66,6 +68,16 @@ public class UserRepository {
                         }
                     }
                 });
+    }
+
+    public void getUserImage (String imageID, final UserImageCallback userImageCallback){
+        StorageReference image= storageReference.child("Profilne_slike/"+imageID);
+        image.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                userImageCallback.onCallback(BitmapFactory.decodeByteArray(bytes,0, bytes.length));
+            }
+        });
     }
 
 }

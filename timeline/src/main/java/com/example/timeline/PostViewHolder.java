@@ -1,15 +1,17 @@
 package com.example.timeline;
 
+import android.media.Image;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.core.entities.User;
 import com.example.core.entities.Post;
+import com.squareup.picasso.Picasso;
 
 public class PostViewHolder extends RecyclerView.ViewHolder {
     ImageView postImage;
@@ -31,12 +33,25 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         username.setText(user.korisnickoIme);
         postDescription.setText(post.getOpis());
 
-        Picasso.with(itemView.getContext())
-                .load(post.getURL_slike())
-                .into(postImage);
+        if(post.getURL_slike().contains("https://")) {
+            Picasso.with(itemView.getContext())
+                    .load(post.getURL_slike())
+                    .into(postImage);
+            postImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        } else {
+            Glide.with(itemView.getContext())
+                    .load(post.getSlika())
+                    .into(postImage);
+        }
 
-        Picasso.with(itemView.getContext())
-                .load(user.profilnaSlika)
-                .into(profileImage);
+        if(user.getProfilnaSlika().contains("https://")) {
+            Picasso.with(itemView.getContext())
+                    .load(user.getProfilnaSlika())
+                    .into(profileImage);
+        } else {
+            Glide.with(itemView.getContext())
+                    .load(user.getSlika())
+                    .into(profileImage);
+        }
     }
 }

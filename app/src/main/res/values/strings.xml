@@ -81,5 +81,6 @@
     <string name="username_post">Username</string>
     <string name="post_description_post">Post description</string>
     <string name="module_name">Timeline view</string>
+    <string name="registration_default_profile_picture">default_profile_picture.jpeg</string>
     >>>>>>> feature/registration-design
 </resources>

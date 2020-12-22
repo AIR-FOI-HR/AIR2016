@@ -99,7 +99,6 @@ public class LoginTest extends AppCompatActivity {
     public void addTree (View view){
         /*Intent open = new Intent(LoginTest.this, AddTree.class);
             startActivity(open);*/
-        //dataPresentersManager = new DataPresentersManager();
     }
 
 
