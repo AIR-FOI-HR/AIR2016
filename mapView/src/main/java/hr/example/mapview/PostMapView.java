@@ -2,10 +2,10 @@ package hr.example.treeapp;
 
 import androidx.fragment.app.FragmentActivity;
 
-import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
+
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -14,7 +14,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PostMapView extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
