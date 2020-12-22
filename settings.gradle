@@ -1,3 +1,4 @@
+include ':mapView'
 include ':timeline'
 include ':core'
 include ':app'

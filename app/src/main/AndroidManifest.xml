@@ -53,7 +53,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".PostMapView"
+            android:name="hr.example.mapview.PostMapView"
             android:label="@string/title_activity_post_map_view" />
         <activity android:name="auth.PassReset" />
         <activity android:name="addTreeLogic.CroppActivity" />

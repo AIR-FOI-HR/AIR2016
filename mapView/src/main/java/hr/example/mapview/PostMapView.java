@@ -1,12 +1,22 @@
-package hr.example.treeapp;
+package hr.example.mapview;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 
+import com.example.core.DataPresenter;
+import com.example.core.entities.Post;
+import com.example.core.entities.User;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -16,64 +26,84 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
-public class PostMapView extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, DataPresenter {
 
     private GoogleMap mMap;
-    private GetPostData getPostData;
+    private SupportMapFragment mMapFragment;
+    private List<Post> posts;
+    private boolean dataReady=false;
+    private List<User> users;
+    private boolean mapReady=false;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_post_map_view, container, false);
+        return view;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_map_view);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        mMapFragment.getMapAsync(this);
+        /**setContentView(R.layout.activity_post_map_view);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
+        mapFragment.getMapAsync(this);**/
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-
-        setMarkersOnMap();
-
+        mapReady=true;
+        if(mapReady&& dataReady)
+            setMarkersOnMap();
     }
 
     private void setMarkersOnMap() {
-        getPostData = new GetPostData();
-        getPostData.getPostsForMap(new PostLocationcallback() {
-            @Override
-            public void onCallbackList(List<PostLocation> postLocationList) {
-                if(postLocationList!=null){
-                    for (PostLocation postLocation : postLocationList){
-                        Marker markerOnMap = mMap.addMarker(setMarkerOptions(postLocation));
-                        markerOnMap.setTag(postLocation.postId);
-                    }
-                }
-            }
-        });
-        mMap.setOnMarkerClickListener(this);
+        for (Post currentPost: posts){
+            Marker markerOnMap = mMap.addMarker(setMarkerOptions(currentPost));
+            markerOnMap.setTag(currentPost.getID_objava());
+        }
     }
 
-    private MarkerOptions setMarkerOptions(PostLocation postLocation) {
+    private MarkerOptions setMarkerOptions(Post post) {
         final com.google.android.gms.maps.model.LatLng mapsLatLng =
-                new com.google.android.gms.maps.model.LatLng(postLocation.latLng.latitude,
-                        postLocation.latLng.longitude);
+                new com.google.android.gms.maps.model.LatLng(post.getLatitude(),
+                        post.getLongitude());
         return new MarkerOptions()
                 .position(mapsLatLng)
-                .title(postLocation.postId)
+                .title(post.getOpis())
                 .draggable(false)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker));
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        String postMarkerID = marker.getTag().toString();
-        Intent singlePostView = new Intent(PostMapView.this, SinglePostViewActivity.class);
-        singlePostView.putExtra("postId",postMarkerID);
-        startActivity(singlePostView);
 
         return false;
+    }
+
+    @Override
+    public void setData(List<Post> posts, List<User> users) {
+        this.posts=posts;
+        this.users=users;
+        dataReady=true;
+        if(dataReady && mapReady)
+            setMarkersOnMap();
+
+    }
+
+    @Override
+    public String getModuleName(Context context) {
+        return context.getString(R.string.map_view_module_name);
+    }
+
+    @Override
+    public Fragment getFragment() {
+        return this;
     }
 }
