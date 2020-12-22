@@ -34,7 +34,7 @@ public class LoginTest extends AppCompatActivity {
         context=this;
         FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
         dataPresentersManager=new DataPresentersManager(context);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.currentPresenter.getFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.firstPresenter.getFragment()).commit();
         FillTopMenu();
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
@@ -69,7 +69,7 @@ public class LoginTest extends AppCompatActivity {
 
                     switch(item.getItemId()){
                         case R.id.nav_home:
-                                selectedFragment=dataPresentersManager.currentPresenter.getFragment();
+                                selectedFragment=dataPresentersManager.firstPresenter.getFragment();
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                             break;
                         case R.id.nav_leaderboard:

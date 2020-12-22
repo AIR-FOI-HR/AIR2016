@@ -20,13 +20,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="idegas"
-                    ></Button>
-            </LinearLayout>
+                android:orientation="vertical" />
 
         </LinearLayout>
 
@@ -39,8 +33,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@id/topmenu"
+        android:layout_alignParentBottom="true"
 
-        tools:layout_editor_absoluteX="-16dp"></FrameLayout>
+        tools:layout_editor_absoluteX="-16dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

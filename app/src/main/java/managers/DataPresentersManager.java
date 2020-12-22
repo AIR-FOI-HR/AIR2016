@@ -15,6 +15,7 @@ public class DataPresentersManager {
     public List<DataPresenter> presenters = new ArrayList<>();
     public DataPresenter currentPresenter;
     private Context context;
+    public DataPresenter firstPresenter;
 
     public DataPresentersManager(Context context){
         this.context = context;
@@ -24,8 +25,8 @@ public class DataPresentersManager {
     private void loadPresenters() {
         presenters.add(new PostListFragment());
         presenters.add(new PostMapView());
-        currentPresenter = presenters.get(0);
+        firstPresenter = presenters.get(0);
         DataManager dataManager = DataManager.getInstance();
-        dataManager.loadData(currentPresenter, context);
+        dataManager.loadData(firstPresenter, context);
     }
 }
