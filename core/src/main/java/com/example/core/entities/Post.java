@@ -33,6 +33,7 @@ public class Post {
         this.Opis = post.Opis;
         this.URL_slike = post.URL_slike;
         this.Broj_lajkova = post.Broj_lajkova;
+        this.Slika=post.Slika;
     }
 
     public Bitmap getSlika() {

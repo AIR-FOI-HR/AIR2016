@@ -26,14 +26,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginTest extends AppCompatActivity {
-    DataPresentersManager dataPresentersManager=new DataPresentersManager();
+    DataPresentersManager dataPresentersManager;
     Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_test);
+        context=this;
         FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+        dataPresentersManager=new DataPresentersManager(context);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.currentPresenter.getFragment()).commit();
         FillTopMenu();
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);

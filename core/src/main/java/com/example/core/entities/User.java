@@ -127,6 +127,7 @@ public class User {
         this.bodovi=user.bodovi;
         this.korisnickoIme=user.korisnickoIme;
         this.datumRodenja=user.datumRodenja;
+        this.Slika=user.Slika;
     }
 
 }
