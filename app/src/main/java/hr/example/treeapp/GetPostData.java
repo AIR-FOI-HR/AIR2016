@@ -1,16 +1,12 @@
 package hr.example.treeapp;
 
-import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.text.TextUtils;
-import android.util.Log;
-
+import com.example.core.entities.Comment;
+import com.example.core.entities.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -37,6 +33,7 @@ public class GetPostData {
     public FirebaseUser user;
 
     List<Comment> listaKomentara = new ArrayList<Comment>();
+    List<Post> listaObjava = new ArrayList<>();
 
     public void getPost(String postId, final PostCallback postCallback) {
         firebaseFirestore.collection("Objave")
@@ -107,7 +104,8 @@ public class GetPostData {
                 });
     }
 
-    public void getPostImage (String imageName, final ImageCallback imageCallback){
+//TODO: maknuti jedan od ovih
+    /**public void getPostImage (String imageName, final ImageCallback imageCallback){
         StorageReference image= storageReference.child("Objave/"+imageName);
         image.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
@@ -115,5 +113,52 @@ public class GetPostData {
                 imageCallback.onCallbackList(BitmapFactory.decodeByteArray(bytes,0, bytes.length));
             }
         });
+    }**/
+
+    public void getPostImage (String imageID, final PostImageCallback postImageCallback){
+        StorageReference image= storageReference.child("Objave/"+imageID);
+        image.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                postImageCallback.onCallback(BitmapFactory.decodeByteArray(bytes,0, bytes.length));
+            }
+        });
     }
+
+    public void getAllPosts(final AllPostsCallback allPostsCallback) {
+        firebaseFirestore.collection("Objave")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            listaObjava.clear();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double)document.get("Latitude"), (double)document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (long)document.get("Broj_lajkova"));
+                                listaObjava.add(post);
+                            }
+                            allPostsCallback.onCallback(listaObjava);
+                        } else {
+                            allPostsCallback.onCallback(null);
+                        }
+                    }
+                });
+    }
+
+
+
+    //metoda za dohvat komentara jedne objave za prikaz objave
+            /*getPostData.getPostComments("oEyhr7OjvnDKB5vuA8ie", new CommentCallback() {
+            @Override
+            public void onCallback(List<Comment> comment) {
+                if (comment != null) {
+                    for(Comment c : comment){
+                        Log.d("komentar", "komentari:" + c.getTekst());
+                    }
+                }
+                else{
+                    Log.d("komentar", "Nema komentara.");
+                }
+            }
+        });*/
 }

@@ -1,46 +1,96 @@
 package hr.example.treeapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import auth.UsernameAvailabilityCallback;
-import recyclerview.PostItem;
-import recyclerview.PostRecyclerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import managers.DataPresentersManager;
+
+import com.example.timeline.PostListFragment;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.gms.maps.MapView;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.content.ContentValues.TAG;
-
 public class LoginTest extends AppCompatActivity {
-    TextView userID;
-    GetPostData getPostData;
-    RecyclerView recyclerView;
+    DataPresentersManager dataPresentersManager;
     Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_test);
-        userID=(TextView)findViewById(R.id.userid);
+        context=this;
         FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
-        userID.setText(user.getUid());
-        context = this.context;
+        dataPresentersManager=new DataPresentersManager(context);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.currentPresenter.getFragment()).commit();
+        FillTopMenu();
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
+        bottomNav.setItemIconTintList(null);
+        //displayMainFragment();
+    }
 
-        getPostData = new GetPostData();
+    private void FillTopMenu() {
+        HorizontalScrollView horizontalScrollView = findViewById(R.id.topmenu);
+        LinearLayout mainLinearLayout =findViewById(R.id.topmenumainlayout);
+        for (int i=0;i<dataPresentersManager.presenters.size() ;i++){
+            LinearLayout newLayout = new LinearLayout(this);
+            mainLinearLayout.addView(newLayout);
+            Button button=new Button(this);
+            button.setText(dataPresentersManager.presenters.get(i).getModuleName(this));
+            int finalI = i;
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.presenters.get(finalI).getFragment()).commit();
+                }
+            });
+            newLayout.addView(button);
+        }
+    }
 
-        recyclerView = findViewById(R.id.main_recycler);
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    Fragment selectedFragment =null;
+
+                    switch(item.getItemId()){
+                        case R.id.nav_home:
+                                selectedFragment=dataPresentersManager.currentPresenter.getFragment();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                            break;
+                        case R.id.nav_leaderboard:
+                            break;
+                        case R.id.nav_addtree:
+                            break;
+                        case R.id.nav_search:
+                            break;
+                        case R.id.nav_profile:
+                            break;
+                    }
+                    return true;
+                }
+            };
+
+    private void displayMainFragment(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_container, new PostListFragment());
+        ft.commit();
     }
 
     public void logout(View view){
@@ -52,45 +102,6 @@ public class LoginTest extends AppCompatActivity {
     public void addTree (View view){
         /*Intent open = new Intent(LoginTest.this, AddTree.class);
             startActivity(open);*/
-
-        loadData();
-    }
-
-    private void loadData(){
-        getPostData.getPost("oEyhr7OjvnDKB5vuA8ie", new PostCallback() {
-            @Override
-            public void onCallback(Post post) {
-                if (post != null) {
-
-                    List<Post> postList = new ArrayList<>();
-                    postList.add(post);
-
-                    List<PostItem> postItems = new ArrayList<>();
-                    for(Post p : postList){
-                        postItems.add(new PostItem(post));
-                    }
-                    recyclerView.setAdapter(new PostRecyclerAdapter(postItems, context));
-                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                }
-                else{
-                    Log.d("dokument", "Nema dokumenta objave.");
-                }
-            }
-        });
-
-        getPostData.getPostComments("oEyhr7OjvnDKB5vuA8ie", new CommentCallback() {
-            @Override
-            public void onCallback(List<Comment> comment) {
-                if (comment != null) {
-                    for(Comment c : comment){
-                        Log.d("komentar", "komentari:" + c.getTekst());
-                    }
-                }
-                else{
-                    Log.d("komentar", "Nema komentara.");
-                }
-            }
-        });
     }
 
 

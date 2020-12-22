@@ -4,28 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.TextureView;
+import android.os.Bundle;;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.maps.CameraUpdate;
+import com.example.core.entities.Comment;
+import com.example.core.entities.Post;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -33,15 +23,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.util.ArrayList;
+;
 import java.util.List;
 
-import auth.User;
-import recyclerview.PostItem;
-import recyclerview.PostRecyclerAdapter;
+import com.example.core.entities.User;
+
 
 public class SinglePostViewActivity extends AppCompatActivity implements OnMapReadyCallback {
     private String postId;
@@ -152,12 +138,12 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     }
 
     private void populatePostData() {
-        numberOfLikes.setText(Long.valueOf(post.Broj_lajkova).toString());
-        description.setText(post.Opis);
+        numberOfLikes.setText(Long.valueOf(post.getBroj_lajkova()).toString());
+        description.setText(post.getOpis());
 
         final com.google.android.gms.maps.model.LatLng treeLocation =
-                new com.google.android.gms.maps.model.LatLng(post.Latitude,
-                        post.longitude);
+                new com.google.android.gms.maps.model.LatLng(post.getLatitude(),
+                        post.getLongitude());
 
         map.addMarker(new MarkerOptions()
                 .position(treeLocation)
@@ -168,12 +154,12 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     }
 
     private void getPostImage(){
-        getPostData.getPostImage(post.URL_slike, new ImageCallback() {
+        getPostData.getPostImage(post.getURL_slike(), new PostImageCallback() {
             @Override
-            public void onCallbackList(Bitmap imageCallback) {
-                if(imageCallback != null) {
-                    image= imageCallback;
-                    Glide.with(SinglePostViewActivity.this).load(imageCallback).into(postImage);
+            public void onCallback(Bitmap slika) {
+                if(slika != null) {
+                    image= slika;
+                    Glide.with(SinglePostViewActivity.this).load(image).into(postImage);
                 }
                 else
                     Toast.makeText(SinglePostViewActivity.this, R.string.Error_loading_picture, Toast.LENGTH_LONG);
@@ -183,7 +169,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
 
     private void getUser(){
         UserRepository userRepository = new UserRepository();
-        userRepository.getUser(post.Korisnik_ID, new UserCallback() {
+        userRepository.getUser(post.getKorisnik_ID(), new UserCallback() {
             @Override
             public void onCallback(User user) {
                 username.setText(user.korisnickoIme);

@@ -38,6 +38,7 @@ import java.util.regex.Pattern;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import hr.example.treeapp.R;
 import hr.example.treeapp.RegistrationStep2;
 import hr.example.treeapp.RegistrationStep3;
 
@@ -50,7 +51,7 @@ public class RegistrationRepository {
     public FirebaseUser user;
     public String dostupno, userID, slikaID;
     List<String> listaKorisnickihImena = new ArrayList<String>();
-    private Context context;
+    public Context context;
 
     public RegistrationRepository(Context context){
         this.context=context;
@@ -98,8 +99,11 @@ public class RegistrationRepository {
                     korisnik.put("Korisnicko_ime", KorIme);
                     if (!TextUtils.isEmpty(Slika)) {
                         UploadPicture(Slika);
+                        korisnik.put("Profilna_slika_ID", slikaID);
                     }
-                    korisnik.put("Profilna_slika_ID", slikaID);
+                    else{
+                        korisnik.put("Profilna_slika_ID", context.getString(R.string.registration_default_profile_picture));
+                    }
                     korisnik.put("Datum_rodenja", datumRodenja);
                     korisnik.put("Uloga_ID", UlogaID);
                     documentReference.set(korisnik);

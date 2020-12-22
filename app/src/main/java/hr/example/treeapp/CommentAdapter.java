@@ -12,10 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.core.entities.Comment;
+import com.example.core.entities.User;
 
 import java.util.List;
+import com.example.core.entities.Comment;
 
-import auth.User;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
 
@@ -35,7 +37,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
-        String userId = mData.get(position).Korisnik_ID;
+        String userId = mData.get(position).getKorisnik_ID();
         UserRepository userRepository = new UserRepository();
         userRepository.getUserImage(userId, new ProfileImageCallback() {
             @Override
