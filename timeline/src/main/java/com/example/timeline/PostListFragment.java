@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.core.DataPresenter;
+import com.example.core.LiveData.LiveDataPostID;
 import com.example.core.entities.Post;
 import com.example.core.entities.User;
 
@@ -26,6 +27,41 @@ public class PostListFragment extends Fragment implements DataPresenter {
     private List<User> users;
     private boolean dataReady = false;
     private boolean moduleReady = false;
+    private LinearLayoutManager layoutManager;
+
+    boolean userScrolled=false;
+
+    private boolean loading = true;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
+
+    LiveDataPostID liveDataPostID;
+
+    public void implementScrollListener() {
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+                        if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                            userScrolled = true;
+                        }
+                    }
+
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        visibleItemCount = layoutManager.getChildCount();
+                        totalItemCount = layoutManager.getItemCount();
+                        pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+
+                        if (userScrolled && (visibleItemCount + pastVisiblesItems) == totalItemCount) {
+                            userScrolled = false;
+                            //RefreshData(oldestPostId);
+                            //timelinePostCallbackAccept.UpdateLastPostNumber(5);
+                        }
+                    }
+                });
+    }
 
     @Nullable
     @Override
@@ -39,6 +75,8 @@ public class PostListFragment extends Fragment implements DataPresenter {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.main_recycler);
+        layoutManager = new LinearLayoutManager(context);
+        liveDataPostID = new LiveDataPostID();
         moduleReady = true;
         tryToDisplayData();
 
@@ -59,7 +97,8 @@ public class PostListFragment extends Fragment implements DataPresenter {
             List<PostItem> postItems = PostListViewModel.convertToPostItemList(posts);
             List<UserItem> userItems = UserListViewModel.convertToUserItemList(users);
             recyclerView.setAdapter(new PostRecyclerAdapter(postItems, userItems, context));
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setLayoutManager(layoutManager);
+            liveDataPostID.UpdateLastPostNumber(5);
         }
     }
 

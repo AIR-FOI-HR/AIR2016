@@ -2,19 +2,22 @@ package managers;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.example.core.DataPresenter;
 import com.example.core.entities.Post;
 import com.example.core.entities.User;
-import com.example.timeline.PostItem;
-import com.example.timeline.PostRecyclerAdapter;
-import com.example.timeline.UserItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import hr.example.treeapp.AllPostsCallback;
 import hr.example.treeapp.AllUsersCallback;
 import hr.example.treeapp.GetPostData;

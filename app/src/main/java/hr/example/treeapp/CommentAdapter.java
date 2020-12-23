@@ -16,7 +16,6 @@ import com.example.core.entities.Comment;
 import com.example.core.entities.User;
 
 import java.util.List;
-import com.example.core.entities.Comment;
 
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {

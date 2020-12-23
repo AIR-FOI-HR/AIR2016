@@ -1,6 +1,5 @@
 package com.example.timeline;
 
-import com.example.core.entities.Post;
 import com.example.core.entities.User;
 
 import java.util.ArrayList;

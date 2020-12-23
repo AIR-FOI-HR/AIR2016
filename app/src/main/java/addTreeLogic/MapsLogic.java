@@ -6,7 +6,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import addTreeLogic.LatLng;
 import hr.example.treeapp.R;
 
 public class MapsLogic{

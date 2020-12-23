@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import androidx.lifecycle.Observer;
 import hr.example.mapview.PostMapView;
 import managers.DataPresentersManager;
 
+import com.example.core.LiveData.LiveDataPostID;
 import com.example.timeline.PostListFragment;
 
 import android.content.Context;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,12 +29,23 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginTest extends AppCompatActivity {
     DataPresentersManager dataPresentersManager;
     Context context;
+    private LiveDataPostID model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_test);
         context=this;
+
+        final Observer<Integer> nameObserver = new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                Toast.makeText(context, "radi" + integer, Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        model.lastPostNumber().observe(this, nameObserver);
+
         FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
         dataPresentersManager=new DataPresentersManager(context);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.firstPresenter.getFragment()).commit();
@@ -41,6 +55,8 @@ public class LoginTest extends AppCompatActivity {
         bottomNav.setItemIconTintList(null);
         //displayMainFragment();
     }
+
+
 
     private void FillTopMenu() {
         HorizontalScrollView horizontalScrollView = findViewById(R.id.topmenu);
