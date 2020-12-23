@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.core.DataPresenter;
-import com.example.core.LiveData.LiveDataPostID;
+import com.example.core.LiveData.LiveData;
 import com.example.core.entities.Post;
 import com.example.core.entities.User;
 
@@ -34,7 +34,7 @@ public class PostListFragment extends Fragment implements DataPresenter {
     private boolean loading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
 
-    LiveDataPostID liveDataPostID;
+    LiveData liveData;
 
     public void implementScrollListener() {
 
@@ -76,7 +76,7 @@ public class PostListFragment extends Fragment implements DataPresenter {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.main_recycler);
         layoutManager = new LinearLayoutManager(context);
-        liveDataPostID = new LiveDataPostID();
+        liveData = new LiveData();
         moduleReady = true;
         tryToDisplayData();
 
@@ -98,7 +98,7 @@ public class PostListFragment extends Fragment implements DataPresenter {
             List<UserItem> userItems = UserListViewModel.convertToUserItemList(users);
             recyclerView.setAdapter(new PostRecyclerAdapter(postItems, userItems, context));
             recyclerView.setLayoutManager(layoutManager);
-            liveDataPostID.UpdateLastPostNumber(5);
+            liveData.UpdateLastPostNumber(5);
         }
     }
 

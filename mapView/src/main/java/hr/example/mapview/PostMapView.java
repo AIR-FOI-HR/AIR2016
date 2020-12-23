@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 
 import com.example.core.DataPresenter;
+import com.example.core.LiveData.LiveData;
 import com.example.core.entities.Post;
 import com.example.core.entities.User;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,6 +33,7 @@ public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleM
     private boolean dataReady=false;
     private List<User> users;
     private boolean mapReady=false;
+    private LiveData liveData;
 
     @Nullable
     @Override
@@ -43,6 +45,7 @@ public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        liveData = new LiveData();
         mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
         /**setContentView(R.layout.activity_post_map_view);
@@ -59,6 +62,7 @@ public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleM
         mapReady=true;
         if(mapReady&& dataReady)
             setMarkersOnMap();
+
     }
 
     private void setMarkersOnMap() {
@@ -66,6 +70,7 @@ public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleM
             Marker markerOnMap = mMap.addMarker(setMarkerOptions(currentPost));
             markerOnMap.setTag(currentPost.getID_objava());
         }
+        mMap.setOnMarkerClickListener(this);
     }
 
     private MarkerOptions setMarkerOptions(Post post) {
@@ -81,7 +86,7 @@ public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleM
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-
+        liveData.UpdateSelectedPostId(marker.getTag().toString());
         return false;
     }
 

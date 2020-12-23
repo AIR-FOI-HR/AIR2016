@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer;
 import hr.example.mapview.PostMapView;
 import managers.DataPresentersManager;
 
-import com.example.core.LiveData.LiveDataPostID;
+import com.example.core.LiveData.LiveData;
 import com.example.timeline.PostListFragment;
 
 import android.content.Context;
@@ -29,7 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginTest extends AppCompatActivity {
     DataPresentersManager dataPresentersManager;
     Context context;
-    private LiveDataPostID model;
+    private LiveData model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,16 @@ public class LoginTest extends AppCompatActivity {
         };
 
         model.lastPostNumber().observe(this, nameObserver);
+
+        final Observer<String> postIdObserver = new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                Intent singlePostView = new Intent(LoginTest.this, SinglePostViewActivity.class);
+                singlePostView.putExtra("postId",s);
+                startActivity(singlePostView);
+            }
+        };
+        model.selectedPostId().observe(this, postIdObserver);
 
         FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
         dataPresentersManager=new DataPresentersManager(context);
