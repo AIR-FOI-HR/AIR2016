@@ -18,13 +18,15 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     TextView username;
     TextView postDescription;
     private View itemView;
+    PostRecyclerAdapter.OnItemClicked onItemClicked;
 
-    public PostViewHolder(@NonNull View itemView) {
+    public PostViewHolder(@NonNull View itemView, PostRecyclerAdapter.OnItemClicked onItemClicked) {
         super(itemView);
         postImage = itemView.findViewById(R.id.post_image);
         profileImage = itemView.findViewById(R.id.profile_image);
         username = itemView.findViewById(R.id.username);
         postDescription = itemView.findViewById(R.id.post_description);
+        this.onItemClicked=onItemClicked;
         this.itemView = itemView;
     }
 

@@ -20,7 +20,7 @@ import com.example.core.LiveData.LiveData;
 import com.example.core.entities.Post;
 import com.example.core.entities.User;
 
-public class PostListFragment extends Fragment implements DataPresenter {
+public class PostListFragment extends Fragment implements DataPresenter, PostRecyclerAdapter.OnItemClicked {
     RecyclerView recyclerView;
     Context context;
     private List<Post> posts;
@@ -78,6 +78,7 @@ public class PostListFragment extends Fragment implements DataPresenter {
         layoutManager = new LinearLayoutManager(context);
         liveData = new LiveData();
         moduleReady = true;
+
         tryToDisplayData();
 
     }
@@ -96,7 +97,7 @@ public class PostListFragment extends Fragment implements DataPresenter {
         if(moduleReady && dataReady) {
             List<PostItem> postItems = PostListViewModel.convertToPostItemList(posts);
             List<UserItem> userItems = UserListViewModel.convertToUserItemList(users);
-            recyclerView.setAdapter(new PostRecyclerAdapter(postItems, userItems, context));
+            recyclerView.setAdapter(new PostRecyclerAdapter(postItems, userItems, context, this));
             recyclerView.setLayoutManager(layoutManager);
             liveData.UpdateLastPostNumber(5);
         }
@@ -110,5 +111,10 @@ public class PostListFragment extends Fragment implements DataPresenter {
     @Override
     public Fragment getFragment() {
         return this;
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        liveData.UpdateSelectedPostId(posts.get(position).getID_objava());
     }
 }

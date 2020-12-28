@@ -18,10 +18,13 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
     private ArrayList<UserItem> userItemList;
     private Context context;
 
-    public PostRecyclerAdapter(@NonNull List<PostItem> postItemList, List<UserItem> userItemList, Context context) {
+    private OnItemClicked onClickListener;
+
+    public PostRecyclerAdapter(@NonNull List<PostItem> postItemList, List<UserItem> userItemList, Context context, OnItemClicked onItemClicked) {
         this.postItemList = (ArrayList<PostItem>) postItemList;
         this.userItemList = (ArrayList<UserItem>) userItemList;
         this.context = context;
+        this.onClickListener =onItemClicked;
     }
 
     @NonNull
@@ -30,7 +33,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
         View view = layoutInflater.inflate(R.layout.post_list_item, parent, false);
-        return new PostViewHolder(view);
+        return new PostViewHolder(view, onClickListener);
     }
 
     @Override
@@ -42,7 +45,12 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
             if(u.uid.equals(post.getKorisnik_ID()))
                 user = u;
         }
-
+        holder.postImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickListener.onItemClick(position);
+            }
+        });
         holder.bindToData(post, user);
     }
 
@@ -50,4 +58,12 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
     public int getItemCount() {
         return postItemList == null? 0: postItemList.size();
     }
+
+    /**
+     * https://www.youtube.com/watch?v=69C1ljfDvl0&ab_channel=CodingWithMitch
+     */
+    public interface OnItemClicked {
+        void onItemClick(int position);
+    }
+
 }
