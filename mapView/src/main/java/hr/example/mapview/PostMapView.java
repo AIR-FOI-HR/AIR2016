@@ -91,7 +91,7 @@ public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     @Override
-    public void setData(List<Post> posts, List<User> users) {
+    public void setData(List<Post> posts, List<User> users, boolean isDataNew) {
         this.posts=posts;
         this.users=users;
         dataReady=true;

@@ -10,7 +10,7 @@ import java.util.List;
 import androidx.fragment.app.Fragment;
 
 public interface DataPresenter {
-    void setData(List<Post> posts, List<User> users);
+    void setData(List<Post> posts, List<User> users, boolean isDataNew);
 
     String getModuleName(Context context);
     Fragment getFragment();

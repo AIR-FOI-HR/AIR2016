@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import androidx.lifecycle.Observer;
 import hr.example.mapview.PostMapView;
+import managers.DataManager;
 import managers.DataPresentersManager;
 
 import com.example.core.LiveData.LiveData;
@@ -36,15 +37,16 @@ public class LoginTest extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_test);
         context=this;
+        DataManager dataManager = DataManager.getInstance();
 
-        final Observer<Integer> nameObserver = new Observer<Integer>() {
+        final Observer<String> nameObserver = new Observer<String>() {
             @Override
-            public void onChanged(Integer integer) {
-                Toast.makeText(context, "radi" + integer, Toast.LENGTH_SHORT).show();
+            public void onChanged(String lastPostID) {
+                dataManager.GetPostsFromLastID();
             }
         };
 
-        model.lastPostNumber().observe(this, nameObserver);
+        model.lastPostID().observe(this, nameObserver);
 
         final Observer<String> postIdObserver = new Observer<String>() {
             @Override
@@ -102,6 +104,8 @@ public class LoginTest extends AppCompatActivity {
                         case R.id.nav_leaderboard:
                             break;
                         case R.id.nav_addtree:
+                            Intent open = new Intent(LoginTest.this, AddTree.class);
+                            startActivity(open);
                             break;
                         case R.id.nav_search:
                             break;

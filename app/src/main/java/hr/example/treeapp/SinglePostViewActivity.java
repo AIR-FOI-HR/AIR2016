@@ -185,7 +185,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
             @Override
             public void onCallbackList(UserImage userImage) {
                 if(userImage.image!=null && userImage.url==null)
-                    Glide.with(SinglePostViewActivity.this).load(image).into(profilePicture);
+                    Glide.with(SinglePostViewActivity.this).load(userImage.image).into(profilePicture);
                 else if (userImage.url!=null && userImage.image==null) {
                     RequestOptions options = new RequestOptions()
                             .centerCrop()

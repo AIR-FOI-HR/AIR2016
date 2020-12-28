@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -31,6 +32,7 @@ public class GetPostData {
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private StorageReference storageReference = firebaseStorage.getReference();
     public FirebaseUser user;
+    QueryDocumentSnapshot lastDocument = null;
 
     List<Comment> listaKomentara = new ArrayList<Comment>();
     List<Post> listaObjava = new ArrayList<>();
@@ -127,6 +129,8 @@ public class GetPostData {
 
     public void getAllPosts(final AllPostsCallback allPostsCallback) {
         firebaseFirestore.collection("Objave")
+                .orderBy("Datum_objave", Query.Direction.DESCENDING)
+                .limit(5)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -136,6 +140,7 @@ public class GetPostData {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double)document.get("Latitude"), (double)document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (long)document.get("Broj_lajkova"));
                                 listaObjava.add(post);
+                                lastDocument = document;
                             }
                             allPostsCallback.onCallback(listaObjava);
                         } else {
@@ -144,6 +149,30 @@ public class GetPostData {
                     }
                 });
     }
+
+    public void getPostsFromLastID(final GetPostsFromLastID getPostsFromLastID) {
+        firebaseFirestore.collection("Objave")
+                .orderBy("Datum_objave", Query.Direction.DESCENDING)
+                .startAfter(lastDocument)
+                .limit(6)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double)document.get("Latitude"), (double)document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (long)document.get("Broj_lajkova"));
+                                listaObjava.add(post);
+                                lastDocument = document;
+                            }
+                            getPostsFromLastID.onCallback(listaObjava);
+                        } else {
+                            getPostsFromLastID.onCallback(null);
+                        }
+                    }
+                });
+    }
+
 
 
 

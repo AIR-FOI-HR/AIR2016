@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import hr.example.treeapp.AllPostsCallback;
 import hr.example.treeapp.AllUsersCallback;
 import hr.example.treeapp.GetPostData;
+import hr.example.treeapp.GetPostsFromLastID;
 import hr.example.treeapp.PostImageCallback;
 import hr.example.treeapp.UserImageCallback;
 import hr.example.treeapp.UserRepository;
@@ -41,6 +42,7 @@ public class DataManager {
     private int numberOfUsers = 0;
     private boolean postBitmapsReady = false;
     private boolean userBitmapsReady = false;
+    private boolean newPostsReady = false;
 
     public static DataManager getInstance(){
         return instance;
@@ -55,6 +57,7 @@ public class DataManager {
         userBitmapsReady = false;
         postsReady = false;
         usersReady = false;
+        newPostsReady = false;
 
         getPostData.getAllPosts(new AllPostsCallback() {
             @Override
@@ -63,7 +66,7 @@ public class DataManager {
                     posts = postList;
                     postsReady = true;
                     fillPostsWithBitmaps();
-                    sendDataToPresenter(presenter, context);
+                    sendDataToPresenter(presenter);
                 }
                 else{
                     Log.d("dokument", "Nema dokumenta objave.");
@@ -78,7 +81,7 @@ public class DataManager {
                     users = userList;
                     usersReady = true;
                     fillUsersWithBitmaps();
-                    sendDataToPresenter(presenter, context);
+                    sendDataToPresenter(presenter);
                 }
                 else{
                     Log.d("dokument", "Nema dokumenta objave.");
@@ -87,26 +90,32 @@ public class DataManager {
         });
     }
 
-    public void sendDataToPresenter(DataPresenter presenter, Context context){
+    public void sendDataToPresenter(DataPresenter presenter){
         if(postsReady && usersReady && postBitmapsReady && userBitmapsReady){
-            presenter.setData(posts, users);
+            presenter.setData(posts, users, true);
+            postBitmapsReady = false;
+            usersReady = false;
+            userBitmapsReady = false;
         }
     }
 
     private void fillPostsWithBitmaps(){
         for (Post p : posts) {
-            getPostData.getPostImage(p.getURL_slike(), new PostImageCallback() {
-                @Override
-                public void onCallback(Bitmap slika) {
+            if (p.getSlika() == null) {
+                getPostData.getPostImage(p.getURL_slike(), new PostImageCallback() {
+                    @Override
+                    public void onCallback(Bitmap slika) {
                         p.setSlika(slika);
                         numberOfPosts++;
-                        if(numberOfPosts == posts.size()) {
+                        if (numberOfPosts == posts.size()) {
                             postBitmapsReady = true;
-                            sendDataToPresenter(presenter, context);
+                            sendDataToPresenter(presenter);
+                            sendNewDataToPresenter(presenter);
                         }
 
-                }
-            });
+                    }
+                });
+            }
         }
     }
 
@@ -120,7 +129,7 @@ public class DataManager {
                         numberOfUsers++;
                         if (numberOfUsers == users.size()) {
                             userBitmapsReady = true;
-                            sendDataToPresenter(presenter, context);
+                            sendDataToPresenter(presenter);
                         }
 
                     }
@@ -129,11 +138,35 @@ public class DataManager {
                 numberOfUsers++;
                 if (numberOfUsers == users.size()) {
                     userBitmapsReady = true;
-                    sendDataToPresenter(presenter, context);
+                    sendDataToPresenter(presenter);
                 }
             }
         }
     }
 
+    public void GetPostsFromLastID(){
+        getPostData.getPostsFromLastID(new GetPostsFromLastID() {
+            @Override
+            public void onCallback(List<Post> postList) {
+                if (postList != null) {
+                    posts = postList;
+                    newPostsReady = true;
+                    fillPostsWithBitmaps();
+                    sendNewDataToPresenter(presenter);
+                }
+                else{
+                    Log.d("dokument", "Nema dokumenta objave.");
+                }
+            }
+        });
+    }
+
+    public void sendNewDataToPresenter(DataPresenter presenter){
+        if(newPostsReady&&postBitmapsReady){
+            presenter.setData(posts, users, false);
+            newPostsReady = false;
+            postBitmapsReady = false;
+        }
+    }
 
 }

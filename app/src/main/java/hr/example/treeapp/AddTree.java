@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Html;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ import addTreeLogic.ImageManipulation;
 import addTreeLogic.LatLng;
 import addTreeLogic.MapsLogic;
 import addTreeLogic.PermissionsChecks;
+import hr.example.treeapp.addTree.AddTreeLogic;
 
 public class AddTree extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, LocationListener {
     TextView treeDescription;
@@ -66,6 +68,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     private boolean pressedLater;
     private boolean pressedDontAskAgain;
     private long laterPressedTime;
+    private Button uploadButton;
 
     private final String[] permissions = {"Camera", "Media & Storage"};
     private boolean cameraPermsOk=false;
@@ -75,6 +78,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     private ImageManipulation imageManipulation;
     private MapsLogic mapsLogic;
     private final HashtagsLogic hashtagsLogic = new HashtagsLogic();
+    AddTreeLogic addTreeLogic;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -87,6 +91,8 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         builder = new AlertDialog.Builder(AddTree.this);
         imageManipulation = new ImageManipulation(this);
         permissionsChecks = new PermissionsChecks(this);
+        addTreeLogic = new AddTreeLogic(this);
+        uploadButton=findViewById(R.id.plantTreeButton);
 
         setUpPermissionsRequest();
 
@@ -159,6 +165,14 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
             treeDescription.setText(Html.fromHtml(hashtagsLogic.colorHastags(treeDescription)));
         });
         treeDescription.setOnFocusChangeListener((v, hasFocus) -> treeDescription.setText(Html.fromHtml(hashtagsLogic.colorHastags(treeDescription))));
+
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadImage();
+                finish();
+            }
+        });
     }
 
     private void mapInitialization() {
@@ -351,17 +365,19 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     public void uploadImage() {
         LatLng treeLocation = getPinedLocation(); //lokacija pin-a
         Uri image= finalImageUri; //uri of a cropped image
-        String treeDesc = treeDescription.toString().trim();
+        String treeDesc = treeDescription.getText().toString();
         List<String> treeTagsList = hashtags;
         Double treeLat = treeLocation.latitude;
         Double treeLng = treeLocation.longitude;
-        //uzmi Uri image i pozovi metodu za upload
+
+        addTreeLogic.uploadPost(image,treeLat, treeLng,treeDesc);
     }
 
     @Override
     public void onClick(View v) {
 
     }
+
 
     /**
      * Metoda pomoću koje se mapa popunjava, prikazuje se cijela Hrvatska

@@ -14,8 +14,8 @@ import com.example.core.entities.User;
 import com.example.core.entities.Post;
 
 public class PostRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
-    private ArrayList<PostItem> postItemList;
-    private ArrayList<UserItem> userItemList;
+    public ArrayList<PostItem> postItemList;
+    public ArrayList<UserItem> userItemList;
     private Context context;
 
     private OnItemClicked onClickListener;

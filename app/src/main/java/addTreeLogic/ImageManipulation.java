@@ -46,7 +46,7 @@ public class ImageManipulation {
         options.setCompressionFormat(Bitmap.CompressFormat.JPEG); //format fotografije
 
         options.setHideBottomControls(false);
-        options.setFreeStyleCropEnabled(true); //zaklučan omjer
+        options.setFreeStyleCropEnabled(false); //zaklučan omjer
 
         options.setStatusBarColor(activity.getResources().getColor(R.color.tree_green));
         options.setToolbarColor(activity.getResources().getColor(R.color.tree_green));
