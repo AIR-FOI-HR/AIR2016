@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.api.Distribution;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -85,8 +86,10 @@ public class LoginTest extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.presenters.get(finalI).getFragment()).commit();
                     dataPresentersManager.loadFragment(finalI);
                 }
+
             });
             newLayout.addView(button);
+
         }
     }
 
@@ -95,13 +98,23 @@ public class LoginTest extends AppCompatActivity {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     Fragment selectedFragment =null;
+                    LinearLayout myLayout = (LinearLayout) findViewById(R.id.topmenumainlayout);
+
 
                     switch(item.getItemId()){
                         case R.id.nav_home:
                                 selectedFragment=dataPresentersManager.firstPresenter.getFragment();
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                            myLayout.setVisibility(LinearLayout.VISIBLE);
+                            myLayout.bringToFront();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+
                             break;
                         case R.id.nav_leaderboard:
+                            selectedFragment=new LeaderboardFragment();
+
+                            myLayout.setVisibility(LinearLayout.GONE);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+
                             break;
                         case R.id.nav_addtree:
                             Intent open = new Intent(LoginTest.this, AddTree.class);
@@ -112,7 +125,7 @@ public class LoginTest extends AppCompatActivity {
                         case R.id.nav_profile:
                             break;
                     }
-                    return true;
+                return true;
                 }
             };
 
