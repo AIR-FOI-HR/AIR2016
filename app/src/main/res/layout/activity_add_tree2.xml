@@ -8,29 +8,30 @@
 
 
     <ScrollView
+        android:id="@+id/add_tree_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="205dp"
         tools:layout_editor_absoluteY="223dp">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/treeImageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:adjustViewBounds="true"
                 android:visibility="visible"
-                app:srcCompat="@drawable/image_load_icon"
-                android:adjustViewBounds="true"/>
-
+                app:srcCompat="@drawable/image_load_icon" />
 
             <ImageView
                 android:id="@+id/separator_line"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/treeImageView"
                 android:scaleX="1.5"
                 app:srcCompat="@drawable/line_plus_h" />
 
@@ -38,6 +39,7 @@
                 android:id="@+id/story_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/separator_line"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/roboto_light"
@@ -49,8 +51,9 @@
                 android:id="@+id/treeDescriptionText"
                 android:layout_width="match_parent"
                 android:layout_height="111dp"
-                android:layout_marginTop="5dp"
+                android:layout_below="@id/story_text"
                 android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="5dp"
                 android:autofillHints=""
                 android:backgroundTint="@color/white"
                 android:ems="10"
@@ -63,6 +66,7 @@
                 android:id="@+id/mapText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/treeDescriptionText"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="5dp"
@@ -76,11 +80,20 @@
                 class="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
+                android:layout_below="@id/mapText"
                 android:layout_marginBottom="16dp" />
+
+            <ImageView
+                android:id="@+id/transparent_image"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_below="@id/mapText"
+                android:src="@color/transparent" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_below="@id/map"
                 android:orientation="horizontal">
 
                 <Button
@@ -109,12 +122,11 @@
                     android:fontFamily="@font/roboto_medium"
                     android:insetLeft="6dp"
                     android:insetRight="6dp"
-                    android:onClick="uploadNewPost"
                     android:text="@string/plant_tree" />
 
             </LinearLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

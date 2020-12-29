@@ -19,9 +19,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Html;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -104,6 +106,65 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
 
         startingListeners();
 
+        //scrollBlocker();
+
+    }
+
+    private void scrollBlocker() {
+        ScrollView mainScrollView = (ScrollView) findViewById(R.id.add_tree_scroll_view);
+        ImageView transparentImageView = (ImageView) findViewById(R.id.transparent_image);
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(com.google.android.gms.maps.model.LatLng latLng) {
+
+            }
+        });
+        map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                mainScrollView.requestDisallowInterceptTouchEvent(true);
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                mainScrollView.requestDisallowInterceptTouchEvent(false);
+                Float zoomLvl = (float)15;
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),zoomLvl));
+            }
+        });
+        /**
+        transparentImageView.setOnTouchListener(new View.OnTouchListener() {
+
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        mainScrollView.requestDisallowInterceptTouchEvent(true);
+                        // Disable touch on transparent view
+                        return false;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        mainScrollView.requestDisallowInterceptTouchEvent(false);
+                        return true;
+
+                    case MotionEvent.ACTION_MOVE:
+                        mainScrollView.requestDisallowInterceptTouchEvent(true);
+                        return false;
+
+                    default:
+                        return true;
+                }
+            }
+        });*/
     }
 
     private void setUpPermissionsRequest() {
@@ -386,7 +447,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-
+        scrollBlocker();
         map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setScrollGesturesEnabled(false);
