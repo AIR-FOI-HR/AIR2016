@@ -99,22 +99,27 @@ public class DataManager {
         }
     }
 
-    private void fillPostsWithBitmaps(){
-        for (Post p : posts) {
-            if (p.getSlika() == null) {
-                getPostData.getPostImage(p.getURL_slike(), new PostImageCallback() {
-                    @Override
-                    public void onCallback(Bitmap slika) {
-                        p.setSlika(slika);
-                        numberOfPosts++;
-                        if (numberOfPosts == posts.size()) {
-                            postBitmapsReady = true;
-                            sendDataToPresenter(presenter);
-                            sendNewDataToPresenter(presenter);
-                        }
+    private void fillPostsWithBitmaps() {
+        if (numberOfPosts == posts.size()) {
+            postBitmapsReady = true;
+            sendNewDataToPresenter(presenter);
+        } else {
+            for (Post p : posts) {
+                if (p.getSlika() == null) {
+                    getPostData.getPostImage(p.getURL_slike(), new PostImageCallback() {
+                        @Override
+                        public void onCallback(Bitmap slika) {
+                            p.setSlika(slika);
+                            numberOfPosts++;
+                            if (numberOfPosts == posts.size()) {
+                                postBitmapsReady = true;
+                                sendDataToPresenter(presenter);
+                                sendNewDataToPresenter(presenter);
+                            }
 
-                    }
-                });
+                        }
+                    });
+                }
             }
         }
     }

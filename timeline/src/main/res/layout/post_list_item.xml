@@ -26,8 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="#80D0D0D0">
+            android:layout_gravity="bottom"
+            android:background="#80545454">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"

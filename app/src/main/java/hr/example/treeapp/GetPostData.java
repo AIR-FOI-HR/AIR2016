@@ -154,7 +154,7 @@ public class GetPostData {
         firebaseFirestore.collection("Objave")
                 .orderBy("Datum_objave", Query.Direction.DESCENDING)
                 .startAfter(lastDocument)
-                .limit(6)
+                .limit(5)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
