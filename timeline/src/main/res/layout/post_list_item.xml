@@ -29,7 +29,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:background="#80D0D0D0">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -37,7 +37,7 @@
                 android:src="@android:drawable/ic_menu_report_image">
 
 
-            </ImageView>
+            </de.hdodenhof.circleimageview.CircleImageView>
 
             <LinearLayout
                 android:layout_width="match_parent"

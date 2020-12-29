@@ -2,6 +2,7 @@ package hr.example.treeapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -15,6 +16,8 @@ import com.example.timeline.PostListFragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -78,6 +81,14 @@ public class LoginTest extends AppCompatActivity {
             mainLinearLayout.addView(newLayout);
             Button button=new Button(this);
             button.setText(dataPresentersManager.presenters.get(i).getModuleName(this));
+            button.setBackgroundColor(getResources().getColor(R.color.baby_green));
+            Typeface typeface = ResourcesCompat.getFont(this,R.font.roboto);
+            button.setTextColor(getResources().getColor(R.color.tree_green));
+            button.setTypeface(typeface);
+            button.setPadding(32,0,0,0);
+
+
+
             int finalI = i;
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
