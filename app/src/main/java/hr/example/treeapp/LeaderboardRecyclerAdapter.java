@@ -1,0 +1,100 @@
+package hr.example.treeapp;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.example.core.entities.User;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+public class LeaderboardRecyclerAdapter extends RecyclerView.Adapter<LeaderboardRecyclerAdapter.MyViewHolder> {
+
+    Context mContext;
+    List<User> users;
+    private View itemView;
+    ImageView profile_picture;
+    private UserRepository userRepository = new UserRepository();
+    private int numberOfUsers = 0;
+    private boolean userBitmapsReady = false;
+
+
+
+    public LeaderboardRecyclerAdapter(Context mContext, List<User> users) {
+        this.mContext = mContext;
+        this.users = users;
+    }
+
+    @NonNull
+    @Override
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v;
+        v= LayoutInflater.from(mContext).inflate(R.layout.leaderboard_item, parent, false);
+        MyViewHolder vHolder=new MyViewHolder(v);
+        return vHolder;
+
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+
+        holder.ranking_number.setText(position+1+".");
+    /*    if(users.get(position).getProfilnaSlika().contains("https://")) {
+            userRepository.getUserImage(users.get(position).getProfilnaSlika(), new UserImageCallback() {
+                @Override
+                public void onCallback(Bitmap slika) {
+                    users.get(position).setSlika(slika);
+                    numberOfUsers++;
+                    if (numberOfUsers == users.size()) {
+                        userBitmapsReady = true;
+
+                    }
+
+                }
+            });
+        } else{
+            numberOfUsers++;
+            if (numberOfUsers == users.size()) {
+                userBitmapsReady = true;
+
+            }
+        }
+    */
+        holder.username.setText(users.get(position).getKorisnickoIme());
+        holder.points.setText((Integer.toString((int) users.get(position).getBodovi())));
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return users.size();
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder{
+        private TextView ranking_number;
+        private ImageView profile_picture;
+        private TextView username;
+        private TextView points;
+
+
+        public MyViewHolder(View itemView){
+            super(itemView);
+
+            ranking_number=(TextView)itemView.findViewById(R.id.ranking_number);
+            profile_picture=(ImageView)itemView.findViewById(R.id.profile_image_leaderboard);
+            username=(TextView)itemView.findViewById(R.id.username_leaderboard);
+            points=(TextView)itemView.findViewById(R.id.points);
+
+
+        }
+    }
+}

@@ -94,6 +94,9 @@
     <string name="module_name">Timeline view</string>
     <string name="registration_default_profile_picture">default_profile_picture.jpeg</string>
     <string name="leaderboard">Leaderboard</string>
+    <string name="leaderboard_item_number">Ranking number</string>
+    <string name="leaderboard_item_points">Points</string>
+
     <string name="large_text">
 
         "Material is the metaphor.\n\n"

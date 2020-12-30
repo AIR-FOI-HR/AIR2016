@@ -15,6 +15,8 @@ public class User {
     public String datumRodenja;
     public long bodovi;
     Bitmap Slika;
+    public int SlikaLeaderboard;
+
 
     public String getUid() {
         return uid;
