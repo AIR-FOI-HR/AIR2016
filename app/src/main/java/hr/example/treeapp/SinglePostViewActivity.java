@@ -6,11 +6,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private  Bitmap image;
     private TextView username;
     private GetPostData getPostData;
-
+    private String userID;
     private ImageView postImage;
 
     private RecyclerView commentRecyclerView;
@@ -50,8 +51,6 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private GoogleMap map;
     private boolean isBig = false;
     LatLng treeLocation;
-    private LinearLayout deleteLayout;
-    private Button deleteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +67,6 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         description = findViewById(R.id.treeDescriptionText);
         userPoints = findViewById(R.id.userPoints);
         leafImage = findViewById(R.id.leafIconImageView);
-        deleteLayout=findViewById(R.id.admindelete);
-        deleteButton=findViewById(R.id.admindeletebutton);
         leafImage.setImageResource(R.drawable.leaf_green);
         //tamnaPozadina= findViewById(R.id.tamnaPozadina);
         getPost();
@@ -98,22 +95,13 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         });
         initCommentRecycleView();
         initMap();
-        if(getPostData.getCurrentUserRole()==2){
-            deleteButton.setVisibility(View.GONE);
-        }
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getPostData.deletePost(postId);
-                finish();
-            }
-        });
     }
     private void initMap(){
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.treeLocationMapView);
         mapFragment.getMapAsync(this);
     }
+
     private void initCommentRecycleView() {
         commentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -127,7 +115,33 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
 
     }
 
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.postpopupmenu, popup.getMenu());
+        if(getPostData.getCurrentUserRole()!=2 && getPostData.getCurrentUserID()!=userID ) {
+            popup.getMenu().findItem(R.id.postpopupdelete).setVisible(false);
+        }
+        popup.setOnMenuItemClickListener (new PopupMenu.OnMenuItemClickListener ()
+        {
+            @Override
+            public boolean onMenuItemClick (MenuItem item)
+            {
+                int id = item.getItemId();
+                switch (id)
+                {
+                    case R.id.postpopupdelete: deletePost(); break;
+                }
+                return true;
+            }
+        });
+        popup.show();
+    }
 
+    public void deletePost(){
+        getPostData.deletePost(postId);
+        finish();
+    }
 
     private void getPost(){
         getPrimaryPostData();
@@ -186,6 +200,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         userRepository.getUser(post.getKorisnik_ID(), new UserCallback() {
             @Override
             public void onCallback(User user) {
+                userID=user.uid;
                 username.setText(user.korisnickoIme);
                 String bodovi = user.bodovi +" "+ getString(R.string.points);
                 userPoints.setText(bodovi);

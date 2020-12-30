@@ -213,6 +213,9 @@ public class GetPostData {
                 });
     }
 
+    public String getCurrentUserID(){
+        return firebaseAuth.getCurrentUser().getUid();
+    }
 
 
 

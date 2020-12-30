@@ -7,7 +7,19 @@
     android:background="#FFFFFF"
     tools:context=".SinglePostViewActivity">
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="showPopup"
+        android:src="@drawable/ic_baseline_more_vert_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:translationZ="91dp"
+        android:alpha="0.5"
+        />
+
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -219,26 +231,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/admindelete"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/admindeletebutton"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginStart="16dp"
-
-                        android:layout_marginBottom="0dp"
-                        android:layout_marginEnd="16dp"
-                        android:backgroundTint="#48C1F6"
-                        android:text="Delete" />
-                </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
