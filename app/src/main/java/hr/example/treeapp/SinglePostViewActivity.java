@@ -8,7 +8,9 @@ import android.graphics.Bitmap;
 import android.os.Bundle;;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +50,8 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private GoogleMap map;
     private boolean isBig = false;
     LatLng treeLocation;
+    private LinearLayout deleteLayout;
+    private Button deleteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +68,9 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         description = findViewById(R.id.treeDescriptionText);
         userPoints = findViewById(R.id.userPoints);
         leafImage = findViewById(R.id.leafIconImageView);
-
+        deleteLayout=findViewById(R.id.admindelete);
+        deleteButton=findViewById(R.id.admindeletebutton);
         leafImage.setImageResource(R.drawable.leaf_green);
-
         //tamnaPozadina= findViewById(R.id.tamnaPozadina);
         getPost();
         postImage.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +98,16 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         });
         initCommentRecycleView();
         initMap();
+        if(getPostData.getCurrentUserRole()==2){
+            deleteButton.setVisibility(View.GONE);
+        }
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getPostData.deletePost(postId);
+                finish();
+            }
+        });
     }
     private void initMap(){
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

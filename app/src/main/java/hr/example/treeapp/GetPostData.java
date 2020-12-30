@@ -4,8 +4,10 @@ import android.graphics.BitmapFactory;
 import com.example.core.entities.Comment;
 import com.example.core.entities.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -31,6 +33,7 @@ public class GetPostData {
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private StorageReference storageReference = firebaseStorage.getReference();
+    private FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     public FirebaseUser user;
     QueryDocumentSnapshot lastDocument = null;
 
@@ -169,6 +172,43 @@ public class GetPostData {
                         } else {
                             getPostsFromLastID.onCallback(null);
                         }
+                    }
+                });
+    }
+    public long getCurrentUserRole() {
+        final long[] finali = new long[1];
+        firebaseFirestore.collection("Korisnici")
+                .document(firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        long i;
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if(document.exists()){
+                                i= (long) document.get("Uloga_ID");
+                                finali[0] =i;
+                            }
+                        } else {
+                        }
+                    }
+                });
+        return finali[0];
+    }
+
+    public void deletePost(String postID){
+        firebaseFirestore.collection("Objave")
+                .document(postID)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
                     }
                 });
     }
