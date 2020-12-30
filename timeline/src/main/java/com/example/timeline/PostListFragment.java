@@ -53,6 +53,7 @@ public class PostListFragment extends Fragment implements DataPresenter, PostRec
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post_list, container, false);
         context = this.getContext();
+
         return view;
     }
 
