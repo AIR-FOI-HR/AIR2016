@@ -21,10 +21,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.api.Distribution;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -99,20 +97,26 @@ public class LoginTest extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     Fragment selectedFragment =null;
                     LinearLayout myLayout = (LinearLayout) findViewById(R.id.topmenumainlayout);
+                    HorizontalScrollView horizontalScrollView = findViewById(R.id.topmenu);
+
 
 
                     switch(item.getItemId()){
                         case R.id.nav_home:
-                                selectedFragment=dataPresentersManager.firstPresenter.getFragment();
+
+                            selectedFragment=dataPresentersManager.firstPresenter.getFragment();
+                            horizontalScrollView.setVisibility(HorizontalScrollView.VISIBLE);
                             myLayout.setVisibility(LinearLayout.VISIBLE);
-                            myLayout.bringToFront();
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                            dataPresentersManager.loadFragment(0);
+
 
                             break;
                         case R.id.nav_leaderboard:
-                            selectedFragment=new LeaderboardFragment();
 
-                            myLayout.setVisibility(LinearLayout.GONE);
+                            selectedFragment=new LeaderboardFragment();
+                            horizontalScrollView.setVisibility(HorizontalScrollView.GONE);
+                           myLayout.setVisibility(LinearLayout.GONE);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
 
                             break;
