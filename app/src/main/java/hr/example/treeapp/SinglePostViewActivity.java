@@ -1,14 +1,19 @@
 package hr.example.treeapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,9 +30,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 ;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.core.entities.User;
+import com.google.protobuf.StringValue;
 
 
 public class SinglePostViewActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -38,7 +46,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private GetPostData getPostData;
 
     private ImageView postImage;
-
+    private ImageView postComment;
     private RecyclerView commentRecyclerView;
     private CommentAdapter commentAdapter;
     private ImageView profilePicture;
@@ -50,6 +58,9 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private boolean isBig = false;
     private boolean userLikedPictureFlag=false;
     LatLng treeLocation;
+    private List<String> likesList;
+    Context context=this;
+    UserRepository userRepository= new UserRepository();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +77,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         description = findViewById(R.id.treeDescriptionText);
         userPoints = findViewById(R.id.userPoints);
         leafImage = findViewById(R.id.leafIconButton);
-
+        postComment = findViewById(R.id.postNewComment);
         leafImage.setImageResource(R.drawable.leaf_green);
 
         //tamnaPozadina= findViewById(R.id.tamnaPozadina);
@@ -108,8 +119,36 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         });
         initCommentRecycleView();
 
+        getUsersLiked();
+
+        
+    }
+
+    private void getUsersLiked() {
+
+        getPostData.getUsersLiked(postId, new GetLikesForPostCallback() {
+            @Override
+            public void onCallback(List<String> listOfLikesByUserID) {
+                List<String> lista=listOfLikesByUserID;
+                Toast.makeText(context,lista.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        /*userRepository.getUser("LHAJZDU9gfXVzCD9ICJmj8YBZRN2", new UserCallback() {
+            @Override
+            public void onCallback(User user) {
+                if(user==null)
+                    Toast.makeText(context,"user.uid",Toast.LENGTH_LONG).show();
+            }
+        });*/
+    }
+
+    private void comment(){
+        boolean userIsAnon = userRepository.isCurrentUserAnonymous();
+        if(userRepository.isCurrentUserAnonymous())
 
     }
+
     private void initMap(){
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.treeLocationMapView);
@@ -143,6 +182,20 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
 
             }
         });
+        likesList= new ArrayList<>();
+        getPostData.getPostLikes(postId, new GetLikesForPostCallback() {
+            @Override
+            public void onCallback(List<String> listOfLikesByUserID) {
+                likesList=listOfLikesByUserID;
+                if(likesList.isEmpty())
+                    numberOfLikes.setText("0");
+                else{
+                    String likes= String.valueOf(listOfLikesByUserID.size());
+                    numberOfLikes.setText(likes);
+                }
+
+            }
+        });
     }
 
 
@@ -161,8 +214,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                     populatePostData();
                 }
                 else {
-                    Toast.makeText(SinglePostViewActivity.this, R.string.Error, Toast.LENGTH_LONG);
-
+                    Toast.makeText(SinglePostViewActivity.this, R.string.Error, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -193,7 +245,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                     Glide.with(SinglePostViewActivity.this).load(image).into(postImage);
                 }
                 else
-                    Toast.makeText(SinglePostViewActivity.this, R.string.Error_loading_picture, Toast.LENGTH_LONG);
+                    Toast.makeText(SinglePostViewActivity.this, R.string.Error_loading_picture, Toast.LENGTH_LONG).show();
             }
         });
     }

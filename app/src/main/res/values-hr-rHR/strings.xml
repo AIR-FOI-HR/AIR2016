@@ -77,6 +77,7 @@
     <string name="comments">Komentari</string>
     <string name="description">Opis</string>
     <string name="points">bodova</string>
+    <string name="leafs_on_this_post">Listovi na ovoj objavi</string>
 
 
 </resources>

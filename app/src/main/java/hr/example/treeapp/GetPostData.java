@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.core.entities.Comment;
 import com.example.core.entities.Post;
+import com.example.core.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -13,21 +14,27 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.type.DateTime;
 
 import java.util.ArrayList;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 
 import addTreeLogic.LatLng;
@@ -288,6 +295,43 @@ public class GetPostData {
                         postLikesCallback.onCallback(likesOnThisPost);
             }
         });
+    }
+    public void getUsersLiked (String postID, final GetLikesForPostCallback postLikesCallback){
+        UserRepository userRepository= new UserRepository();
+        List<String> likesOnThisPost = new ArrayList<>();
+        firebaseFirestore.collection("Objave")
+                .document(postID).collection("Lajkovi")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful())
+                            for (QueryDocumentSnapshot document : task.getResult()){
+                                userRepository.getUser(document.get("Korisnik_ID").toString(), new UserCallback() {
+                                    @Override
+                                    public void onCallback(User user) {
+                                        if(user!=null)
+                                            likesOnThisPost.add(user.korisnickoIme);
+                                        if(user==null)
+                                            likesOnThisPost.add("Anonymous");
+                                        if(likesOnThisPost.size()==task.getResult().size() && likesOnThisPost.size()>0)
+                                            postLikesCallback.onCallback(likesOnThisPost);
+                                    }
+                                });
+                            }
+                    }
+                });
+    }
+
+    public void postComent(String postID, String commentText){
+        String userID=currentUser.getUid();
+        Date dateTime = Calendar.getInstance().getTime();
+        DocumentReference documentReference=firebaseFirestore.collection("Objave").document(postID).collection("Komentari").document();
+        Map<String, Object> comment= new HashMap<>();
+        comment.put("Korisnik_ID", userID);
+        comment.put("Datum", dateTime);
+        comment.put("Tekst", commentText);
+        documentReference.set(comment);
     }
 }
 
