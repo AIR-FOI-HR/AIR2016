@@ -37,7 +37,6 @@ public class UserRepository {
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        String a="a";
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if(document.exists()){
@@ -108,8 +107,27 @@ public class UserRepository {
         });
     }
 
-    public boolean isCurrentUserAnonymous(){
-        return firebaseAuth.getCurrentUser().isAnonymous();
+    public String getCurrentUserID(){
+        return firebaseAuth.getCurrentUser().getUid();
+    }
+
+    public void isCurrentUserAnonymous(final UserAnonymousCallback userAnonymousCallback){
+        firebaseFirestore.collection("Korisnici")
+                .document(getCurrentUserID())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if(document.exists()){
+                                userAnonymousCallback.onCallback(false);
+                            }
+                            else
+                                userAnonymousCallback.onCallback(true);
+                        }
+                    }
+                });
     }
 
 }

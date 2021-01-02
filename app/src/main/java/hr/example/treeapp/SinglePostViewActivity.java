@@ -46,7 +46,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private GetPostData getPostData;
 
     private ImageView postImage;
-    private ImageView postComment;
+    private Button postComment;
     private RecyclerView commentRecyclerView;
     private CommentAdapter commentAdapter;
     private ImageView profilePicture;
@@ -54,6 +54,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private TextView description;
     private TextView userPoints;
     private ImageView leafImage;
+    private TextView commentText;
     private GoogleMap map;
     private boolean isBig = false;
     private boolean userLikedPictureFlag=false;
@@ -61,6 +62,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private List<String> likesList;
     Context context=this;
     UserRepository userRepository= new UserRepository();
+    private boolean userIsAnonymous;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,12 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         description = findViewById(R.id.treeDescriptionText);
         userPoints = findViewById(R.id.userPoints);
         leafImage = findViewById(R.id.leafIconButton);
+        commentText = findViewById(R.id.newCommentTextBox);
+
         postComment = findViewById(R.id.postNewComment);
+        checkIfUserIsAnonymous();
+        postComment.setEnabled(!userIsAnonymous);
+
         leafImage.setImageResource(R.drawable.leaf_green);
 
         //tamnaPozadina= findViewById(R.id.tamnaPozadina);
@@ -121,7 +128,22 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
 
         getUsersLiked();
 
-        
+        postComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(userIsAnonymous)
+                    Toast.makeText(context, R.string.feature_not_available, Toast.LENGTH_LONG).show();
+                else{
+                    if(commentText.getText().length()==0)
+                        Toast.makeText(context,"You have to write a comment first!", Toast.LENGTH_LONG).show();
+                    else{
+                        getPostData.postComent(postId,commentText.getText().toString());
+                        getComments();
+                    }
+
+                }
+            }
+        });
     }
 
     private void getUsersLiked() {
@@ -143,10 +165,13 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         });*/
     }
 
-    private void comment(){
-        boolean userIsAnon = userRepository.isCurrentUserAnonymous();
-        if(userRepository.isCurrentUserAnonymous())
-
+    private void checkIfUserIsAnonymous(){
+        userRepository.isCurrentUserAnonymous(new UserAnonymousCallback() {
+            @Override
+            public void onCallback(boolean isAnonymous) {
+                userIsAnonymous=isAnonymous;
+            }
+        });
     }
 
     private void initMap(){
@@ -157,6 +182,11 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private void initCommentRecycleView() {
         commentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        getComments();
+
+    }
+
+    private void getComments() {
         getPostData.getPostComments(postId, new CommentCallback() {
             @Override
             public void onCallback(List<Comment> comment) {
@@ -164,7 +194,6 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                 commentRecyclerView.setAdapter(commentAdapter);
             }
         });
-
     }
 
     private void refreshLikeStatus(){

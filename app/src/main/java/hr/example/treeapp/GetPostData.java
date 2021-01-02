@@ -109,7 +109,7 @@ public class GetPostData {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Comment comment = new Comment(document.getId() ,document.getString("Korisnik_ID"), document.getString("Tekst"), document.getString("Datum"));
+                                Comment comment = new Comment(document.getId() ,document.getString("Korisnik_ID"), document.getString("Tekst"), "document.get().toString()");
                                 listaKomentara.add(comment);
                             }
                             commentCallback.onCallback(listaKomentara);

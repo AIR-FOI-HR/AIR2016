@@ -206,15 +206,17 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:inputType="textPersonName"
-                        android:text="Name" />
+                        android:fontFamily="@font/roboto_light"
+                        android:hint="@string/write_a_comment"
+                        android:padding="8dp" />
 
-                    <ImageView
+                    <Button
                         android:id="@+id/postNewComment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="8dp"
                         android:layout_weight="1"
-                        app:srcCompat="@drawable/send_comment" />
+                        android:background="@drawable/send_comment" />
                 </LinearLayout>
 
             </LinearLayout>
