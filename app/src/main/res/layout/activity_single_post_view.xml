@@ -77,12 +77,12 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/leafIconImageView"
+                        android:id="@+id/leafIconButton"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginRight="16dp"
-                        tools:srcCompat="@drawable/leaf_green" />
+                        tools:srcCompat="@drawable/leaf_like_button" />
 
                     <TextView
                         android:id="@+id/numberOfLeafsText"

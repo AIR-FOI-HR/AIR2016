@@ -22,6 +22,7 @@ import hr.example.treeapp.AllPostsCallback;
 import hr.example.treeapp.AllUsersCallback;
 import hr.example.treeapp.GetPostData;
 import hr.example.treeapp.GetPostsFromLastID;
+import hr.example.treeapp.GetPostsInLatLng;
 import hr.example.treeapp.PostImageCallback;
 import hr.example.treeapp.UserImageCallback;
 import hr.example.treeapp.UserRepository;
@@ -161,6 +162,20 @@ public class DataManager {
                 }
                 else{
                     Log.d("dokument", "Nema dokumenta objave.");
+                }
+            }
+        });
+    }
+
+    public void getPostsInLatLng(double minLatitude, double maxLatitude, double minLongitude, double maxLongitude){
+        getPostData.getPostsInLatLngBoundry(minLatitude, maxLatitude, minLongitude, maxLongitude, new GetPostsInLatLng() {
+            @Override
+            public void onCallbackPostsInLatLng(List<Post> postsInLatLng) {
+                if(postsInLatLng!=null){
+                    posts=postsInLatLng;
+                    newPostsReady=true;
+                    postBitmapsReady=true;
+                    sendNewDataToPresenter(presenter);
                 }
             }
         });

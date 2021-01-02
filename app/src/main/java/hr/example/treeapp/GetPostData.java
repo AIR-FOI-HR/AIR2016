@@ -1,12 +1,17 @@
 package hr.example.treeapp;
 
 import android.graphics.BitmapFactory;
+import android.util.Log;
+
 import com.example.core.entities.Comment;
 import com.example.core.entities.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -17,7 +22,9 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 import androidx.annotation.NonNull;
@@ -31,7 +38,7 @@ public class GetPostData {
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private StorageReference storageReference = firebaseStorage.getReference();
-    public FirebaseUser user;
+    public FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     QueryDocumentSnapshot lastDocument = null;
 
     List<Comment> listaKomentara = new ArrayList<Comment>();
@@ -172,22 +179,116 @@ public class GetPostData {
                     }
                 });
     }
-
-
-
-
-    //metoda za dohvat komentara jedne objave za prikaz objave
-            /*getPostData.getPostComments("oEyhr7OjvnDKB5vuA8ie", new CommentCallback() {
-            @Override
-            public void onCallback(List<Comment> comment) {
-                if (comment != null) {
-                    for(Comment c : comment){
-                        Log.d("komentar", "komentari:" + c.getTekst());
+    List<Post> objave = new ArrayList<>();
+    List<Double> prikazaneObjaveId = new ArrayList<>();
+    public void getPostsInLatLngBoundry (double minLatitude, double maxLatitude, double minLongitude, double maxLongitude, final GetPostsInLatLng getPostsInLatLng){
+        //minLatitude=0; maxLatitude=0; maxLongitude=0; minLongitude=0;
+        CollectionReference collectionObjave = firebaseFirestore.collection("Objave");
+            collectionObjave.whereLessThanOrEqualTo("Latitude", maxLatitude)
+                    .whereGreaterThanOrEqualTo("Latitude", minLatitude)
+                    /**collectionObjave.whereLessThanOrEqualTo("Longitude", maxLongitude)
+                     .whereGreaterThanOrEqualTo("Longitude", minLongitude);
+                     if(prikazaneObjaveId.size()>0)*/
+                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double) document.get("Latitude"), (double) document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (long) document.get("Broj_lajkova"));
+                            if(!objave.contains(post)){
+                                objave.add(post);
+                            }
+                        }
+                        Log.d("Broj ucitanih:", String.valueOf(objave.size()));
+                        getPostsInLatLng.onCallbackPostsInLatLng(objave);
                     }
                 }
-                else{
-                    Log.d("komentar", "Nema komentara.");
-                }
+            });
+    }
+
+/**
+        if(prikazaneObjaveId.size()>0)
+            firebaseFirestore.collection("Objave")
+                    .whereLessThanOrEqualTo("Latitude",maxLatitude)
+                    .whereGreaterThanOrEqualTo("Latitude", minLatitude)
+                    .whereLessThanOrEqualTo("Longitude", maxLongitude)
+                    .whereGreaterThanOrEqualTo("Longitude", minLongitude)
+                    //.whereNotIn("ID_objava",prikazaneObjaveId)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        }
+                    });
+        else
+            firebaseFirestore.collection("Objave")
+                    .whereLessThanOrEqualTo("Latitude",maxLatitude)
+                    .whereGreaterThanOrEqualTo("Latitude", minLatitude)
+                    .whereLessThanOrEqualTo("Longitude", maxLongitude)
+                    .whereGreaterThanOrEqualTo("Longitude", minLongitude)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()){
+                                for (QueryDocumentSnapshot document : task.getResult()){
+                                    Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double)document.get("Latitude"), (double)document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (long)document.get("Broj_lajkova"));
+                                    objave.add(post);
+                                    prikazaneObjaveId.add(post.getID_objava());
+                                }
+                                getPostsInLatLng.onCallbackPostsInLatLng(objave);
+                            }
+                        }
+                    });*/
+
+    public void likePost(String postID){
+        DocumentReference documentReference = firebaseFirestore.collection("Objave").document(postID).collection("Lajkovi").document(currentUser.getUid());
+        Map<String, Object> like= new HashMap<>();
+        like.put("Korisnik_ID", currentUser.getUid());
+        documentReference.set(like);
+
+    }
+
+    public void removeLikeOnPost (String postID){
+        DocumentReference documentReference = firebaseFirestore.collection("Objave").document(postID).collection("Lajkovi").document(currentUser.getUid());
+        documentReference.delete();
+    }
+
+    public void hasUserLikedPost(String postID, final CheckIfUserLikedPhotoCallback checkCallback){
+
+        firebaseFirestore.collection("Objave")
+                .document(postID).collection("Lajkovi")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        boolean check=false;
+                        if(task.isSuccessful())
+                            for (QueryDocumentSnapshot document : task.getResult())
+                                if(document.get("Korisnik_ID").toString().equals(currentUser.getUid()))
+                                    check=true;
+                         checkCallback.onCallback(check);
+                    }
+                });
+    }
+
+    public void getPostLikes(String postID, final GetLikesForPostCallback postLikesCallback){
+        List<String> likesOnThisPost = new ArrayList<>();
+        firebaseFirestore.collection("Objave")
+                .document(postID).collection("Lajkovi")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful())
+                            for (QueryDocumentSnapshot document : task.getResult())
+                                if(document!=null)
+                                    likesOnThisPost.add(document.get("Korisnik_ID").toString());
+                        postLikesCallback.onCallback(likesOnThisPost);
             }
-        });*/
+        });
+    }
 }
+
+

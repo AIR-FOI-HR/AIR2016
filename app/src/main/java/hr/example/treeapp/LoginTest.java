@@ -12,19 +12,18 @@ import managers.DataManager;
 import managers.DataPresentersManager;
 
 import com.example.core.LiveData.LiveData;
+import com.example.core.VisibleMapRange;
 import com.example.timeline.PostListFragment;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,6 +59,14 @@ public class LoginTest extends AppCompatActivity {
             }
         };
         model.selectedPostId().observe(this, postIdObserver);
+
+        final Observer<VisibleMapRange> visibleMapRangeObserver = new Observer<VisibleMapRange>() {
+            @Override
+            public void onChanged(VisibleMapRange mapMinMaxLatLng) {
+                dataManager.getPostsInLatLng(mapMinMaxLatLng.minLatitude, mapMinMaxLatLng.maxLatitude, mapMinMaxLatLng.minLongitude, mapMinMaxLatLng.maxLongitude);
+            }
+        };
+        model.visibleMapRange().observe(this, visibleMapRangeObserver);
 
         FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
         dataPresentersManager=new DataPresentersManager(context);

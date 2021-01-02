@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +16,11 @@ import android.view.ViewGroup;
 
 import com.example.core.DataPresenter;
 import com.example.core.LiveData.LiveData;
+import com.example.core.VisibleMapRange;
 import com.example.core.entities.Post;
 import com.example.core.entities.User;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -34,6 +39,7 @@ public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleM
     private List<User> users;
     private boolean mapReady=false;
     private LiveData liveData;
+    private boolean cameraMoving;
 
     @Nullable
     @Override
@@ -54,15 +60,66 @@ public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleM
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);**/
     }
-
+    private boolean timerStarted=false;
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        final com.google.android.gms.maps.model.LatLng mapsLatLng =
+                new com.google.android.gms.maps.model.LatLng(44.602505,
+                        16.44023);
+        Float zoomLvl = (float)40;
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mapsLatLng,zoomLvl));
+
+        mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+            @Override
+            public void onCameraMoveStarted(int i) {
+
+            }
+        });
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                updateData();
+                /**
+                if(!timerStarted){
+                    timerStarted=true;
+                    updateData();
+                    new CountDownTimer(2000,1000){
+
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            timerStarted=false;
+                        }
+                    };
+                }*/
+            }
+        });
+/*
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                updateData();
+            }
+        });*/
         mapReady=true;
-        if(mapReady&& dataReady)
+        if(dataReady)
             setMarkersOnMap();
 
+    }
+
+    private void updateData() {
+        double maxLat = mMap.getProjection().getVisibleRegion().latLngBounds.northeast.latitude;
+        double minLat = mMap.getProjection().getVisibleRegion().latLngBounds.southwest.latitude;
+        double minLng = mMap.getProjection().getVisibleRegion().latLngBounds.southwest.longitude;
+        double maxLng = mMap.getProjection().getVisibleRegion().latLngBounds.northeast.longitude;
+        VisibleMapRange visibleMapRange= new VisibleMapRange(minLat,maxLat,minLng,maxLng);
+        liveData.UpdateVisibleMapRange(visibleMapRange);
     }
 
     private void setMarkersOnMap() {
@@ -95,7 +152,7 @@ public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleM
         this.posts=posts;
         this.users=users;
         dataReady=true;
-        if(dataReady && mapReady)
+        if(mapReady)
             setMarkersOnMap();
 
     }

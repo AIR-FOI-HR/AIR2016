@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private ImageView leafImage;
     private GoogleMap map;
     private boolean isBig = false;
+    private boolean userLikedPictureFlag=false;
     LatLng treeLocation;
 
     @Override
@@ -63,11 +65,12 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         numberOfLikes = findViewById(R.id.numberOfLeafsText);
         description = findViewById(R.id.treeDescriptionText);
         userPoints = findViewById(R.id.userPoints);
-        leafImage = findViewById(R.id.leafIconImageView);
+        leafImage = findViewById(R.id.leafIconButton);
 
         leafImage.setImageResource(R.drawable.leaf_green);
 
         //tamnaPozadina= findViewById(R.id.tamnaPozadina);
+        initMap();
         getPost();
         postImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,8 +95,20 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
 
             }
         });
+        refreshLikeStatus();
+        leafImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!userLikedPictureFlag)
+                    getPostData.likePost(postId);
+                if(userLikedPictureFlag)
+                    getPostData.removeLikeOnPost(postId);
+                refreshLikeStatus();
+            }
+        });
         initCommentRecycleView();
-        initMap();
+
+
     }
     private void initMap(){
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -113,6 +128,22 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
 
     }
 
+    private void refreshLikeStatus(){
+        getPostData.hasUserLikedPost(postId, new CheckIfUserLikedPhotoCallback() {
+            @Override
+            public void onCallback(Boolean userLikedPhoto) {
+                if(userLikedPhoto){
+                    userLikedPictureFlag=true;
+                    leafImage.setImageResource(R.drawable.leaf_full);
+                }
+                else{
+                    userLikedPictureFlag=false;
+                    leafImage.setImageResource(R.drawable.leaf_transparent);
+                }
+
+            }
+        });
+    }
 
 
     private void getPost(){
