@@ -160,12 +160,13 @@ public class GetPostData {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            List<Post> listaNovihObjava = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double)document.get("Latitude"), (double)document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (long)document.get("Broj_lajkova"));
-                                listaObjava.add(post);
+                                listaNovihObjava.add(post);
                                 lastDocument = document;
                             }
-                            getPostsFromLastID.onCallback(listaObjava);
+                            getPostsFromLastID.onCallback(listaNovihObjava);
                         } else {
                             getPostsFromLastID.onCallback(null);
                         }

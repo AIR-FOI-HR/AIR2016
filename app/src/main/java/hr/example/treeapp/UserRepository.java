@@ -2,6 +2,8 @@ package hr.example.treeapp;
 
 
 import android.graphics.BitmapFactory;
+
+import com.example.core.entities.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -24,7 +26,7 @@ public class UserRepository {
     private StorageReference storageReference = firebaseStorage.getReference();
     public FirebaseUser user;
 
-    List<User> listaKorisnika = new ArrayList<>();
+    public List<User> listaKorisnika = new ArrayList<>();
 
     public void getUser(String korisnikID, final UserCallback userCallback) {
         firebaseFirestore.collection("Korisnici")
@@ -74,7 +76,6 @@ public class UserRepository {
 
     public void getAllUsers(final AllUsersCallback allUsersCallback) {
         firebaseFirestore.collection("Korisnici")
-                .limit(6)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -88,6 +89,26 @@ public class UserRepository {
                             allUsersCallback.onCallback(listaKorisnika);
                         } else {
                             allUsersCallback.onCallback(null);
+                        }
+                    }
+                });
+    }
+
+    public void getUser(Post post, final UserCallback UserCallback) {
+        firebaseFirestore.collection("Korisnici")
+                .document(post.getKorisnik_ID())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if(document.exists()){
+                                User user = new User(document.getId(), document.get("Ime").toString(), document.get("Prezime").toString(), document.get("E-mail").toString(), document.getString("Profilna_slika_ID"), (long)document.get("Uloga_ID"), document.get("Korisnicko_ime").toString(), document.get("Datum_rodenja").toString(), (long)document.get("Bodovi"));
+                                UserCallback.onCallback(user);
+                            }
+                        } else {
+                           UserCallback.onCallback(null);
                         }
                     }
                 });

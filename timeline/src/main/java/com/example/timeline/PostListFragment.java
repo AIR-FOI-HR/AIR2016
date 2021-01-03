@@ -30,6 +30,7 @@ public class PostListFragment extends Fragment implements DataPresenter, PostRec
     private boolean dataReady = false;
     private boolean moduleReady = false;
     private LinearLayoutManager layoutManager;
+    PostRecyclerAdapter postRecyclerAdapter;
 
     private boolean loading = true;
 
@@ -78,9 +79,8 @@ public class PostListFragment extends Fragment implements DataPresenter, PostRec
 
         dataReady = true;
         tryToDisplayData(isNewData);
-
     }
-    PostRecyclerAdapter postRecyclerAdapter;
+
     private void tryToDisplayData(boolean isNewData){
         if(moduleReady && dataReady) {
             List<PostItem> postItems = PostListViewModel.convertToPostItemList(posts);

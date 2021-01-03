@@ -23,6 +23,7 @@ import hr.example.treeapp.AllUsersCallback;
 import hr.example.treeapp.GetPostData;
 import hr.example.treeapp.GetPostsFromLastID;
 import hr.example.treeapp.PostImageCallback;
+import hr.example.treeapp.UserCallback;
 import hr.example.treeapp.UserImageCallback;
 import hr.example.treeapp.UserRepository;
 
@@ -43,6 +44,9 @@ public class DataManager {
     private boolean postBitmapsReady = false;
     private boolean userBitmapsReady = false;
     private boolean newPostsReady = false;
+    private boolean firstCall = true;
+    private int numberOfNewUsers = 0;
+    private boolean userPostoji = false;
 
     public static DataManager getInstance(){
         return instance;
@@ -58,6 +62,10 @@ public class DataManager {
         postsReady = false;
         usersReady = false;
         newPostsReady = false;
+        firstCall = true;
+        numberOfNewUsers = 0;
+        users.clear();
+        userPostoji = false;
 
         getPostData.getAllPosts(new AllPostsCallback() {
             @Override
@@ -66,21 +74,7 @@ public class DataManager {
                     posts = postList;
                     postsReady = true;
                     fillPostsWithBitmaps();
-                    sendDataToPresenter(presenter);
-                }
-                else{
-                    Log.d("dokument", "Nema dokumenta objave.");
-                }
-            }
-        });
-
-        userRepository.getAllUsers(new AllUsersCallback() {
-            @Override
-            public void onCallback(List<User> userList) {
-                if (userList != null) {
-                    users = userList;
-                    usersReady = true;
-                    fillUsersWithBitmaps();
+                    getUsers(posts);
                     sendDataToPresenter(presenter);
                 }
                 else{
@@ -90,12 +84,55 @@ public class DataManager {
         });
     }
 
+    private void getUsers(List<Post> posts) {
+        numberOfNewUsers = 0;
+        if(posts.isEmpty()){
+            usersReady = true;
+            userBitmapsReady = true;
+            sendDataToPresenter(presenter);
+            sendNewDataToPresenter(presenter);
+        }
+        else {
+            for (Post p : posts) {
+                userRepository.getUser(p, new UserCallback() {
+                    @Override
+                    public void onCallback(User user) {
+                        if (user != null) {
+                            numberOfNewUsers++;
+                            userPostoji = false;
+                            for (User u : users) {
+                                if (u.getKorisnickoIme() == user.getKorisnickoIme()) {
+                                    userPostoji = true;
+                                }
+                            }
+                            if (!userPostoji) {
+                                users.add(user);
+                            }
+                            if (posts.size() == numberOfNewUsers) {
+                                usersReady = true;
+                                fillUsersWithBitmaps();
+                                sendDataToPresenter(presenter);
+                                sendNewDataToPresenter(presenter);
+                            }
+                        } else {
+                            numberOfNewUsers++;
+                            sendDataToPresenter(presenter);
+                            sendNewDataToPresenter(presenter);
+                            Log.d("dokument", "Nema dokumenta objave.");
+                        }
+                    }
+                });
+            }
+        }
+    }
+
     public void sendDataToPresenter(DataPresenter presenter){
-        if(postsReady && usersReady && postBitmapsReady && userBitmapsReady){
+        if(postsReady && usersReady && postBitmapsReady && userBitmapsReady&&firstCall){
             presenter.setData(posts, users, true);
             postBitmapsReady = false;
             usersReady = false;
             userBitmapsReady = false;
+            firstCall = false;
         }
     }
 
@@ -125,25 +162,38 @@ public class DataManager {
     }
 
     private void fillUsersWithBitmaps(){
+        numberOfUsers = 0;
         for (User u : users) {
             if (!(u.getProfilnaSlika().contains("https://"))) {
-                userRepository.getUserImage(u.getProfilnaSlika(), new UserImageCallback() {
-                    @Override
-                    public void onCallback(Bitmap slika) {
-                        u.setSlika(slika);
-                        numberOfUsers++;
-                        if (numberOfUsers == users.size()) {
-                            userBitmapsReady = true;
-                            sendDataToPresenter(presenter);
-                        }
+                if (u.getSlika() == null) {
+                    userRepository.getUserImage(u.getProfilnaSlika(), new UserImageCallback() {
+                        @Override
+                        public void onCallback(Bitmap slika) {
+                            u.setSlika(slika);
+                            numberOfUsers++;
+                            if (numberOfUsers == users.size()) {
+                                userBitmapsReady = true;
+                                sendDataToPresenter(presenter);
+                                sendNewDataToPresenter(presenter);
+                            }
 
+                        }
+                    });
+                } else {
+                    numberOfUsers++;
+                    if (numberOfUsers == users.size()) {
+                        userBitmapsReady = true;
+                        sendDataToPresenter(presenter);
+                        sendNewDataToPresenter(presenter);
                     }
-                });
-            } else{
+                }
+            }
+            else{
                 numberOfUsers++;
                 if (numberOfUsers == users.size()) {
                     userBitmapsReady = true;
                     sendDataToPresenter(presenter);
+                    sendNewDataToPresenter(presenter);
                 }
             }
         }
@@ -154,9 +204,10 @@ public class DataManager {
             @Override
             public void onCallback(List<Post> postList) {
                 if (postList != null) {
-                    posts = postList;
+                    posts.addAll(postList);
                     newPostsReady = true;
                     fillPostsWithBitmaps();
+                    getUsers(postList);
                     sendNewDataToPresenter(presenter);
                 }
                 else{
@@ -167,10 +218,12 @@ public class DataManager {
     }
 
     public void sendNewDataToPresenter(DataPresenter presenter){
-        if(newPostsReady&&postBitmapsReady){
+        if(newPostsReady && usersReady && postBitmapsReady && userBitmapsReady){
             presenter.setData(posts, users, false);
             newPostsReady = false;
             postBitmapsReady = false;
+            usersReady = false;
+            userBitmapsReady = false;
         }
     }
 

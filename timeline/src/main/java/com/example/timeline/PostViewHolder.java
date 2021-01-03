@@ -17,6 +17,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     ImageView profileImage;
     TextView username;
     TextView postDescription;
+    TextView leafNumberTextView;
     private View itemView;
     PostRecyclerAdapter.OnItemClicked onItemClicked;
 
@@ -26,6 +27,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         profileImage = itemView.findViewById(R.id.profile_image);
         username = itemView.findViewById(R.id.username);
         postDescription = itemView.findViewById(R.id.post_description);
+        leafNumberTextView = itemView.findViewById(R.id.leafNumberTextView);
         this.onItemClicked=onItemClicked;
         this.itemView = itemView;
     }
@@ -33,6 +35,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     public void bindToData(Post post, User user){
         username.setText(user.korisnickoIme);
         postDescription.setText(post.getOpis());
+        leafNumberTextView.setText(String.valueOf(post.getBroj_lajkova()));
 
         if(post.getURL_slike().contains("https://")) {
             Picasso.with(itemView.getContext())
