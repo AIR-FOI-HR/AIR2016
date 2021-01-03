@@ -96,5 +96,6 @@
     <string name="leafs_on_this_post">Leafs on this post</string>
     <string name="write_a_comment">Write a comment!</string>
     <string name="feature_not_available">This feature isn\'t available for you! Please Register :)</string>
+    <string name="now">Now</string>
 
 </resources>

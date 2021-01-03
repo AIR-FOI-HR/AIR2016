@@ -1,18 +1,18 @@
 package hr.example.treeapp;
 
-import androidx.appcompat.app.AlertDialog;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.graphics.Point;
 import android.os.Bundle;;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,13 +29,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-;
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import com.example.core.entities.User;
-import com.google.protobuf.StringValue;
+
 
 
 public class SinglePostViewActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -43,7 +42,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private Post post;
     private  Bitmap image;
     private TextView username;
-    private GetPostData getPostData;
+    private GetPostData getPostData= new GetPostData();;
 
     private ImageView postImage;
     private Button postComment;
@@ -70,7 +69,6 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         setContentView(R.layout.activity_single_post_view);
         postId  = getIntent().getStringExtra("postId");
         postImage = findViewById(R.id.postImageView);
-        getPostData = new GetPostData();
 
         commentRecyclerView = findViewById(R.id.commentRecycleView);
         username = findViewById(R.id.usernameText);
@@ -87,15 +85,26 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
 
         leafImage.setImageResource(R.drawable.leaf_green);
 
-        //tamnaPozadina= findViewById(R.id.tamnaPozadina);
         initMap();
+
         getPost();
+
+        refreshLikeStatus();
+
+        initCommentRecycleView();
+
+        getUsersLiked();
+
+        initClickListeners();
+    }
+    private void initClickListeners(){
         postImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!isBig){
+                    Point displaySize = getDisplayWidth();
                     ViewGroup.LayoutParams params = postImage.getLayoutParams();
-                    params.height = image.getHeight();
+                    params.height = displaySize.x;
                     postImage.setScaleType(ImageView.ScaleType.FIT_XY);
                     postImage.setLayoutParams(params);
                     postImage.setImageBitmap(image);
@@ -113,7 +122,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
 
             }
         });
-        refreshLikeStatus();
+
         leafImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,9 +133,6 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                 refreshLikeStatus();
             }
         });
-        initCommentRecycleView();
-
-        getUsersLiked();
 
         postComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,13 +143,36 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                     if(commentText.getText().length()==0)
                         Toast.makeText(context,"You have to write a comment first!", Toast.LENGTH_LONG).show();
                     else{
-                        getPostData.postComent(postId,commentText.getText().toString());
-                        getComments();
+                        postComment();
                     }
 
                 }
             }
         });
+    }
+
+    private Point getDisplayWidth() {
+        Display display   = getWindowManager().getDefaultDisplay();
+        Point displaySize = new Point();
+        display.getSize(displaySize);
+        return displaySize;
+    }
+
+    private void postComment() {
+        String text=commentText.getText().toString();
+        getPostData.postComent(postId,text);
+        Toast.makeText(context, "Commented!", Toast.LENGTH_SHORT).show();
+        updateCommentRecycleView(text);
+    }
+
+    private void updateCommentRecycleView(String text) {
+        String currentUserID = userRepository.getCurrentUserID();
+        Comment cmnt= new Comment(currentUserID,currentUserID,text, getString(R.string.now));
+        commentText.setText(null);
+        commentText.clearFocus();
+        commentAdapter.mData.add(0,cmnt);
+        commentAdapter.notifyItemInserted(0);
+        commentAdapter.notifyDataSetChanged();
     }
 
     private void getUsersLiked() {
@@ -152,17 +181,9 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
             @Override
             public void onCallback(List<String> listOfLikesByUserID) {
                 List<String> lista=listOfLikesByUserID;
-                Toast.makeText(context,lista.toString(), Toast.LENGTH_LONG).show();
             }
         });
 
-        /*userRepository.getUser("LHAJZDU9gfXVzCD9ICJmj8YBZRN2", new UserCallback() {
-            @Override
-            public void onCallback(User user) {
-                if(user==null)
-                    Toast.makeText(context,"user.uid",Toast.LENGTH_LONG).show();
-            }
-        });*/
     }
 
     private void checkIfUserIsAnonymous(){
@@ -261,7 +282,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                 .position(treeLocation)
                 .draggable(false)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker)));
-        Float zoomLvl = (float)15;
+        float zoomLvl = (float)15;
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(treeLocation,zoomLvl));
     }
 

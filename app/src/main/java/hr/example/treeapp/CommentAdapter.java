@@ -21,7 +21,7 @@ import java.util.List;
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
 
     private Context mContext;
-    private List<Comment> mData;
+    public List<Comment> mData;
 
     public CommentAdapter(Context mContext, List<Comment> mData) {
         this.mContext = mContext;
@@ -38,31 +38,30 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
         String userId = mData.get(position).getKorisnik_ID();
         UserRepository userRepository = new UserRepository();
-        userRepository.getUserImage(userId, new ProfileImageCallback() {
-            @Override
-            public void onCallbackList(UserImage userImage) {
-                if(userImage.image!=null && userImage.url==null)
-                    Glide.with(mContext).load(userImage.image).into(holder.userImage);
-                if(userImage.url!=null && userImage.image==null){
-                    RequestOptions options = new RequestOptions()
-                            .centerCrop()
-                            .placeholder(R.mipmap.ic_launcher_round)
-                            .error(R.mipmap.ic_launcher_round);
-                    Glide.with(mContext).load(userImage.url).apply(options).into(holder.userImage);
-                }
-            }
-        });
+
 
         userRepository.getUser(userId, new UserCallback() {
             @Override
             public void onCallback(User user) {
-                holder.username.setText(user.korisnickoIme);
+                userRepository.getUserImage(userId, new ProfileImageCallback() {
+                    @Override
+                    public void onCallbackList(UserImage userImage) {
+                        holder.username.setText(user.korisnickoIme);
+                        holder.commentContent.setText(mData.get(position).getTekst().trim());
+                        holder.date.setText("");
+                        if(userImage.image!=null && userImage.url==null)
+                            Glide.with(mContext).load(userImage.image).into(holder.userImage);
+                        if(userImage.url!=null && userImage.image==null){
+                            RequestOptions options = new RequestOptions()
+                                    .centerCrop()
+                                    .placeholder(R.mipmap.ic_launcher_round)
+                                    .error(R.mipmap.ic_launcher_round);
+                            Glide.with(mContext).load(userImage.url).apply(options).into(holder.userImage);
+                        }
+                    }
+                });
             }
         });
-
-        holder.commentContent.setText(mData.get(position).getTekst());
-        holder.date.setText(mData.get(position).getDatum());
-
     }
 
     @Override

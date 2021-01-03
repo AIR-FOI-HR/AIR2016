@@ -80,6 +80,7 @@
     <string name="leafs_on_this_post">Listovi na ovoj objavi</string>
     <string name="write_a_comment">Napiši komentar!</string>
     <string name="feature_not_available">Ova mogućnost nije dostupna za vas! Molimo registrirajte se :)</string>
+    <string name="now">Upravo</string>
 
 
 </resources>

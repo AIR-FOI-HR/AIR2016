@@ -7,6 +7,7 @@ import com.example.core.entities.Comment;
 import com.example.core.entities.Post;
 import com.example.core.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -102,14 +103,14 @@ public class GetPostData {
     public void getPostComments(String postId, final CommentCallback commentCallback) {
         firebaseFirestore.collection("Objave")
                 .document(postId)
-                .collection("Komentari")
+                .collection("Komentari").orderBy("Datum", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Comment comment = new Comment(document.getId() ,document.getString("Korisnik_ID"), document.getString("Tekst"), "document.get().toString()");
+                                Comment comment = new Comment(document.getId() ,document.getString("Korisnik_ID"), document.getString("Tekst"), document.get("Datum").toString());
                                 listaKomentara.add(comment);
                             }
                             commentCallback.onCallback(listaKomentara);
@@ -254,12 +255,30 @@ public class GetPostData {
         Map<String, Object> like= new HashMap<>();
         like.put("Korisnik_ID", currentUser.getUid());
         documentReference.set(like);
+        updateLikesForPost(postID);
+    }
 
+    private void updateLikesForPost(String postID) {
+        DocumentReference postReference = firebaseFirestore.collection("Objave").document(postID);
+        Map<String, Object> thisPost= new HashMap<>();
+
+        thisPost.put("Broj_lajkova", 0);
+        postReference.update(thisPost);
+        getUsersLiked(postID, new GetLikesForPostCallback() {
+            @Override
+            public void onCallback(List<String> listOfLikesByUserID) {
+                thisPost.put("Broj_lajkova", listOfLikesByUserID.size());
+                postReference.update(thisPost);
+            }
+        });
     }
 
     public void removeLikeOnPost (String postID){
         DocumentReference documentReference = firebaseFirestore.collection("Objave").document(postID).collection("Lajkovi").document(currentUser.getUid());
         documentReference.delete();
+        updateLikesForPost(postID);
+
+
     }
 
     public void hasUserLikedPost(String postID, final CheckIfUserLikedPhotoCallback checkCallback){
@@ -294,7 +313,13 @@ public class GetPostData {
                                     likesOnThisPost.add(document.get("Korisnik_ID").toString());
                         postLikesCallback.onCallback(likesOnThisPost);
             }
-        });
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        postLikesCallback.onCallback(null);
+                    }
+                });
     }
     public void getUsersLiked (String postID, final GetLikesForPostCallback postLikesCallback){
         UserRepository userRepository= new UserRepository();
@@ -325,11 +350,12 @@ public class GetPostData {
 
     public void postComent(String postID, String commentText){
         String userID=currentUser.getUid();
+        String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(new Date());
         Date dateTime = Calendar.getInstance().getTime();
         DocumentReference documentReference=firebaseFirestore.collection("Objave").document(postID).collection("Komentari").document();
         Map<String, Object> comment= new HashMap<>();
         comment.put("Korisnik_ID", userID);
-        comment.put("Datum", dateTime);
+        comment.put("Datum", currentDateTimeString);
         comment.put("Tekst", commentText);
         documentReference.set(comment);
     }
