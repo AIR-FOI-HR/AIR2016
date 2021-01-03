@@ -1,6 +1,7 @@
 package hr.example.treeapp;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.core.entities.User;
 import com.squareup.picasso.Picasso;
 
@@ -26,6 +28,7 @@ public class LeaderboardRecyclerAdapter extends RecyclerView.Adapter<Leaderboard
     private UserRepository userRepository = new UserRepository();
     private int numberOfUsers = 0;
     private boolean userBitmapsReady = false;
+    String string;
 
 
 
@@ -42,35 +45,34 @@ public class LeaderboardRecyclerAdapter extends RecyclerView.Adapter<Leaderboard
         MyViewHolder vHolder=new MyViewHolder(v);
         return vHolder;
 
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
         holder.ranking_number.setText(position+1+".");
-    /*    if(users.get(position).getProfilnaSlika().contains("https://")) {
-            userRepository.getUserImage(users.get(position).getProfilnaSlika(), new UserImageCallback() {
-                @Override
-                public void onCallback(Bitmap slika) {
-                    users.get(position).setSlika(slika);
-                    numberOfUsers++;
-                    if (numberOfUsers == users.size()) {
-                        userBitmapsReady = true;
-
-                    }
-
+        userRepository.getUserImage(users.get(position).uid, new ProfileImageCallback() {
+            @Override
+            public void onCallbackList(UserImage userImage) {
+                if(userImage.image!=null && userImage.url==null)
+                    Glide.with(mContext).load(userImage.image).into(holder.profile_picture);
+                if(userImage.url!=null && userImage.image==null){
+                    RequestOptions options = new RequestOptions()
+                            .centerCrop()
+                            .placeholder(R.mipmap.ic_launcher_round)
+                            .error(R.mipmap.ic_launcher_round);
+                    Glide.with(mContext).load(userImage.url).apply(options).into(holder.profile_picture);
                 }
-            });
-        } else{
-            numberOfUsers++;
-            if (numberOfUsers == users.size()) {
-                userBitmapsReady = true;
 
             }
-        }
-    */
+        });
+        Resources res = mContext.getResources();
+        string=res.getString(R.string.leaderboard_item_points_text);
+
+
         holder.username.setText(users.get(position).getKorisnickoIme());
-        holder.points.setText((Integer.toString((int) users.get(position).getBodovi())));
+        holder.points.setText((Integer.toString((int) users.get(position).getBodovi()))+string);
 
     }
 
@@ -86,7 +88,7 @@ public class LeaderboardRecyclerAdapter extends RecyclerView.Adapter<Leaderboard
         private TextView points;
 
 
-        public MyViewHolder(View itemView){
+        public MyViewHolder(@NonNull View itemView){
             super(itemView);
 
             ranking_number=(TextView)itemView.findViewById(R.id.ranking_number);

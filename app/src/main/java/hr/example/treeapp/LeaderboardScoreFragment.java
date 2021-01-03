@@ -77,6 +77,8 @@ public class LeaderboardScoreFragment extends Fragment {
 
     }
 
+
+
   /*  public void fillLeaderboardProfilePicture(List<User> userList){
         for (User u : userList) {
             if (!(u.getProfilnaSlika().contains("https://"))) {

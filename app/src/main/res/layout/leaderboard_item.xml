@@ -14,21 +14,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#80D0D0D0"
+        android:background="@color/teal_700"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
-            android:layout_width="61dp"
-            android:layout_height="match_parent"
             android:id="@+id/ranking_number"
+            android:layout_width="27dp"
+            android:layout_height="match_parent"
             android:layout_marginStart="@dimen/general_margin"
             android:layout_marginEnd="@dimen/general_margin"
             android:layout_marginBottom="@dimen/general_margin"
+            android:paddingTop="12dp"
+
             android:text="@string/leaderboard_item_number"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/cardview_light_background"
-            ></TextView>
+            android:textColor="@color/cardview_light_background"></TextView>
 
         <ImageView
             android:id="@+id/profile_image_leaderboard"
@@ -44,7 +45,9 @@
             android:layout_marginStart="@dimen/general_margin"
             android:layout_marginEnd="@dimen/general_margin"
             android:layout_marginBottom="@dimen/general_margin"
+            android:paddingTop="12dp"
             android:text="@string/username_post"
+            android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/cardview_light_background"></TextView>
 
@@ -55,6 +58,7 @@
             android:layout_marginStart="@dimen/general_margin"
             android:layout_marginEnd="@dimen/general_margin"
             android:layout_marginBottom="@dimen/general_margin"
+            android:paddingTop="12dp"
             android:text="@string/leaderboard_item_points"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/cardview_light_background"></TextView>
