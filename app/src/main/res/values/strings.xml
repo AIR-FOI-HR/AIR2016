@@ -98,6 +98,8 @@
     <string name="leaderboard_item_points">Points</string>
     <string name="leaderboard_item_points_text">\u0020points</string>
     <string name="leaderboard_location_button">Choose location</string>
+    <string name="leaderboard_apply_button">Apply location</string>
+
 
 
     <string name="large_text">

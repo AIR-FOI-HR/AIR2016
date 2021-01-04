@@ -2,16 +2,23 @@ package hr.example.treeapp;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -19,7 +26,14 @@ import com.google.android.gms.maps.model.PolylineOptions;
 public class LeaderboardLocationMapview extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    Marker noviMarker;
     LatLng novaLat;
+    Circle circle;
+    SupportMapFragment mapFragment;
+    View view;
+    Button button;
+    EditText editText;
+    int radius=100000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,19 +45,21 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
         mapFragment.getMapAsync(this);
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         initClickEvent();
+
+        button=findViewById(R.id.button_apply_leaderboard);
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if(novaLat!=null){
+
+                }
+                finish();
+            }
+        });
 
     }
 
@@ -51,14 +67,29 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                mMap.addMarker(new MarkerOptions().position(latLng).title("Marker in this position"));
+                noviMarker=mMap.addMarker(new MarkerOptions().position(latLng).title("Centar kruga"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 novaLat=latLng;
+                if(noviMarker!=null){
+                    noviMarker.remove();
+                }
+                editText=findViewById(R.id.radius_text);
+                String temp=editText.getText().toString();
+                if(temp.matches("")){
+                }
+                else{
+                    radius = Integer.valueOf(editText.getText().toString());
+                }
 
-                Circle circle = mMap.addCircle(new CircleOptions()
+                if(circle!=null){
+                    circle.remove();
+
+                }
+
+                circle = mMap.addCircle(new CircleOptions()
                         .center(novaLat)
-                        .radius(100000)
-                        .strokeWidth(100)
+                        .radius(radius)
+                        .strokeWidth(10)
                         .strokeColor(Color.GREEN)
                         .clickable(true));
 
@@ -68,11 +99,14 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
                         // Flip the r, g and b components of the circle's stroke color.
                         int strokeColor = circle.getStrokeColor() ^ 0x00ffffff;
                         circle.setStrokeColor(strokeColor);
+
                     }
                 });
-
-
             }
+
         });
     }
+
+
+
 }

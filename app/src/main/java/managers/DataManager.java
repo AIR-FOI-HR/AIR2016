@@ -23,6 +23,7 @@ import hr.example.treeapp.AllUsersCallback;
 import hr.example.treeapp.GetPostData;
 import hr.example.treeapp.GetPostsFromLastID;
 import hr.example.treeapp.PostImageCallback;
+import hr.example.treeapp.UserCallback;
 import hr.example.treeapp.UserImageCallback;
 import hr.example.treeapp.UserRepository;
 
@@ -43,6 +44,7 @@ public class DataManager {
     private boolean postBitmapsReady = false;
     private boolean userBitmapsReady = false;
     private boolean newPostsReady = false;
+    private boolean userpostoji=false;
 
     public static DataManager getInstance(){
         return instance;
@@ -57,6 +59,7 @@ public class DataManager {
         userBitmapsReady = false;
         postsReady = false;
         usersReady = false;
+
         newPostsReady = false;
 
         getPostData.getAllPosts(new AllPostsCallback() {
@@ -169,4 +172,29 @@ public class DataManager {
         }
     }
 
-}
+    private void getUsersForLocationLeaderboard(List<Post> posts) {
+        if(posts.isEmpty()){
+            usersReady = true;
+            userBitmapsReady = true;
+        }
+        else {
+            for (Post p : posts) {
+                userRepository.getUser(p.getKorisnik_ID(), new UserCallback() {
+                    @Override
+                    public void onCallback(User user) {
+                        if (user != null) {
+                            userpostoji = false;
+                            for (User u : users) {
+                                if (u.getKorisnickoIme() == user.getKorisnickoIme()) {
+                                    userpostoji = true;
+                                }
+                            }
+                            if (!userpostoji) {
+                                users.add(user);
+                            }
+                    }
+                };
+            });
+        }
+    }
+}}
