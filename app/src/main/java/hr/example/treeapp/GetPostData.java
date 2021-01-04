@@ -294,7 +294,7 @@ public class GetPostData {
                             for (QueryDocumentSnapshot document : task.getResult())
                                 if(document.get("Korisnik_ID").toString().equals(currentUser.getUid()))
                                     check=true;
-                         checkCallback.onCallback(check);
+                            checkCallback.onCallback(check);
                     }
                 });
     }
@@ -336,7 +336,7 @@ public class GetPostData {
                                     @Override
                                     public void onCallback(User user) {
                                         if(user!=null)
-                                            likesOnThisPost.add(user.korisnickoIme);
+                                            likesOnThisPost.add(user.uid);
                                         if(user==null)
                                             likesOnThisPost.add("Anonymous");
                                         if(likesOnThisPost.size()==task.getResult().size() && likesOnThisPost.size()>0)

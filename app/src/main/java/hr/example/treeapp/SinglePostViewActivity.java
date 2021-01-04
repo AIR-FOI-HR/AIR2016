@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private Button postComment;
     private RecyclerView commentRecyclerView;
     private CommentAdapter commentAdapter;
+    private ReactionAdapter reactionAdapter;
     private ImageView profilePicture;
     private TextView numberOfLikes;
     private TextView description;
@@ -57,11 +59,13 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private GoogleMap map;
     private boolean isBig = false;
     private boolean userLikedPictureFlag=false;
+    private RecyclerView reactionsRecyclerView;
     LatLng treeLocation;
     private List<String> likesList;
     Context context=this;
     UserRepository userRepository= new UserRepository();
     private boolean userIsAnonymous;
+    private boolean reactionsVisible =false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +82,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         userPoints = findViewById(R.id.userPoints);
         leafImage = findViewById(R.id.leafIconButton);
         commentText = findViewById(R.id.newCommentTextBox);
+        reactionsRecyclerView= findViewById(R.id.reactionsRecyclerView);
 
         postComment = findViewById(R.id.postNewComment);
         checkIfUserIsAnonymous();
@@ -93,9 +98,9 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
 
         initCommentRecycleView();
 
-        getUsersLiked();
-
         initClickListeners();
+
+        reactionsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
     }
     private void initClickListeners(){
         postImage.setOnClickListener(new View.OnClickListener() {
@@ -149,6 +154,19 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                 }
             }
         });
+        numberOfLikes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!reactionsVisible){
+                    getUsersLiked();
+                    reactionsVisible=true;
+                }
+                else{
+                    reactionsVisible=false;
+                    reactionsRecyclerView.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     private Point getDisplayWidth() {
@@ -175,16 +193,6 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         commentAdapter.notifyDataSetChanged();
     }
 
-    private void getUsersLiked() {
-
-        getPostData.getUsersLiked(postId, new GetLikesForPostCallback() {
-            @Override
-            public void onCallback(List<String> listOfLikesByUserID) {
-                List<String> lista=listOfLikesByUserID;
-            }
-        });
-
-    }
 
     private void checkIfUserIsAnonymous(){
         userRepository.isCurrentUserAnonymous(new UserAnonymousCallback() {
@@ -202,7 +210,6 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     }
     private void initCommentRecycleView() {
         commentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         getComments();
 
     }
@@ -215,6 +222,21 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                 commentRecyclerView.setAdapter(commentAdapter);
             }
         });
+    }
+
+
+
+    private void getUsersLiked() {
+
+        getPostData.getUsersLiked(postId, new GetLikesForPostCallback() {
+            @Override
+            public void onCallback(List<String> listOfLikesByUserID) {
+                reactionAdapter = new ReactionAdapter(getApplicationContext(), listOfLikesByUserID);
+                reactionsRecyclerView.setAdapter(reactionAdapter);
+
+            }
+        });
+        reactionsRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void refreshLikeStatus(){

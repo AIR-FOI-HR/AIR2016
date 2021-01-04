@@ -7,6 +7,9 @@
     android:background="#FFFFFF"
     tools:context=".SinglePostViewActivity">
 
+
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -17,6 +20,7 @@
             android:layout_height="wrap_content"
             android:divider="@drawable/line_11"
             android:orientation="vertical">
+
 
             <ImageView
                 android:id="@+id/postImageView"
@@ -97,6 +101,12 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/reactionsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
 
             <LinearLayout
                 android:layout_width="match_parent"
