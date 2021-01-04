@@ -191,9 +191,9 @@ public class GetPostData {
     List<Double> prikazaneObjaveId = new ArrayList<>();
     public void getPostsInLatLngBoundry (double minLatitude, double maxLatitude, double minLongitude, double maxLongitude, final GetPostsInLatLng getPostsInLatLng){
         //minLatitude=0; maxLatitude=0; maxLongitude=0; minLongitude=0;
-        CollectionReference collectionObjave = firebaseFirestore.collection("Objave");
-            collectionObjave.whereLessThanOrEqualTo("Latitude", maxLatitude)
-                    .whereGreaterThanOrEqualTo("Latitude", minLatitude)
+        firebaseFirestore.collection("Objave")
+                .whereLessThanOrEqualTo("Latitude", maxLatitude)
+                .whereGreaterThanOrEqualTo("Latitude", minLatitude)
                     /**collectionObjave.whereLessThanOrEqualTo("Longitude", maxLongitude)
                      .whereGreaterThanOrEqualTo("Longitude", minLongitude);
                      if(prikazaneObjaveId.size()>0)*/
@@ -203,9 +203,14 @@ public class GetPostData {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double) document.get("Latitude"), (double) document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (long) document.get("Broj_lajkova"));
-                            if(!objave.contains(post)){
+                            boolean postIsShown=false;
+                            for(Post p: objave)
+                                if (p.getID_objava().equals(document.getId())) {
+                                    postIsShown = true;
+                                    break;
+                                }
+                            if(!postIsShown)
                                 objave.add(post);
-                            }
                         }
                         Log.d("Broj ucitanih:", String.valueOf(objave.size()));
                         getPostsInLatLng.onCallbackPostsInLatLng(objave);
