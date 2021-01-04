@@ -23,11 +23,6 @@ public class LeaderboardRecyclerAdapter extends RecyclerView.Adapter<Leaderboard
 
     Context mContext;
     List<User> users;
-    private View itemView;
-    ImageView profile_picture;
-    private UserRepository userRepository = new UserRepository();
-    private int numberOfUsers = 0;
-    private boolean userBitmapsReady = false;
     String string;
 
 
@@ -50,13 +45,15 @@ public class LeaderboardRecyclerAdapter extends RecyclerView.Adapter<Leaderboard
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
+        String userId = users.get(position).getUid();
         holder.ranking_number.setText(position+1+".");
-        userRepository.getUserImage(users.get(position).uid, new ProfileImageCallback() {
+        UserRepository userRepository = new UserRepository();
+        userRepository.getUserImage(userId, new ProfileImageCallback() {
             @Override
-            public void onCallbackList(UserImage userImage) {
-                if(userImage.image!=null && userImage.url==null)
+          public void onCallbackList(UserImage userImage) {
+                if(userImage.image!=null && userImage.url==null) {
                     Glide.with(mContext).load(userImage.image).into(holder.profile_picture);
+                }
                 if(userImage.url!=null && userImage.image==null){
                     RequestOptions options = new RequestOptions()
                             .centerCrop()
@@ -66,10 +63,10 @@ public class LeaderboardRecyclerAdapter extends RecyclerView.Adapter<Leaderboard
                 }
 
             }
+
         });
         Resources res = mContext.getResources();
         string=res.getString(R.string.leaderboard_item_points_text);
-
 
         holder.username.setText(users.get(position).getKorisnickoIme());
         holder.points.setText((Integer.toString((int) users.get(position).getBodovi()))+string);

@@ -26,8 +26,6 @@ public class LeaderboardScoreFragment extends Fragment {
 
     private UserRepository userRepository = new UserRepository();
     private List<User> users = new ArrayList<>();
-    private int numberOfUsers = 0;
-    private boolean userBitmapsReady = false;
     View v;
     private RecyclerView myRecyclerView;
 
@@ -64,7 +62,6 @@ public class LeaderboardScoreFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         v= inflater.inflate(R.layout.fragment_leaderboardscore, container, false);
-
         return v;
 
     }

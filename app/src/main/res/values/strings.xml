@@ -97,6 +97,7 @@
     <string name="leaderboard_item_number">Ranking number</string>
     <string name="leaderboard_item_points">Points</string>
     <string name="leaderboard_item_points_text">\u0020points</string>
+    <string name="leaderboard_location_button">Choose location</string>
 
 
     <string name="large_text">
@@ -191,5 +192,6 @@
     </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_leaderboard_location_mapview">Map</string>
 
 </resources>
