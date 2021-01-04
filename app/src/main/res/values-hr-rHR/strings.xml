@@ -78,6 +78,7 @@
     <string name="description">Opis</string>
     <string name="points">bodova</string>
     <string name="deletePost">Obriši objavu</string>
+    <string name="deleteComment">Obriši komentar</string>
 
 
 </resources>

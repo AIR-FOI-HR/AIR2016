@@ -1,15 +1,21 @@
 package hr.example.treeapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;;
+import android.text.Layout;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -108,6 +114,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         getPostData.getPostComments(postId, new CommentCallback() {
             @Override
             public void onCallback(List<Comment> comment) {
+                commentAdapter.postID=postId;
                 commentAdapter= new CommentAdapter(getApplicationContext(),comment);
                 commentRecyclerView.setAdapter(commentAdapter);
             }
@@ -119,8 +126,11 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.postpopupmenu, popup.getMenu());
-        if(getPostData.getCurrentUserRole()!=2 && getPostData.getCurrentUserID()!=userID ) {
+        if(getPostData.getCurrentUserRole()!=2 /*&& getPostData.getCurrentUserID()!=userID*/ ) {
             popup.getMenu().findItem(R.id.postpopupdelete).setVisible(false);
+        }
+        else{
+            popup.getMenu().findItem(R.id.postpopupdelete).setVisible(true);
         }
         popup.setOnMenuItemClickListener (new PopupMenu.OnMenuItemClickListener ()
         {

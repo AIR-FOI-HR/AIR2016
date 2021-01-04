@@ -213,6 +213,24 @@ public class GetPostData {
                 });
     }
 
+    public void deleteComment(String postID, String commentID){
+        firebaseFirestore.collection("Objave")
+                .document(postID)
+                .collection("Komentari")
+                .document(commentID)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
+    }
+
     public String getCurrentUserID(){
         return firebaseAuth.getCurrentUser().getUid();
     }

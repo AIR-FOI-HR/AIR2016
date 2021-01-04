@@ -2,9 +2,13 @@ package hr.example.treeapp;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,10 +26,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     private Context mContext;
     private List<Comment> mData;
+    private GetPostData getPostData;
+    public static String postID;
 
     public CommentAdapter(Context mContext, List<Comment> mData) {
         this.mContext = mContext;
         this.mData = mData;
+        getPostData=new GetPostData();
     }
     @NonNull
     @Override
@@ -62,7 +69,35 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         holder.commentContent.setText(mData.get(position).getTekst());
         holder.date.setText(mData.get(position).getDatum());
-
+        holder.commentPopup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupComment = new PopupMenu(mContext, view);
+                MenuInflater inflater = popupComment.getMenuInflater();
+                inflater.inflate(R.menu.commentpopupmenu, popupComment.getMenu());
+                if(getPostData.getCurrentUserRole()==2 /* && getPostData.getCurrentUserID()!=userID*/ ) {
+                    popupComment.getMenu().findItem(R.id.commentpopupdelete).setVisible(false);
+                }
+                else{
+                    popupComment.getMenu().findItem(R.id.commentpopupdelete).setVisible(true);
+                }
+                popupComment.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.commentpopupdelete:
+                                getPostData.deleteComment( postID, mData.get(position).getKomentar_ID());
+                                notifyItemRangeChanged(position, mData.size());
+                                mData.remove(position);
+                                notifyItemRemoved(position);
+                                break;
+                        }
+                        return true;
+                    }
+                });
+                popupComment.show();
+            }
+        });
     }
 
     @Override
@@ -74,6 +109,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         ImageView userImage;
         TextView username, commentContent, date;
+        ImageButton commentPopup;
 
 
         public CommentViewHolder(@NonNull View itemView) {
@@ -82,6 +118,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             username = itemView.findViewById(R.id.commentUsername);
             commentContent= itemView.findViewById(R.id.commentText);
             date = itemView.findViewById(R.id.commentDate);
+            commentPopup=itemView.findViewById(R.id.imageButtonComment);
+
         }
     }
 }
