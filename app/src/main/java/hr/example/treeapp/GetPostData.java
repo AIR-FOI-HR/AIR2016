@@ -1,12 +1,15 @@
 package hr.example.treeapp;
 
 import android.graphics.BitmapFactory;
+import android.util.Log;
+
 import com.example.core.entities.Comment;
 import com.example.core.entities.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -172,22 +175,31 @@ public class GetPostData {
                     }
                 });
     }
-
-
-
-
-    //metoda za dohvat komentara jedne objave za prikaz objave
-            /*getPostData.getPostComments("oEyhr7OjvnDKB5vuA8ie", new CommentCallback() {
-            @Override
-            public void onCallback(List<Comment> comment) {
-                if (comment != null) {
-                    for(Comment c : comment){
-                        Log.d("komentar", "komentari:" + c.getTekst());
+    List<Post> objave = new ArrayList<>();
+    List<Double> prikazaneObjaveId = new ArrayList<>();
+    public void getPostsForLeaderboard (double minLatitude, double maxLatitude, double minLongitude, double maxLongitude, final GetPostsInLatLng getPostsInLatLng){
+        //minLatitude=0; maxLatitude=0; maxLongitude=0; minLongitude=0;
+        CollectionReference collectionObjave = firebaseFirestore.collection("Objave");
+        collectionObjave.whereLessThanOrEqualTo("Latitude", maxLatitude)
+                .whereGreaterThanOrEqualTo("Latitude", minLatitude)
+                     /*collectionObjave.whereLessThanOrEqualTo("Longitude", maxLongitude)
+                     .whereGreaterThanOrEqualTo("Longitude", minLongitude);
+                     if(prikazaneObjaveId.size()>0)*/
+                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double) document.get("Latitude"), (double) document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (long) document.get("Broj_lajkova"));
+                            if(!objave.contains(post) && minLongitude<=post.getLongitude() && maxLongitude>=post.getLongitude()){
+                                objave.add(post);
+                            }
+                        }
+                        Log.d("Broj ucitanih:", String.valueOf(objave.size()));
+                        getPostsInLatLng.onCallbackPostsInLatLng(objave);
                     }
                 }
-                else{
-                    Log.d("komentar", "Nema komentara.");
-                }
-            }
-        });*/
+            });
+    }
+
 }

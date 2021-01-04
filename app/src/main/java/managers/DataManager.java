@@ -10,6 +10,7 @@ import com.example.core.entities.Post;
 import com.example.core.entities.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.Nullable;
@@ -172,29 +173,4 @@ public class DataManager {
         }
     }
 
-    private void getUsersForLocationLeaderboard(List<Post> posts) {
-        if(posts.isEmpty()){
-            usersReady = true;
-            userBitmapsReady = true;
-        }
-        else {
-            for (Post p : posts) {
-                userRepository.getUser(p.getKorisnik_ID(), new UserCallback() {
-                    @Override
-                    public void onCallback(User user) {
-                        if (user != null) {
-                            userpostoji = false;
-                            for (User u : users) {
-                                if (u.getKorisnickoIme() == user.getKorisnickoIme()) {
-                                    userpostoji = true;
-                                }
-                            }
-                            if (!userpostoji) {
-                                users.add(user);
-                            }
-                    }
-                };
-            });
-        }
-    }
-}}
+   }

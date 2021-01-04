@@ -2,6 +2,9 @@ package hr.example.treeapp;
 
 
 import android.graphics.BitmapFactory;
+import android.util.Log;
+
+import com.example.core.entities.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -16,6 +19,8 @@ import com.google.firebase.storage.StorageReference;
 import androidx.annotation.NonNull;
 import com.example.core.entities.User;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -24,7 +29,9 @@ public class UserRepository {
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private StorageReference storageReference = firebaseStorage.getReference();
     public FirebaseUser user;
-
+    private boolean usersReady = false;
+    private boolean userpostoji=false;
+    private int numberOfNewUsers = 0;
     List<User> listaKorisnika = new ArrayList<>();
     List<User> leaderboardKorisnici= new ArrayList<>();
 
@@ -130,4 +137,9 @@ public class UserRepository {
 
 
 
-}
+    }
+
+
+
+
+

@@ -1,15 +1,22 @@
 package hr.example.treeapp;
 
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.core.entities.Post;
+import com.example.core.entities.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,6 +30,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import managers.DataManager;
+
 public class LeaderboardLocationMapview extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -34,6 +48,22 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
     Button button;
     EditText editText;
     int radius=100000;
+    double minLatitude;
+    double maxLatitude;
+    double minLongitude;
+    double maxLongitude;
+    private GetPostData getPostData = new GetPostData();
+    private List<Post> posts = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
+    private RecyclerView myRecyclerView;
+    UserRepository userRepository = new UserRepository();
+    List<User> leaderboardKorisnici= new ArrayList<>();
+    private int numberOfNewUsers = 0;
+    private boolean userpostoji=false;
+    private Context context=this;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +73,7 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
     }
 
     @Override
@@ -51,11 +82,26 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
         initClickEvent();
 
         button=findViewById(R.id.button_apply_leaderboard);
+        editText=findViewById(R.id.radius_text);
+        String temp=editText.getText().toString();
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 if(novaLat!=null){
+                    minLatitude=novaLat.latitude-radius/111111;
+                    maxLatitude=novaLat.latitude+radius/111111;
+                    minLongitude=novaLat.longitude-radius/111111;
+                    maxLongitude=novaLat.longitude+radius/111111;
+                    getPostData.getPostsForLeaderboard(minLatitude, maxLatitude, minLongitude, maxLongitude, new GetPostsInLatLng() {
+                        @Override
+                        public void onCallbackPostsInLatLng(List<Post> postsInLatLng) {
+                            if(postsInLatLng!=null){
+                                posts=postsInLatLng;
+                                getUsersForLocationLeaderboard(posts);
 
+                            }
+                        }
+                    });
                 }
                 finish();
             }
@@ -105,6 +151,52 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
             }
 
         });
+    }
+
+    public  void getUsersForLocationLeaderboard(List<Post> posts) {
+        numberOfNewUsers=0;
+        leaderboardKorisnici.clear();
+            for (Post p : posts) {
+                userRepository.getUser(p.getKorisnik_ID(), new UserCallback() {
+                    @Override
+                    public void onCallback(User user) {
+                        if (user != null) {
+                            userpostoji = false;
+                            numberOfNewUsers++;
+                            for (User u : leaderboardKorisnici) {
+                                if (u.getKorisnickoIme() == user.getKorisnickoIme()) {
+                                    userpostoji = true;
+                                }
+                            }
+                            if (!userpostoji) {
+                                leaderboardKorisnici.add(user);
+                            }
+                            if (posts.size() == numberOfNewUsers) {
+                                sortAndSendUsersForLocationLeaderboard(leaderboardKorisnici);
+                            }
+                        } else {
+                            numberOfNewUsers++;
+                            Log.d("dokument", "Nema dokumenta objave.");
+                        }
+                    }
+                });
+            };
+        }
+
+    public void sortAndSendUsersForLocationLeaderboard(List<User> users){
+        Collections.sort(users, new Comparator<User>() {
+            @Override
+            public int compare(User o1, User o2) {
+                return Double.compare(o1.bodovi, o2.bodovi);
+            }
+        });
+        /*
+        myRecyclerView=(RecyclerView)findViewById(R.id.leaderboard_location_recycler);
+        LeaderboardRecyclerAdapter leaderboardRecyclerAdapter = new LeaderboardRecyclerAdapter(getApplicationContext(), leaderboardKorisnici);
+        myRecyclerView.setAdapter(leaderboardRecyclerAdapter);
+        myRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+         */
+
     }
 
 

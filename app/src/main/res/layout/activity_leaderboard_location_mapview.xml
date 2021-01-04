@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/map"
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".LeaderboardLocationMapview"
-    android:orientation="vertical" >
+    android:orientation="vertical">
     <LinearLayout
         android:id="@+id/LinearLayout3"
         android:layout_width="match_parent"
@@ -36,7 +34,8 @@
         android:layout_alignTop="@id/LinearLayout3"
         android:layout_marginTop="67dp"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
 
         <EditText
             android:id="@+id/radius_text"
@@ -46,6 +45,10 @@
             android:background="@color/teal_700"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/cardview_light_background"></EditText>
+            android:textColor="@color/cardview_light_background"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="115dp"
+            tools:layout_editor_absoluteY="67dp"></EditText>
     </LinearLayout>
+
 </fragment>

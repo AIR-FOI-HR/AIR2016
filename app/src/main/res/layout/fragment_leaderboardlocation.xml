@@ -4,12 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-
+    android:layout_height="wrap_content"
+    android:id="@+id/leadearboardlocation_fragm">
 
     <LinearLayout
-        android:id="@+id/LinearLayout1"
+        android:id="@+id/LinearLayout5"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center"
@@ -32,9 +31,10 @@
         android:id="@+id/leaderboard_location_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
     </androidx.recyclerview.widget.RecyclerView>
 

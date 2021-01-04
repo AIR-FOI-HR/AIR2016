@@ -2,6 +2,7 @@ package hr.example.treeapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.core.entities.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,16 +24,12 @@ public class LeaderboardLocationFragment extends Fragment{
     private List<User> users;
     HorizontalScrollView mainLinearLayout;
     private Button button;
+    private static final int MY_REQUEST_CODE = 0xe110;
+    List<User> leaderboardKorisnici= new ArrayList<>();
+
 
     public LeaderboardLocationFragment() {
         // Required empty public constructor
-    }
-
-
-
-    public static LeaderboardLocationFragment newInstance(String param1, String param2) {
-        LeaderboardLocationFragment fragment = new LeaderboardLocationFragment();
-        return fragment;
     }
 
     @Override
@@ -57,12 +55,11 @@ public class LeaderboardLocationFragment extends Fragment{
            public void onClick(View view) {
                Intent open = new Intent(getActivity(), LeaderboardLocationMapview.class);
                startActivity(open);
+
+
            }
        });
-
-
     }
-
 
 }
 
