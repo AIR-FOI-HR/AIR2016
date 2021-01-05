@@ -63,6 +63,7 @@ public class LeaderboardLocationFragment extends Fragment{
            public void onClick(View view) {
                leaderboardKorisnici.clear();
                Intent open = new Intent(getActivity(), LeaderboardLocationMapview.class);
+               open.putExtra("requestCode", MY_REQUEST_CODE);
                startActivityForResult(open, MY_REQUEST_CODE);
 
 
@@ -75,10 +76,11 @@ public class LeaderboardLocationFragment extends Fragment{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
                 if (resultCode == requestCode) {
-                    Log.d("heh", "dela");
-                    leaderboardKorisnici = (List<User>) data.getSerializableExtra("LIST");
+                    leaderboardKorisnici = (List<User>) data.getSerializableExtra("USERLIST");
                     // TODO Update your TextView.
+                    Log.d("rasema", "leaderboard");
                 }
+
         myRecyclerView=(RecyclerView)view.findViewById(R.id.leaderboard_location_recycler);
         LeaderboardRecyclerAdapter leaderboardRecyclerAdapter = new LeaderboardRecyclerAdapter(getContext(), leaderboardKorisnici);
         myRecyclerView.setAdapter(leaderboardRecyclerAdapter);

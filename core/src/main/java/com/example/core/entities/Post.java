@@ -2,7 +2,9 @@ package com.example.core.entities;
 
 import android.graphics.Bitmap;
 
-public class Post {
+import java.io.Serializable;
+
+public class Post implements Serializable {
     String ID_objava;
     String Korisnik_ID;
     String Datum_objave;

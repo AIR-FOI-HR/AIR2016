@@ -165,6 +165,20 @@ public class DataManager {
         });
     }
 
+    public void sendPostsUsersByLocation(List<Post> postList, List<User> userList){
+        numberOfUsers = 0;
+        numberOfPosts = 0;
+        posts = postList;
+        users = userList;
+        postsReady = true;
+        usersReady = true;
+        postBitmapsReady = false;
+        userBitmapsReady = false;
+        fillPostsWithBitmaps();
+        fillUsersWithBitmaps();
+        sendDataToPresenter(presenter);
+    }
+
     public void sendNewDataToPresenter(DataPresenter presenter){
         if(newPostsReady&&postBitmapsReady){
             presenter.setData(posts, users, false);

@@ -66,13 +66,20 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
     private boolean userpostoji=false;
     private Context context=this;
     private static final int MY_REQUEST_CODE = 0xe110;
-
+    private static final int MY_REQUEST_CODE_TIMELINE = 0xe111;
+    private int CODE;
+    private boolean leaderboardDataReady = false;
+    private boolean timelineDataReady = false;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        CODE = intent.getIntExtra("requestCode", 0);
+        leaderboardDataReady = false;
+        timelineDataReady = false;
         setContentView(R.layout.activity_leaderboard_location_mapview);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -179,7 +186,12 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
                                 leaderboardKorisnici.add(user);
                             }
                             if (posts.size() == numberOfNewUsers) {
-                                sortAndSendUsersForLocationLeaderboard(leaderboardKorisnici);
+                                if(CODE == MY_REQUEST_CODE){
+                                    sortAndSendUsersForLocationLeaderboard(leaderboardKorisnici);
+                                }
+                                if(CODE == MY_REQUEST_CODE_TIMELINE){
+                                    returnPostsAndUsersForTimeline(posts, leaderboardKorisnici);
+                                }
                             }
                         } else {
                             numberOfNewUsers++;
@@ -198,10 +210,19 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
                 }
             });
             Intent resultIntent = new Intent();
-            resultIntent.putExtra("LIST", (Serializable) users);
+            resultIntent.putExtra("USERLIST", (Serializable) users);
             setResult(MY_REQUEST_CODE, resultIntent);
             finish();
         }
+
+    public void returnPostsAndUsersForTimeline(List<Post> posts, List<User> users){
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("POSTLIST", (Serializable) posts);
+        resultIntent.putExtra("USERLIST", (Serializable) users);
+        setResult(MY_REQUEST_CODE_TIMELINE, resultIntent);
+        finish();
+    }
+
 
     }
 

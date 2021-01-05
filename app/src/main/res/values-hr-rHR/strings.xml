@@ -77,6 +77,7 @@
     <string name="comments">Komentari</string>
     <string name="description">Opis</string>
     <string name="points">bodova</string>
+    <string name="choose_location_button_timeline">Odaberi lokaciju</string>
 
 
 </resources>

@@ -83,7 +83,6 @@ public class UserRepository {
 
     public void getAllUsers(final AllUsersCallback allUsersCallback) {
         firebaseFirestore.collection("Korisnici")
-                .limit(6)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

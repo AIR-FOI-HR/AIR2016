@@ -1,12 +1,8 @@
 package com.example.core.entities;
 
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class User implements Serializable {
     public String uid;
@@ -136,48 +132,4 @@ public class User implements Serializable {
         this.Slika=user.Slika;
     }
 
-  /*  public User(Parcel in){
-        this.uid=in.readString();
-        this.ime=in.readString();
-        this.prezime=in.readString();
-        this.email=in.readString();
-        this.profilnaSlika=in.readString();
-        this.uloga=in.readInt();
-        this.bodovi=in.readInt();
-        this.korisnickoIme=in.readString();
-        this.datumRodenja=in.readString();
-    }
-
-   */
-/*
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(uid);
-        dest.writeString(ime);
-        dest.writeString(prezime);
-        dest.writeString(email);
-        dest.writeString(profilnaSlika);
-        dest.writeInt((int) uloga);
-        dest.writeInt((int) bodovi);
-        dest.writeString(korisnickoIme);
-        dest.writeString(datumRodenja);
-    }
-
-    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>()
-    {
-        public User createFromParcel(Parcel in)
-        {
-            return new User(in);
-        }
-        public User[] newArray(int size)
-        {
-            return new User[size];
-        }
-    };
-*/
 }

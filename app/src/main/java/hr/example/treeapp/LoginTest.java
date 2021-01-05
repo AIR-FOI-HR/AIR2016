@@ -1,6 +1,7 @@
 package hr.example.treeapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -11,11 +12,14 @@ import managers.DataManager;
 import managers.DataPresentersManager;
 
 import com.example.core.LiveData.LiveData;
+import com.example.core.entities.Post;
+import com.example.core.entities.User;
 import com.example.timeline.PostListFragment;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -26,10 +30,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 public class LoginTest extends AppCompatActivity {
     DataPresentersManager dataPresentersManager;
     Context context;
     private LiveData model;
+    private static final int MY_REQUEST_CODE = 0xe111;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +73,6 @@ public class LoginTest extends AppCompatActivity {
         bottomNav.setItemIconTintList(null);
         //displayMainFragment();
     }
-
-
 
     private void FillTopMenu() {
         HorizontalScrollView horizontalScrollView = findViewById(R.id.topmenu);
@@ -157,5 +162,24 @@ public class LoginTest extends AppCompatActivity {
                 PostMapView.class
         );
         startActivity(openMapview);
+    }
+
+    public void chooseLocationButtonClick(View view) {
+        Intent open = new Intent(getApplicationContext(), LeaderboardLocationMapview.class);
+        open.putExtra("requestCode", MY_REQUEST_CODE);
+        startActivityForResult(open, MY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == requestCode) {
+            List<Post> posts = (List<Post>) data.getSerializableExtra("POSTLIST");
+            List<User> users = (List<User>) data.getSerializableExtra("USERLIST");
+            Log.d("rasema", "timeline");
+            DataManager dataManager = DataManager.getInstance();
+            dataManager.sendPostsUsersByLocation(posts, users);
+        }
+
     }
 }
