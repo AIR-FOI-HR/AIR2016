@@ -1,5 +1,6 @@
 package hr.example.treeapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,9 @@ import android.widget.HorizontalScrollView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.core.entities.User;
 
@@ -26,6 +30,8 @@ public class LeaderboardLocationFragment extends Fragment{
     private Button button;
     private static final int MY_REQUEST_CODE = 0xe110;
     List<User> leaderboardKorisnici= new ArrayList<>();
+    private RecyclerView myRecyclerView;
+    View view;
 
 
     public LeaderboardLocationFragment() {
@@ -34,15 +40,17 @@ public class LeaderboardLocationFragment extends Fragment{
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState
-        );
+        super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_leaderboardlocation, container, false);
+        view= inflater.inflate(R.layout.fragment_leaderboardlocation, container, false);
+        return view;
+
     }
 
 
@@ -53,12 +61,30 @@ public class LeaderboardLocationFragment extends Fragment{
         button.setOnClickListener(new View.OnClickListener(){
            @Override
            public void onClick(View view) {
+               leaderboardKorisnici.clear();
                Intent open = new Intent(getActivity(), LeaderboardLocationMapview.class);
-               startActivity(open);
+               startActivityForResult(open, MY_REQUEST_CODE);
+
+
+               Activity thisActivity=getActivity();
 
 
            }
        });
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+                if (resultCode == requestCode) {
+                    Log.d("heh", "dela");
+                    leaderboardKorisnici = (List<User>) data.getSerializableExtra("LIST");
+                    // TODO Update your TextView.
+                }
+        myRecyclerView=(RecyclerView)view.findViewById(R.id.leaderboard_location_recycler);
+        LeaderboardRecyclerAdapter leaderboardRecyclerAdapter = new LeaderboardRecyclerAdapter(getContext(), leaderboardKorisnici);
+        myRecyclerView.setAdapter(leaderboardRecyclerAdapter);
+        myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        myRecyclerView.setAdapter(leaderboardRecyclerAdapter);
+
     }
 
 }

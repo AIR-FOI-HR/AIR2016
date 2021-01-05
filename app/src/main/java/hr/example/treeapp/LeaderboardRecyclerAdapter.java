@@ -39,8 +39,6 @@ public class LeaderboardRecyclerAdapter extends RecyclerView.Adapter<Leaderboard
         v= LayoutInflater.from(mContext).inflate(R.layout.leaderboard_item, parent, false);
         MyViewHolder vHolder=new MyViewHolder(v);
         return vHolder;
-
-
     }
 
     @Override

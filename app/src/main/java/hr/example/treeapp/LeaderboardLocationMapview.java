@@ -4,10 +4,12 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -30,6 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,7 +40,7 @@ import java.util.List;
 
 import managers.DataManager;
 
-public class LeaderboardLocationMapview extends FragmentActivity implements OnMapReadyCallback {
+public class LeaderboardLocationMapview extends FragmentActivity implements OnMapReadyCallback{
 
     private GoogleMap mMap;
     Marker noviMarker;
@@ -58,9 +61,11 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
     private RecyclerView myRecyclerView;
     UserRepository userRepository = new UserRepository();
     List<User> leaderboardKorisnici= new ArrayList<>();
+    List<User> leaderboardKorisnici2= new ArrayList<>();
     private int numberOfNewUsers = 0;
     private boolean userpostoji=false;
     private Context context=this;
+    private static final int MY_REQUEST_CODE = 0xe110;
 
 
 
@@ -98,12 +103,14 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
                             if(postsInLatLng!=null){
                                 posts=postsInLatLng;
                                 getUsersForLocationLeaderboard(posts);
-
+                            }
+                            if(postsInLatLng.isEmpty()){
+                                finish();
                             }
                         }
                     });
+
                 }
-                finish();
             }
         });
 
@@ -184,21 +191,19 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
         }
 
     public void sortAndSendUsersForLocationLeaderboard(List<User> users){
-        Collections.sort(users, new Comparator<User>() {
-            @Override
-            public int compare(User o1, User o2) {
-                return Double.compare(o1.bodovi, o2.bodovi);
-            }
-        });
-        /*
-        myRecyclerView=(RecyclerView)findViewById(R.id.leaderboard_location_recycler);
-        LeaderboardRecyclerAdapter leaderboardRecyclerAdapter = new LeaderboardRecyclerAdapter(getApplicationContext(), leaderboardKorisnici);
-        myRecyclerView.setAdapter(leaderboardRecyclerAdapter);
-        myRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-         */
+            Collections.sort(users, new Comparator<User>() {
+                @Override
+                public int compare(User o1, User o2) {
+                    return (int) (o2.getBodovi()-o1.getBodovi());
+                }
+            });
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("LIST", (Serializable) users);
+            setResult(MY_REQUEST_CODE, resultIntent);
+            finish();
+        }
 
     }
 
 
 
-}
