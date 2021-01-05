@@ -12,6 +12,7 @@ import managers.DataManager;
 import managers.DataPresentersManager;
 
 import com.example.core.LiveData.LiveData;
+import com.example.core.VisibleMapRange;
 import com.example.timeline.PostListFragment;
 
 import android.content.Context;
@@ -45,7 +46,7 @@ public class LoginTest extends AppCompatActivity {
         final Observer<String> nameObserver = new Observer<String>() {
             @Override
             public void onChanged(String lastPostID) {
-                dataManager.GetPostsFromLastID();
+                    dataManager.GetPostsFromLastID();
             }
         };
 
@@ -60,6 +61,14 @@ public class LoginTest extends AppCompatActivity {
             }
         };
         model.selectedPostId().observe(this, postIdObserver);
+
+        final Observer<VisibleMapRange> visibleMapRangeObserver = new Observer<VisibleMapRange>() {
+            @Override
+            public void onChanged(VisibleMapRange mapMinMaxLatLng) {
+                dataManager.getPostsInLatLng(mapMinMaxLatLng.minLatitude, mapMinMaxLatLng.maxLatitude, mapMinMaxLatLng.minLongitude, mapMinMaxLatLng.maxLongitude);
+            }
+        };
+        model.visibleMapRange().observe(this, visibleMapRangeObserver);
 
         FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
         dataPresentersManager=new DataPresentersManager(context);

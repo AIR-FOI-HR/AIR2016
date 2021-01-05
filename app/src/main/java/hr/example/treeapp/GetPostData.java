@@ -1,12 +1,15 @@
 package hr.example.treeapp;
 
 import android.graphics.BitmapFactory;
+import android.util.Log;
+
 import com.example.core.entities.Comment;
 import com.example.core.entities.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -36,6 +39,39 @@ public class GetPostData {
 
     List<Comment> listaKomentara = new ArrayList<Comment>();
     List<Post> listaObjava = new ArrayList<>();
+
+    List<Post> objave = new ArrayList<>();
+    List<Double> prikazaneObjaveId = new ArrayList<>();
+
+    public void getPostsInLatLngBoundry (double minLatitude, double maxLatitude, double minLongitude, double maxLongitude, final GetPostsInLatLng getPostsInLatLng){
+        //minLatitude=0; maxLatitude=0; maxLongitude=0; minLongitude=0;
+        CollectionReference collectionObjave = firebaseFirestore.collection("Objave");
+        collectionObjave.whereLessThanOrEqualTo("Latitude", maxLatitude)
+                .whereGreaterThanOrEqualTo("Latitude", minLatitude)
+                /**collectionObjave.whereLessThanOrEqualTo("Longitude", maxLongitude)
+                 .whereGreaterThanOrEqualTo("Longitude", minLongitude);
+                 if(prikazaneObjaveId.size()>0)*/
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double) document.get("Latitude"), (double) document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (long) document.get("Broj_lajkova"));
+                        boolean postIsShown=false;
+                        for(Post p: objave)
+                            if (p.getID_objava().equals(document.getId())) {
+                                postIsShown = true;
+                                break;
+                            }
+                        if(!postIsShown)
+                            objave.add(post);
+                    }
+                    Log.d("Broj ucitanih:", String.valueOf(objave.size()));
+                    getPostsInLatLng.onCallbackPostsInLatLng(objave);
+                }
+            }
+        });
+    }
 
     public void getPost(String postId, final PostCallback postCallback) {
         firebaseFirestore.collection("Objave")
@@ -128,6 +164,27 @@ public class GetPostData {
     }
 
     public void getAllPosts(final AllPostsCallback allPostsCallback) {
+        firebaseFirestore.collection("Objave")
+                .orderBy("Datum_objave", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            listaObjava.clear();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double)document.get("Latitude"), (double)document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (long)document.get("Broj_lajkova"));
+                                listaObjava.add(post);
+                            }
+                            allPostsCallback.onCallback(listaObjava);
+                        } else {
+                            allPostsCallback.onCallback(null);
+                        }
+                    }
+                });
+    }
+
+    public void getFirstPosts(final AllPostsCallback allPostsCallback) {
         firebaseFirestore.collection("Objave")
                 .orderBy("Datum_objave", Query.Direction.DESCENDING)
                 .limit(5)

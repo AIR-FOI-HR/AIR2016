@@ -2,7 +2,6 @@ package managers;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.example.core.DataPresenter;
@@ -12,16 +11,11 @@ import com.example.core.entities.User;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import hr.example.treeapp.AllPostsCallback;
 import hr.example.treeapp.AllUsersCallback;
 import hr.example.treeapp.GetPostData;
 import hr.example.treeapp.GetPostsFromLastID;
+import hr.example.treeapp.GetPostsInLatLng;
 import hr.example.treeapp.PostImageCallback;
 import hr.example.treeapp.UserCallback;
 import hr.example.treeapp.UserImageCallback;
@@ -52,7 +46,7 @@ public class DataManager {
         return instance;
     }
 
-    public void loadData(DataPresenter presenter, Context context){
+    public void loadAllData(DataPresenter presenter, Context context){
         this.presenter = presenter;
         this.context = context;
         numberOfPosts = 0;
@@ -74,11 +68,91 @@ public class DataManager {
                     posts = postList;
                     postsReady = true;
                     fillPostsWithBitmaps();
+                    sendDataToPresenter(presenter);
+                } else {
+                    Log.d("dokument", "Nema dokumenta objave.");
+                }
+            }
+        });
+
+        userRepository.getAllUsers(new AllUsersCallback() {
+            @Override
+            public void onCallback(List<User> userList) {
+                if (userList != null) {
+                    users = userList;
+                    usersReady = true;
+                    fillUsersWithBitmaps();
+                    sendDataToPresenter(presenter);
+                } else {
+                    Log.d("dokument", "Nema dokumenta objave.");
+                }
+            }
+        });
+
+        }
+
+    public void loadDataTimeline(DataPresenter presenter, Context context){
+        this.presenter = presenter;
+        this.context = context;
+        numberOfPosts = 0;
+        numberOfUsers = 0;
+        postBitmapsReady = false;
+        userBitmapsReady = false;
+        postsReady = false;
+        usersReady = false;
+        newPostsReady = false;
+        firstCall = true;
+        numberOfNewUsers = 0;
+        users.clear();
+        userPostoji = false;
+
+        getPostData.getFirstPosts(new AllPostsCallback() {
+            @Override
+            public void onCallback(List<Post> postList) {
+                if (postList != null) {
+                    posts = postList;
+                    postsReady = true;
+                    fillPostsWithBitmaps();
                     getUsers(posts);
                     sendDataToPresenter(presenter);
-                }
-                else{
+                } else {
                     Log.d("dokument", "Nema dokumenta objave.");
+                }
+            }
+        });
+
+    }
+
+    public void loadDataMap(DataPresenter presenter, Context context){
+        this.presenter = presenter;
+        this.context = context;
+        numberOfPosts = 0;
+        numberOfUsers = 0;
+        postBitmapsReady = false;
+        userBitmapsReady = false;
+        postsReady = false;
+        usersReady = false;
+        newPostsReady = false;
+        firstCall = true;
+        numberOfNewUsers = 0;
+        users.clear();
+        userPostoji = false;
+
+
+
+    }
+
+    public void getPostsInLatLng(double minLatitude, double maxLatitude, double minLongitude, double maxLongitude){
+        getPostData.getPostsInLatLngBoundry(minLatitude, maxLatitude, minLongitude, maxLongitude, new GetPostsInLatLng() {
+            @Override
+            public void onCallbackPostsInLatLng(List<Post> postsInLatLng) {
+                if(postsInLatLng!=null){
+                    posts=postsInLatLng;
+                    newPostsReady=true;
+                    postBitmapsReady=true;
+                    usersReady = true;
+                    userBitmapsReady = true;
+                    sendNewDataToPresenter(presenter);
                 }
             }
         });

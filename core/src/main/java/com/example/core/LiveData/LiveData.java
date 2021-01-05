@@ -1,11 +1,14 @@
 package com.example.core.LiveData;
 
+import com.example.core.VisibleMapRange;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class LiveData extends ViewModel {
     private static MutableLiveData<String> lastPostID;
     private static MutableLiveData<String> selectedPostId;
+    private static MutableLiveData<VisibleMapRange> visibleMapRange;
 
     public static MutableLiveData<String> lastPostID() {
         if (lastPostID == null) {
@@ -26,5 +29,14 @@ public class LiveData extends ViewModel {
     }
 
     public void UpdateSelectedPostId(String postId){ this.selectedPostId().setValue(postId);
+    }
+
+    public static MutableLiveData<VisibleMapRange> visibleMapRange() {
+        if (visibleMapRange == null) {
+            visibleMapRange = new MutableLiveData<VisibleMapRange>();
+        }
+        return visibleMapRange;
+    }
+    public void UpdateVisibleMapRange(VisibleMapRange mapRange){ this.visibleMapRange().setValue(mapRange);
     }
 }

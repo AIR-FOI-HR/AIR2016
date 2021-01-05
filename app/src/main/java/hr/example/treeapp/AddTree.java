@@ -27,6 +27,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.core.DataPresenter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,6 +46,8 @@ import addTreeLogic.LatLng;
 import addTreeLogic.MapsLogic;
 import addTreeLogic.PermissionsChecks;
 import hr.example.treeapp.addTree.AddTreeLogic;
+import managers.DataManager;
+import managers.DataPresentersManager;
 
 public class AddTree extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, LocationListener {
     TextView treeDescription;
@@ -172,7 +175,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         editor = sharedPref.edit();
         pressedLater = sharedPref.getBoolean(getResources().getString(R.string.later), false);
         pressedDontAskAgain = sharedPref.getBoolean(getResources().getString(R.string.dont_ask_again), false);
-        laterPressedTime = sharedPref.getLong(getResources().getString(R.string.later_pressed_time), 0);
+        //laterPressedTime = sharedPref.getLong(getResources().getString(R.string.later_pressed_time), 0);
     }
 
     @SuppressLint("MissingPermission")
@@ -205,15 +208,15 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
             if (laterPressedTime != 0) {
 
                 // check if its been 1 hour since later is been pressed.
-                Date dateObj = new Date();
-                long timeNow = dateObj.getTime();
-                long oneHourLater = laterPressedTime + (3600 * 1000);
-                if (oneHourLater <= timeNow) {
+            //    Date dateObj = new Date();
+             //   long timeNow = dateObj.getTime();
+             //   long oneHourLater = laterPressedTime + (3600 * 1000);
+             //   if (oneHourLater <= timeNow) {
 
-                    requestPermission();
-                    editor.putBoolean(getResources().getString(R.string.later), false);
-                    editor.commit();
-                }
+              //      requestPermission();
+               //     editor.putBoolean(getResources().getString(R.string.later), false);
+               //     editor.commit();
+               // }
             }
             // If pressed don't ask again the app should bot request permissions again.
         } else if (!pressedDontAskAgain)

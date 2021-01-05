@@ -16,6 +16,8 @@ public class DataPresentersManager {
     public DataPresenter currentPresenter;
     private Context context;
     public DataPresenter firstPresenter;
+    String timeline = "Timeline";
+    String mapView = "Map View";
 
     public DataPresentersManager(Context context){
         this.context = context;
@@ -27,11 +29,29 @@ public class DataPresentersManager {
         presenters.add(new PostMapView());
         firstPresenter = presenters.get(0);
         DataManager dataManager = DataManager.getInstance();
-        dataManager.loadData(firstPresenter, context);
+        String modul = firstPresenter.getModuleName(context);
+        if(modul.equals(timeline)){
+            dataManager.loadDataTimeline(firstPresenter, context);
+        }
+        else if(modul.equals(mapView)){
+            dataManager.loadDataMap(firstPresenter, context);
+        }
+        else{
+            dataManager.loadAllData(firstPresenter, context);
+        }
     }
 
     public void loadFragment(int i){
         DataManager dataManager = DataManager.getInstance();
-        dataManager.loadData(presenters.get(i), context);
+        String modul = presenters.get(i).getModuleName(context);
+        if(modul.equals(timeline)){
+            dataManager.loadDataTimeline(presenters.get(i), context);
+        }
+        else if(modul.equals(mapView)){
+            dataManager.loadDataMap(presenters.get(i), context);
+        }
+        else{
+            dataManager.loadAllData(presenters.get(i), context);
+        }
     }
 }
