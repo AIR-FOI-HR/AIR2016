@@ -20,11 +20,20 @@ import com.example.core.entities.User;
 
 public class UserProfileFragment extends Fragment {
     User selectedUser;
+    String userID;
+    UserRepository userRepository;
+    TextView textViewName;
+    TextView textViewUserName;
+    ImageView imageViewProfil;
+    TextView textViewPoints;
+    TextView textViewPosts;
     public UserProfileFragment(User user) {
         this.selectedUser=user;
     }
 
-
+    public UserProfileFragment(String userID) {
+        this.userID=userID;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,23 +49,45 @@ public class UserProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        EditText editTextUsername=(EditText)getView().findViewById(R.id.editTextUserSearch);
-        TextView textViewName=(TextView)getView().findViewById(R.id.textViewName);
-        TextView textViewUserName=(TextView)getView().findViewById(R.id.textViewUserName);
-        ImageView imageViewProfil=(ImageView)getView().findViewById(R.id.imageViewProfilePicture);
-        TextView textViewPoints=(TextView)getView().findViewById(R.id.textViewPoints);
-        TextView textViewPosts=(TextView)getView().findViewById(R.id.textViewPosts);
-        UserRepository userRepository=new UserRepository();
-        userRepository.getUserImage(selectedUser.uid, new ProfileImageCallback() {
-            @Override
-            public void onCallbackList(UserImage userImage) {
-                imageViewProfil.setImageBitmap(userImage.image);
-            }
-        });
-        textViewName.setText(selectedUser.ime+" "+selectedUser.prezime);
-        textViewUserName.setText("@"+selectedUser.korisnickoIme);
-        String b=Long.toString(selectedUser.bodovi);
-        textViewPoints.setText(b);
+        textViewName=(TextView)getView().findViewById(R.id.textViewName);
+        textViewUserName=(TextView)getView().findViewById(R.id.textViewUserName);
+        imageViewProfil=(ImageView)getView().findViewById(R.id.imageViewProfilePicture);
+        textViewPoints=(TextView)getView().findViewById(R.id.textViewPoints);
+        textViewPosts=(TextView)getView().findViewById(R.id.textViewPosts);
+        userRepository=new UserRepository();
+        //za UserProfileFragment(String userID);
+        if(userID!=null){
+            userRepository=new UserRepository();
+            userRepository.getUser(userID, new UserCallback() {
+                @Override
+                public void onCallback(User user) {
+                    selectedUser=user;
+                    userRepository.getUserImage(selectedUser.uid, new ProfileImageCallback() {
+                        @Override
+                        public void onCallbackList(UserImage userImage) {
+                            imageViewProfil.setImageBitmap(userImage.image);
+                        }
+                    });
+                    textViewName.setText(selectedUser.ime+" "+selectedUser.prezime);
+                    textViewUserName.setText("@"+selectedUser.korisnickoIme);
+                    textViewPoints.setText(Long.toString(selectedUser.bodovi));
+                }
+            });
+        }
+        //za UserProfileFragment(User user)
+        else{
+            userRepository.getUserImage(selectedUser.uid, new ProfileImageCallback() {
+                @Override
+                public void onCallbackList(UserImage userImage) {
+                    imageViewProfil.setImageBitmap(userImage.image);
+                }
+            });
+            textViewName.setText(selectedUser.ime+" "+selectedUser.prezime);
+            textViewUserName.setText("@"+selectedUser.korisnickoIme);
+            textViewPoints.setText(Long.toString(selectedUser.bodovi));
+        }
+
+
 
     }
 }

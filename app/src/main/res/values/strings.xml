@@ -105,5 +105,6 @@
     <string name="number_of_points" translatable="false">123456</string>
     <string name="number_of_posts" translatable="false">123456</string>
     <string name="search_no_username">Please enter username!</string>
+    <string name="search_not_found">No users found!</string>
 
 </resources>

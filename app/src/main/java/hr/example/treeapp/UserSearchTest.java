@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.core.entities.User;
@@ -32,7 +33,7 @@ public class UserSearchTest extends Fragment {
     View v;
     private RecyclerView myRecyclerView;
     EditText editTextUsername;
-
+    TextView textViewInfo;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class UserSearchTest extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         editTextUsername=(EditText)getView().findViewById(R.id.editTextUserSearch);
-
+        textViewInfo=(TextView)getView().findViewById(R.id.textViewInfo);
         Button searchButton=(Button) getView().findViewById(R.id.buttonUserSearch);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -72,16 +73,19 @@ public class UserSearchTest extends Fragment {
                             @Override
                             public void onItemClick(User user) {
                                 //open user prof
-                                Fragment selectedFragment =new UserProfileFragment(user);
+                                Fragment selectedFragment =new UserProfileFragment(user.uid);
+                                //Fragment selectedFragment =new UserProfileFragment(user);
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                             }
                         });
                         myRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                         myRecyclerView.setAdapter(userSearchRecyclerAdapter);
-                        Log.d("Users", users.toString());
+                        textViewInfo.setText(null);
+
                     }
-                    else{
-                        Log.d("dokument", "Nema dokumenta objave.");
+                    if(usersList.size()==0){
+                        textViewInfo.setText(getResources().getText(R.string.search_not_found));
+
                     }
 
                 }

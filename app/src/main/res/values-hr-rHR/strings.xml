@@ -83,6 +83,7 @@
     <string name="leaf_icon">Ikona lista</string>
     <string name="tree_icon">Ikona drveta</string>
     <string name="search_no_username">Unesite korisničko ime!</string>
+    <string name="search_not_found">Nije pronađen niti jedan korisnik!</string>
 
 
 </resources>
