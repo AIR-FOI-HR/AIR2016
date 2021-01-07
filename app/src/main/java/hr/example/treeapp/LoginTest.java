@@ -1,6 +1,7 @@
 package hr.example.treeapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
@@ -13,12 +14,15 @@ import managers.DataPresentersManager;
 
 import com.example.core.LiveData.LiveData;
 import com.example.core.VisibleMapRange;
+import com.example.core.entities.Post;
+import com.example.core.entities.User;
 import com.example.timeline.PostListFragment;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -29,10 +33,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 public class LoginTest extends AppCompatActivity {
     DataPresentersManager dataPresentersManager;
     Context context;
     private LiveData model;
+    private static final int MY_REQUEST_CODE = 0xe111;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +85,6 @@ public class LoginTest extends AppCompatActivity {
         //displayMainFragment();
     }
 
-
-
     private void FillTopMenu() {
         HorizontalScrollView horizontalScrollView = findViewById(R.id.topmenu);
         LinearLayout mainLinearLayout =findViewById(R.id.topmenumainlayout);
@@ -103,8 +108,10 @@ public class LoginTest extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.presenters.get(finalI).getFragment()).commit();
                     dataPresentersManager.loadFragment(finalI);
                 }
+
             });
             newLayout.addView(button);
+
         }
     }
 
@@ -113,13 +120,29 @@ public class LoginTest extends AppCompatActivity {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     Fragment selectedFragment =null;
+                    LinearLayout myLayout = (LinearLayout) findViewById(R.id.topmenumainlayout);
+                    HorizontalScrollView horizontalScrollView = findViewById(R.id.topmenu);
+
+
 
                     switch(item.getItemId()){
                         case R.id.nav_home:
-                                selectedFragment=dataPresentersManager.firstPresenter.getFragment();
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+
+                            selectedFragment=dataPresentersManager.firstPresenter.getFragment();
+                            horizontalScrollView.setVisibility(HorizontalScrollView.VISIBLE);
+                            myLayout.setVisibility(LinearLayout.VISIBLE);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                            dataPresentersManager.loadFragment(0);
+
+
                             break;
                         case R.id.nav_leaderboard:
+
+                            selectedFragment=new LeaderboardFragment();
+                            horizontalScrollView.setVisibility(HorizontalScrollView.GONE);
+                           myLayout.setVisibility(LinearLayout.GONE);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+
                             break;
                         case R.id.nav_addtree:
                             Intent open = new Intent(LoginTest.this, AddTree.class);
@@ -130,7 +153,7 @@ public class LoginTest extends AppCompatActivity {
                         case R.id.nav_profile:
                             break;
                     }
-                    return true;
+                return true;
                 }
             };
 
@@ -158,5 +181,24 @@ public class LoginTest extends AppCompatActivity {
                 PostMapView.class
         );
         startActivity(openMapview);
+    }
+
+    public void chooseLocationButtonClick(View view) {
+        Intent open = new Intent(getApplicationContext(), LeaderboardLocationMapview.class);
+        open.putExtra("requestCode", MY_REQUEST_CODE);
+        startActivityForResult(open, MY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == requestCode) {
+            List<Post> posts = (List<Post>) data.getSerializableExtra("POSTLIST");
+            List<User> users = (List<User>) data.getSerializableExtra("USERLIST");
+            Log.d("rasema", "timeline");
+            DataManager dataManager = DataManager.getInstance();
+            dataManager.sendPostsUsersByLocation(posts, users);
+        }
+
     }
 }

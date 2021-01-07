@@ -125,7 +125,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
-                mainScrollView.requestDisallowInterceptTouchEvent(true);
+                //mainScrollView.requestDisallowInterceptTouchEvent(true);
             }
 
             @Override
@@ -135,12 +135,12 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                mainScrollView.requestDisallowInterceptTouchEvent(false);
-                Float zoomLvl = (float)15;
+                //mainScrollView.requestDisallowInterceptTouchEvent(false);
+                Float zoomLvl = map.getCameraPosition().zoom;
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),zoomLvl));
             }
         });
-        /**
+
         transparentImageView.setOnTouchListener(new View.OnTouchListener() {
 
             @SuppressLint("ClickableViewAccessibility")
@@ -167,7 +167,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                         return true;
                 }
             }
-        });*/
+        });
     }
 
     private void setUpPermissionsRequest() {
@@ -456,7 +456,11 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         scrollBlocker();
         map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         map.getUiSettings().setMyLocationButtonEnabled(true);
-        map.getUiSettings().setScrollGesturesEnabled(false);
+        map.getUiSettings().setScrollGesturesEnabled(true);
+        map.getUiSettings().setMapToolbarEnabled(true);
+        map.getUiSettings().setCompassEnabled(true);
+        map.getUiSettings().setAllGesturesEnabled(true);
+        map.getUiSettings().setMyLocationButtonEnabled(true);
 
         final LatLng startLocation = new LatLng(44.478513, 16.577829);
 

@@ -9,6 +9,7 @@ import com.example.core.entities.Post;
 import com.example.core.entities.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import hr.example.treeapp.AllPostsCallback;
@@ -38,9 +39,13 @@ public class DataManager {
     private boolean postBitmapsReady = false;
     private boolean userBitmapsReady = false;
     private boolean newPostsReady = false;
+
     private boolean firstCall = true;
     private int numberOfNewUsers = 0;
     private boolean userPostoji = false;
+
+    private boolean userpostoji=false;
+
 
     public static DataManager getInstance(){
         return instance;
@@ -55,6 +60,7 @@ public class DataManager {
         userBitmapsReady = false;
         postsReady = false;
         usersReady = false;
+
         newPostsReady = false;
         firstCall = true;
         numberOfNewUsers = 0;
@@ -304,7 +310,19 @@ public class DataManager {
         });
     }
 
-
+    public void sendPostsUsersByLocation(List<Post> postList, List<User> userList){
+        numberOfUsers = 0;
+        numberOfPosts = 0;
+        posts = postList;
+        users = userList;
+        postsReady = true;
+        usersReady = true;
+        postBitmapsReady = false;
+        userBitmapsReady = false;
+        fillPostsWithBitmaps();
+        fillUsersWithBitmaps();
+        sendDataToPresenter(presenter);
+    }
 
     public void sendNewDataToPresenter(DataPresenter presenter){
         if(newPostsReady && usersReady && postBitmapsReady && userBitmapsReady){

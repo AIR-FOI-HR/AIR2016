@@ -2,9 +2,9 @@ package com.example.core.entities;
 
 import android.graphics.Bitmap;
 
-import java.util.Date;
+import java.io.Serializable;
 
-public class User {
+public class User implements Serializable {
     public String uid;
     public String ime;
     public String prezime;
@@ -15,6 +15,8 @@ public class User {
     public String datumRodenja;
     public long bodovi;
     Bitmap Slika;
+    public int SlikaLeaderboard;
+
 
     public String getUid() {
         return uid;

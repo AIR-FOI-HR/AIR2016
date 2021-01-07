@@ -6,8 +6,4 @@ import java.util.List;
 
 public interface GetPostsInLatLng {
     void onCallbackPostsInLatLng (List<Post> postsInLatLng);
-
 }
-
-
-
