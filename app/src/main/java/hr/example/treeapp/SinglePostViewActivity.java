@@ -44,7 +44,6 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private  Bitmap image;
     private TextView username;
     private GetPostData getPostData= new GetPostData();;
-
     private ImageView postImage;
     private Button postComment;
     private RecyclerView commentRecyclerView;
@@ -60,10 +59,9 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private boolean isBig = false;
     private boolean userLikedPictureFlag=false;
     private RecyclerView reactionsRecyclerView;
-    LatLng treeLocation;
     private List<String> likesList;
-    Context context=this;
-    UserRepository userRepository= new UserRepository();
+    private Context context=this;
+    private UserRepository userRepository= new UserRepository();
     private boolean userIsAnonymous;
     private boolean reactionsVisible =false;
 
@@ -193,7 +191,10 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         commentAdapter.notifyDataSetChanged();
     }
 
-
+    /**
+     * Metoda koja provjerava je li korisnik gost/anoniman
+     * uz pomoć calllback funkcije postavlja vrijednost u varijablu userIsAnonymous koja se koristi kod omoguććavanja dodavanja komentara
+     */
     private void checkIfUserIsAnonymous(){
         userRepository.isCurrentUserAnonymous(new UserAnonymousCallback() {
             @Override

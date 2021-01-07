@@ -172,7 +172,7 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         editor = sharedPref.edit();
         pressedLater = sharedPref.getBoolean(getResources().getString(R.string.later), false);
         pressedDontAskAgain = sharedPref.getBoolean(getResources().getString(R.string.dont_ask_again), false);
-        laterPressedTime = sharedPref.getLong(getResources().getString(R.string.later_pressed_time), 0);
+        //laterPressedTime = sharedPref.getLong(getResources().getString(R.string.later_pressed_time), 0);
     }
 
     @SuppressLint("MissingPermission")
@@ -204,7 +204,8 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         } else if (pressedLater) {
             if (laterPressedTime != 0) {
 
-                // check if its been 1 hour since later is been pressed.
+                /**
+                //check if its been 1 hour since later is been pressed.
                 Date dateObj = new Date();
                 long timeNow = dateObj.getTime();
                 long oneHourLater = laterPressedTime + (3600 * 1000);
@@ -213,7 +214,8 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                     requestPermission();
                     editor.putBoolean(getResources().getString(R.string.later), false);
                     editor.commit();
-                }
+
+                }*/
             }
             // If pressed don't ask again the app should bot request permissions again.
         } else if (!pressedDontAskAgain)
