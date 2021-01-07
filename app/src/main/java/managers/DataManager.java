@@ -141,7 +141,20 @@ public class DataManager {
 
 
     }
-
+    /**
+    public void getPostsInLatLng(double minLatitude, double maxLatitude, double minLongitude, double maxLongitude){
+        getPostData.getPostsInLatLngBoundry(minLatitude, maxLatitude, minLongitude, maxLongitude, new GetPostsInLatLng() {
+            @Override
+            public void onCallbackPostsInLatLng(List<Post> postsInLatLng) {
+                if(postsInLatLng!=null){
+                    posts=postsInLatLng;
+                    newPostsReady=true;
+                    postBitmapsReady=true;
+                    sendNewDataToPresenter(presenter);
+                }
+            }
+        });
+    }*/
     public void getPostsInLatLng(double minLatitude, double maxLatitude, double minLongitude, double maxLongitude){
         getPostData.getPostsInLatLngBoundry(minLatitude, maxLatitude, minLongitude, maxLongitude, new GetPostsInLatLng() {
             @Override
@@ -290,6 +303,8 @@ public class DataManager {
             }
         });
     }
+
+
 
     public void sendNewDataToPresenter(DataPresenter presenter){
         if(newPostsReady && usersReady && postBitmapsReady && userBitmapsReady){

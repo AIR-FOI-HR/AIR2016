@@ -82,6 +82,7 @@ public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleM
             public void onCameraIdle() {
                 updateData();
                 /**
+
                  if(!timerStarted){
                  timerStarted=true;
                  updateData();
@@ -97,7 +98,24 @@ public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleM
                 timerStarted=false;
                 }
                 };
-                 }*/
+                 }
+                if(!timerStarted){
+                    timerStarted=true;
+                    updateData();
+                    new CountDownTimer(2000,1000){
+
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            timerStarted=false;
+                        }
+                    };
+                }*/
+
             }
         });
 /*

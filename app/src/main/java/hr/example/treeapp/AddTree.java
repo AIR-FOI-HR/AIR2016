@@ -207,16 +207,19 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
         } else if (pressedLater) {
             if (laterPressedTime != 0) {
 
-                // check if its been 1 hour since later is been pressed.
-            //    Date dateObj = new Date();
-             //   long timeNow = dateObj.getTime();
-             //   long oneHourLater = laterPressedTime + (3600 * 1000);
-             //   if (oneHourLater <= timeNow) {
+                /**
+                //check if its been 1 hour since later is been pressed.
+                Date dateObj = new Date();
+                long timeNow = dateObj.getTime();
+                long oneHourLater = laterPressedTime + (3600 * 1000);
+                if (oneHourLater <= timeNow) {
 
-              //      requestPermission();
-               //     editor.putBoolean(getResources().getString(R.string.later), false);
-               //     editor.commit();
-               // }
+                    requestPermission();
+                    editor.putBoolean(getResources().getString(R.string.later), false);
+                    editor.commit();
+
+                }*/
+
             }
             // If pressed don't ask again the app should bot request permissions again.
         } else if (!pressedDontAskAgain)

@@ -44,4 +44,7 @@ public class VisibleMapRange {
     public void setMaxLongitude(double maxLongitude) {
         this.maxLongitude = maxLongitude;
     }
+
 }
+
+

@@ -5,6 +5,8 @@ import com.example.core.VisibleMapRange;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.core.VisibleMapRange;
+
 public class LiveData extends ViewModel {
     private static MutableLiveData<String> lastPostID;
     private static MutableLiveData<String> selectedPostId;

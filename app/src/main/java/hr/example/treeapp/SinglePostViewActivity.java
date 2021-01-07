@@ -1,14 +1,21 @@
 package hr.example.treeapp;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.os.Bundle;;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,10 +30,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.core.entities.User;
+
 
 
 public class SinglePostViewActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -34,20 +43,27 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private Post post;
     private  Bitmap image;
     private TextView username;
-    private GetPostData getPostData;
-
+    private GetPostData getPostData= new GetPostData();;
     private ImageView postImage;
-
+    private Button postComment;
     private RecyclerView commentRecyclerView;
     private CommentAdapter commentAdapter;
+    private ReactionAdapter reactionAdapter;
     private ImageView profilePicture;
     private TextView numberOfLikes;
     private TextView description;
     private TextView userPoints;
     private ImageView leafImage;
+    private TextView commentText;
     private GoogleMap map;
     private boolean isBig = false;
-    LatLng treeLocation;
+    private boolean userLikedPictureFlag=false;
+    private RecyclerView reactionsRecyclerView;
+    private List<String> likesList;
+    private Context context=this;
+    private UserRepository userRepository= new UserRepository();
+    private boolean userIsAnonymous;
+    private boolean reactionsVisible =false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +71,6 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         setContentView(R.layout.activity_single_post_view);
         postId  = getIntent().getStringExtra("postId");
         postImage = findViewById(R.id.postImageView);
-        getPostData = new GetPostData();
 
         commentRecyclerView = findViewById(R.id.commentRecycleView);
         username = findViewById(R.id.usernameText);
@@ -63,18 +78,36 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         numberOfLikes = findViewById(R.id.numberOfLeafsText);
         description = findViewById(R.id.treeDescriptionText);
         userPoints = findViewById(R.id.userPoints);
-        leafImage = findViewById(R.id.leafIconImageView);
+        leafImage = findViewById(R.id.leafIconButton);
+        commentText = findViewById(R.id.newCommentTextBox);
+        reactionsRecyclerView= findViewById(R.id.reactionsRecyclerView);
+
+        postComment = findViewById(R.id.postNewComment);
+        checkIfUserIsAnonymous();
+        postComment.setEnabled(!userIsAnonymous);
 
         leafImage.setImageResource(R.drawable.leaf_green);
 
-        //tamnaPozadina= findViewById(R.id.tamnaPozadina);
+        initMap();
+
         getPost();
+
+        refreshLikeStatus();
+
+        initCommentRecycleView();
+
+        initClickListeners();
+
+        reactionsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+    }
+    private void initClickListeners(){
         postImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!isBig){
+                    Point displaySize = getDisplayWidth();
                     ViewGroup.LayoutParams params = postImage.getLayoutParams();
-                    params.height = image.getHeight();
+                    params.height = displaySize.x;
                     postImage.setScaleType(ImageView.ScaleType.FIT_XY);
                     postImage.setLayoutParams(params);
                     postImage.setImageBitmap(image);
@@ -92,9 +125,85 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
 
             }
         });
-        initCommentRecycleView();
-        initMap();
+
+        leafImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!userLikedPictureFlag)
+                    getPostData.likePost(postId);
+                if(userLikedPictureFlag)
+                    getPostData.removeLikeOnPost(postId);
+                refreshLikeStatus();
+            }
+        });
+
+        postComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(userIsAnonymous)
+                    Toast.makeText(context, R.string.feature_not_available, Toast.LENGTH_LONG).show();
+                else{
+                    if(commentText.getText().length()==0)
+                        Toast.makeText(context,"You have to write a comment first!", Toast.LENGTH_LONG).show();
+                    else{
+                        postComment();
+                    }
+
+                }
+            }
+        });
+        numberOfLikes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!reactionsVisible){
+                    getUsersLiked();
+                    reactionsVisible=true;
+                }
+                else{
+                    reactionsVisible=false;
+                    reactionsRecyclerView.setVisibility(View.GONE);
+                }
+            }
+        });
     }
+
+    private Point getDisplayWidth() {
+        Display display   = getWindowManager().getDefaultDisplay();
+        Point displaySize = new Point();
+        display.getSize(displaySize);
+        return displaySize;
+    }
+
+    private void postComment() {
+        String text=commentText.getText().toString();
+        getPostData.postComent(postId,text);
+        Toast.makeText(context, "Commented!", Toast.LENGTH_SHORT).show();
+        updateCommentRecycleView(text);
+    }
+
+    private void updateCommentRecycleView(String text) {
+        String currentUserID = userRepository.getCurrentUserID();
+        Comment cmnt= new Comment(currentUserID,currentUserID,text, getString(R.string.now));
+        commentText.setText(null);
+        commentText.clearFocus();
+        commentAdapter.mData.add(0,cmnt);
+        commentAdapter.notifyItemInserted(0);
+        commentAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Metoda koja provjerava je li korisnik gost/anoniman
+     * uz pomoć calllback funkcije postavlja vrijednost u varijablu userIsAnonymous koja se koristi kod omoguććavanja dodavanja komentara
+     */
+    private void checkIfUserIsAnonymous(){
+        userRepository.isCurrentUserAnonymous(new UserAnonymousCallback() {
+            @Override
+            public void onCallback(boolean isAnonymous) {
+                userIsAnonymous=isAnonymous;
+            }
+        });
+    }
+
     private void initMap(){
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.treeLocationMapView);
@@ -102,7 +211,11 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     }
     private void initCommentRecycleView() {
         commentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        getComments();
 
+    }
+
+    private void getComments() {
         getPostData.getPostComments(postId, new CommentCallback() {
             @Override
             public void onCallback(List<Comment> comment) {
@@ -110,9 +223,53 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                 commentRecyclerView.setAdapter(commentAdapter);
             }
         });
-
     }
 
+
+
+    private void getUsersLiked() {
+
+        getPostData.getUsersLiked(postId, new GetLikesForPostCallback() {
+            @Override
+            public void onCallback(List<String> listOfLikesByUserID) {
+                reactionAdapter = new ReactionAdapter(getApplicationContext(), listOfLikesByUserID);
+                reactionsRecyclerView.setAdapter(reactionAdapter);
+
+            }
+        });
+        reactionsRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void refreshLikeStatus(){
+        getPostData.hasUserLikedPost(postId, new CheckIfUserLikedPhotoCallback() {
+            @Override
+            public void onCallback(Boolean userLikedPhoto) {
+                if(userLikedPhoto){
+                    userLikedPictureFlag=true;
+                    leafImage.setImageResource(R.drawable.leaf_full);
+                }
+                else{
+                    userLikedPictureFlag=false;
+                    leafImage.setImageResource(R.drawable.leaf_transparent);
+                }
+
+            }
+        });
+        likesList= new ArrayList<>();
+        getPostData.getPostLikes(postId, new GetLikesForPostCallback() {
+            @Override
+            public void onCallback(List<String> listOfLikesByUserID) {
+                likesList=listOfLikesByUserID;
+                if(likesList.isEmpty())
+                    numberOfLikes.setText("0");
+                else{
+                    String likes= String.valueOf(listOfLikesByUserID.size());
+                    numberOfLikes.setText(likes);
+                }
+
+            }
+        });
+    }
 
 
     private void getPost(){
@@ -130,8 +287,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                     populatePostData();
                 }
                 else {
-                    Toast.makeText(SinglePostViewActivity.this, R.string.Error, Toast.LENGTH_LONG);
-
+                    Toast.makeText(SinglePostViewActivity.this, R.string.Error, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -149,7 +305,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                 .position(treeLocation)
                 .draggable(false)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker)));
-        Float zoomLvl = (float)15;
+        float zoomLvl = (float)15;
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(treeLocation,zoomLvl));
     }
 
@@ -162,7 +318,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                     Glide.with(SinglePostViewActivity.this).load(image).into(postImage);
                 }
                 else
-                    Toast.makeText(SinglePostViewActivity.this, R.string.Error_loading_picture, Toast.LENGTH_LONG);
+                    Toast.makeText(SinglePostViewActivity.this, R.string.Error_loading_picture, Toast.LENGTH_LONG).show();
             }
         });
     }
