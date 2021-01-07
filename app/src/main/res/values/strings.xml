@@ -39,15 +39,15 @@
     <string name="PlantATree">Plant a tree, don\'t be a stump</string>
     <string name="NewsFeed">News Feed</string>
     <string name="DatePicker">Birth Date:</string>
-    <string name="title_activity_login_test">LoginTest</string>
+    <string name="title_activity_login_test" translatable="false">LoginTest</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="first_fragment_label" translatable="false">First Fragment</string>
+    <string name="second_fragment_label" translatable="false">Second Fragment</string>
+    <string name="next" translatable="false">Next</string>
+    <string name="previous" translatable="false">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="hello_first_fragment" translatable="false">Hello first fragment</string>
+    <string name="hello_second_fragment" translatable="false">Hello second fragment. Arg: %1$s</string>
 
     <string name="no_name">Please enter your name!</string>
     <string name="no_surname">Please enter your surname!</string>
@@ -81,9 +81,9 @@
     <string name="username_post">Username</string>
     <string name="post_description_post">Post description</string>
 
-    <string name="title_activity_single_post_view">FullscreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_single_post_view" translatable="false">FullscreenActivity</string>
+    <string name="dummy_button" translatable="false">Dummy Button</string>
+    <string name="dummy_content" translatable="false">DUMMY\nCONTENT</string>
     <string name="Error">There was an error!</string>
     <string name="Error_loading_picture">There was an error during image load!</string>
     <string name="tree_description">More about this tree</string>
@@ -92,11 +92,14 @@
     <string name="points">points</string>
 
 
-    <string name="registration_default_profile_picture">default_profile_picture.jpeg</string>
+    <string name="registration_default_profile_picture" translatable="false">default_profile_picture.jpeg</string>
     <string name="leafs_on_this_post">Leafs on this post</string>
     <string name="write_a_comment">Write a comment!</string>
     <string name="feature_not_available">This feature isn\'t available for you! Please Register :)</string>
     <string name="now">Now</string>
     <string name="Anonymous">Anonymous</string>
+
+    <string name="deletePost">Delete post</string>
+    <string name="deleteComment">Delete Comment</string>
 
 </resources>

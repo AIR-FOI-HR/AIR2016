@@ -58,4 +58,5 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
                     .into(profileImage);
         }
     }
+
 }

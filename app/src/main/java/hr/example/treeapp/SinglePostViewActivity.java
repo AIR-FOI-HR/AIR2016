@@ -7,15 +7,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+
 import android.graphics.Point;
 import android.os.Bundle;;
-import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.PopupMenu;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +31,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -43,7 +45,12 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private Post post;
     private  Bitmap image;
     private TextView username;
+
     private GetPostData getPostData= new GetPostData();;
+
+
+    private String userID;
+
     private ImageView postImage;
     private Button postComment;
     private RecyclerView commentRecyclerView;
@@ -78,6 +85,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         numberOfLikes = findViewById(R.id.numberOfLeafsText);
         description = findViewById(R.id.treeDescriptionText);
         userPoints = findViewById(R.id.userPoints);
+
         leafImage = findViewById(R.id.leafIconButton);
         commentText = findViewById(R.id.newCommentTextBox);
         reactionsRecyclerView= findViewById(R.id.reactionsRecyclerView);
@@ -89,6 +97,11 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         leafImage.setImageResource(R.drawable.leaf_green);
 
         initMap();
+
+
+        //leafImage = findViewById(R.id.leafIconImageView);
+        //leafImage.setImageResource(R.drawable.leaf_green);
+        //tamnaPozadina= findViewById(R.id.tamnaPozadina);
 
         getPost();
 
@@ -209,6 +222,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                 .findFragmentById(R.id.treeLocationMapView);
         mapFragment.getMapAsync(this);
     }
+
     private void initCommentRecycleView() {
         commentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         getComments();
@@ -219,6 +233,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         getPostData.getPostComments(postId, new CommentCallback() {
             @Override
             public void onCallback(List<Comment> comment) {
+                commentAdapter.postID=postId;
                 commentAdapter= new CommentAdapter(getApplicationContext(),comment);
                 commentRecyclerView.setAdapter(commentAdapter);
             }
@@ -240,30 +255,30 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         reactionsRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    private void refreshLikeStatus(){
+
+    private void refreshLikeStatus() {
         getPostData.hasUserLikedPost(postId, new CheckIfUserLikedPhotoCallback() {
             @Override
             public void onCallback(Boolean userLikedPhoto) {
-                if(userLikedPhoto){
-                    userLikedPictureFlag=true;
+                if (userLikedPhoto) {
+                    userLikedPictureFlag = true;
                     leafImage.setImageResource(R.drawable.leaf_full);
-                }
-                else{
-                    userLikedPictureFlag=false;
+                } else {
+                    userLikedPictureFlag = false;
                     leafImage.setImageResource(R.drawable.leaf_transparent);
                 }
 
             }
         });
-        likesList= new ArrayList<>();
+        likesList = new ArrayList<>();
         getPostData.getPostLikes(postId, new GetLikesForPostCallback() {
             @Override
             public void onCallback(List<String> listOfLikesByUserID) {
-                likesList=listOfLikesByUserID;
-                if(likesList.isEmpty())
+                likesList = listOfLikesByUserID;
+                if (likesList.isEmpty())
                     numberOfLikes.setText("0");
-                else{
-                    String likes= String.valueOf(listOfLikesByUserID.size());
+                else {
+                    String likes = String.valueOf(listOfLikesByUserID.size());
                     numberOfLikes.setText(likes);
                 }
 
@@ -271,6 +286,36 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         });
     }
 
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.postpopupmenu, popup.getMenu());
+        if(getPostData.getCurrentUserRole()!=1 && !getPostData.getCurrentUserID().equals(userID)) {
+            popup.getMenu().findItem(R.id.postpopupdelete).setVisible(false);
+        }
+        else{
+            popup.getMenu().findItem(R.id.postpopupdelete).setVisible(true);
+        }
+        popup.setOnMenuItemClickListener (new PopupMenu.OnMenuItemClickListener ()
+        {
+            @Override
+            public boolean onMenuItemClick (MenuItem item)
+            {
+                int id = item.getItemId();
+                switch (id)
+                {
+                    case R.id.postpopupdelete: deletePost(); break;
+                }
+                return true;
+            }
+        });
+        popup.show();
+    }
+
+    public void deletePost(){
+        getPostData.deletePost(postId);
+        finish();
+    }
 
     private void getPost(){
         getPrimaryPostData();
@@ -328,6 +373,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         userRepository.getUser(post.getKorisnik_ID(), new UserCallback() {
             @Override
             public void onCallback(User user) {
+                userID=user.uid;
                 username.setText(user.korisnickoIme);
                 String bodovi = user.bodovi +" "+ getString(R.string.points);
                 userPoints.setText(bodovi);

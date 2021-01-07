@@ -48,7 +48,12 @@ public class GetPostData {
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private StorageReference storageReference = firebaseStorage.getReference();
+
     public FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+    private FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
+    public FirebaseUser user;
+
     QueryDocumentSnapshot lastDocument = null;
 
     List<Comment> listaKomentara = new ArrayList<Comment>();
@@ -215,6 +220,7 @@ public class GetPostData {
                     }
                 });
     }
+
     /**
     public void getPostsInLatLngBoundry (double minLatitude, double maxLatitude, double minLongitude, double maxLongitude, final GetPostsInLatLng getPostsInLatLng){
         //minLatitude=0; maxLatitude=0; maxLongitude=0; minLongitude=0;
@@ -311,6 +317,67 @@ public class GetPostData {
                             }
                         }
                     });*/
+
+    public long getCurrentUserRole() {
+        final long[] finali = new long[1];
+        firebaseFirestore.collection("Korisnici")
+                .document(firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        long i;
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if(document.exists()){
+                                i= (long) document.get("Uloga_ID");
+                                finali[0] =i;
+                            }
+                        } else {
+                        }
+                    }
+                });
+        return finali[0];
+    }
+
+    public void deletePost(String postID){
+        firebaseFirestore.collection("Objave")
+                .document(postID)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
+    }
+
+    public void deleteComment(String postID, String commentID){
+        firebaseFirestore.collection("Objave")
+                .document(postID)
+                .collection("Komentari")
+                .document(commentID)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
+    }
+
+    public String getCurrentUserID(){
+        return firebaseAuth.getCurrentUser().getUid();
+    }
+
 
     public void likePost(String postID){
         DocumentReference documentReference = firebaseFirestore.collection("Objave").document(postID).collection("Lajkovi").document(currentUser.getUid());
