@@ -95,7 +95,8 @@ public class LoginTest extends AppCompatActivity {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     Fragment selectedFragment =null;
-
+                    LinearLayout myLayout = (LinearLayout) findViewById(R.id.topmenumainlayout);
+                    HorizontalScrollView horizontalScrollView = findViewById(R.id.topmenu);
                     switch(item.getItemId()){
                         case R.id.nav_home:
                                 selectedFragment=dataPresentersManager.firstPresenter.getFragment();
@@ -108,6 +109,10 @@ public class LoginTest extends AppCompatActivity {
                             startActivity(open);
                             break;
                         case R.id.nav_search:
+                            selectedFragment=new UserSearchTest();
+                            horizontalScrollView.setVisibility(HorizontalScrollView.GONE);
+                            myLayout.setVisibility(LinearLayout.GONE);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                             break;
                         case R.id.nav_profile:
                             break;

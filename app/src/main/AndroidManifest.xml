@@ -35,11 +35,8 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/Theme.TreeApp">
-
-        <activity android:name=".SinglePostViewActivity"></activity>
-
-        <activity android:name=".MainScreen"></activity>
-
+        <activity android:name=".SinglePostViewActivity" />
+        <activity android:name=".MainScreen" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

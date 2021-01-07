@@ -77,6 +77,12 @@
     <string name="comments">Komentari</string>
     <string name="description">Opis</string>
     <string name="points">bodova</string>
+    <string name="user_search_hint">Unesite korisničko ime</string>
+    <string name="user_search_button">Pretraži korisnike</string>
+    <string name="profile_pic">Slika profila</string>
+    <string name="leaf_icon">Ikona lista</string>
+    <string name="tree_icon">Ikona drveta</string>
+    <string name="search_no_username">Unesite korisničko ime!</string>
 
 
 </resources>

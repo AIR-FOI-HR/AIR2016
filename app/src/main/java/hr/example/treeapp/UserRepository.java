@@ -74,7 +74,6 @@ public class UserRepository {
 
     public void getAllUsers(final AllUsersCallback allUsersCallback) {
         firebaseFirestore.collection("Korisnici")
-                .limit(6)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -92,7 +91,28 @@ public class UserRepository {
                     }
                 });
     }
-
+    public void getUsersSearch(String search, final AllUsersCallback allUsersCallback) {
+        firebaseFirestore.collection("Korisnici")
+                .orderBy("Korisnicko_ime")
+                .startAt(search)
+                .endAt(search+'\uf8ff')
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            listaKorisnika.clear();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                User user = new User(document.getId(), document.get("Ime").toString(), document.get("Prezime").toString(), document.get("E-mail").toString(), document.getString("Profilna_slika_ID"), (long)document.get("Uloga_ID"), document.get("Korisnicko_ime").toString(), document.get("Datum_rodenja").toString(), (long)document.get("Bodovi"));
+                                listaKorisnika.add(user);
+                            }
+                            allUsersCallback.onCallback(listaKorisnika);
+                        } else {
+                            allUsersCallback.onCallback(null);
+                        }
+                    }
+                });
+    }
     public void getUserImage (String imageID, final UserImageCallback userImageCallback){
         StorageReference image= storageReference.child("Profilne_slike/"+imageID);
         image.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
