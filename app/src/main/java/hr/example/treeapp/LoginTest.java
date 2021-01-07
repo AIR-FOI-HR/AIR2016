@@ -138,7 +138,6 @@ public class LoginTest extends AppCompatActivity {
                                 dataPresentersManager.loadFragment(0);
                             }
 
-
                             break;
                         case R.id.nav_leaderboard:
 
