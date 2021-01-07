@@ -31,7 +31,7 @@ import android.widget.LinearLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
 
 import java.util.List;
 
@@ -75,10 +75,13 @@ public class LoginTest extends AppCompatActivity {
         };
         model.visibleMapRange().observe(this, visibleMapRangeObserver);
 
-        FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+
         dataPresentersManager=new DataPresentersManager(context);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.firstPresenter.getFragment()).commit();
-        FillTopMenu();
+        if(dataPresentersManager.firstPresenter!=null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.firstPresenter.getFragment()).commit();
+            FillTopMenu();
+        }
+
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         bottomNav.setItemIconTintList(null);
@@ -127,12 +130,13 @@ public class LoginTest extends AppCompatActivity {
 
                     switch(item.getItemId()){
                         case R.id.nav_home:
-
-                            selectedFragment=dataPresentersManager.firstPresenter.getFragment();
-                            horizontalScrollView.setVisibility(HorizontalScrollView.VISIBLE);
-                            myLayout.setVisibility(LinearLayout.VISIBLE);
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-                            dataPresentersManager.loadFragment(0);
+                            if(dataPresentersManager.firstPresenter!=null){
+                                selectedFragment=dataPresentersManager.firstPresenter.getFragment();
+                                horizontalScrollView.setVisibility(HorizontalScrollView.VISIBLE);
+                                myLayout.setVisibility(LinearLayout.VISIBLE);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                                dataPresentersManager.loadFragment(0);
+                            }
 
 
                             break;
