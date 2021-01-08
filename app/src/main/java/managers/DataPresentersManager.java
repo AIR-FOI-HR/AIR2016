@@ -27,7 +27,9 @@ public class DataPresentersManager {
     private void loadPresenters() {
         presenters.add(new PostListFragment());
         presenters.add(new PostMapView());
-        firstPresenter = presenters.get(0);
+        if(!presenters.isEmpty()){
+            firstPresenter = presenters.get(0);
+        }
         DataManager dataManager = DataManager.getInstance();
         if(firstPresenter!=null){
             String modul = firstPresenter.getModuleName(context);
