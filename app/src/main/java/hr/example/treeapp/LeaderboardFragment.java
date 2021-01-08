@@ -46,8 +46,8 @@ public class LeaderboardFragment extends Fragment {
         username=view.findViewById(R.id.user_username_leaderboard);
         points=view.findViewById(R.id.user_points_leaderboard);
         leaderboardViewAdapter = new LeaderboardViewAdapter(getParentFragmentManager());
-        leaderboardViewAdapter.AddFragment(new LeaderboardLocationFragment(), "Location");
         leaderboardViewAdapter.AddFragment(new LeaderboardScoreFragment(), "Score");
+        leaderboardViewAdapter.AddFragment(new LeaderboardLocationFragment(), "Location");
         viewPager.setAdapter(leaderboardViewAdapter);
         tabLayout.setupWithViewPager(viewPager);
         context=view.getContext();

@@ -91,6 +91,7 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         initClickEvent();
 
         button=findViewById(R.id.button_apply_leaderboard);
@@ -116,11 +117,9 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
                             }
                         }
                     });
-
                 }
             }
         });
-
     }
 
     public void initClickEvent() {
@@ -138,12 +137,11 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
                 if(temp.matches("")){
                 }
                 else{
-                    radius = Integer.valueOf(editText.getText().toString());
+                    radius = Integer.valueOf(editText.getText().toString())*1000;
                 }
 
                 if(circle!=null){
                     circle.remove();
-
                 }
 
                 circle = mMap.addCircle(new CircleOptions()
@@ -156,14 +154,12 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
                 mMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
                     @Override
                     public void onCircleClick(Circle circle) {
-                        // Flip the r, g and b components of the circle's stroke color.
-                        int strokeColor = circle.getStrokeColor() ^ 0x00ffffff;
-                        circle.setStrokeColor(strokeColor);
-
+                        noviMarker.remove();
+                        radius=0;
+                        circle.remove();
                     }
                 });
             }
-
         });
     }
 
@@ -225,6 +221,4 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
         setResult(MY_REQUEST_CODE_TIMELINE, resultIntent);
         finish();
     }
-
-
 }
