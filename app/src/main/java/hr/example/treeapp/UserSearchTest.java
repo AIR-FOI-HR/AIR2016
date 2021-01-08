@@ -58,6 +58,7 @@ public class UserSearchTest extends Fragment {
             }
         });
 
+
     }
 
     public void Search(){
@@ -73,7 +74,7 @@ public class UserSearchTest extends Fragment {
                             @Override
                             public void onItemClick(User user) {
                                 //open user prof
-                                Fragment selectedFragment =new UserProfileFragment(user.uid);
+                                Fragment selectedFragment =new UserProfileFragment(user.getUid());
                                 //Fragment selectedFragment =new UserProfileFragment(user);
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                             }

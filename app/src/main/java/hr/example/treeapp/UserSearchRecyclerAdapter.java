@@ -2,7 +2,6 @@ package hr.example.treeapp;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.core.entities.User;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -80,7 +78,7 @@ public class UserSearchRecyclerAdapter extends RecyclerView.Adapter<UserSearchRe
 
         public MyViewHolder(@NonNull View itemView){
             super(itemView);
-            profile_picture=(ImageView)itemView.findViewById(R.id.imageViewProfile);
+            profile_picture=(ImageView)itemView.findViewById(R.id.imageViewUserProfilePost);
             username=(TextView)itemView.findViewById(R.id.textViewUserName);
 
 

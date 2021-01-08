@@ -3,6 +3,7 @@ package hr.example.treeapp;
 import android.graphics.BitmapFactory;
 import com.example.core.entities.Comment;
 import com.example.core.entities.Post;
+import com.example.core.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -36,7 +37,7 @@ public class GetPostData {
 
     List<Comment> listaKomentara = new ArrayList<Comment>();
     List<Post> listaObjava = new ArrayList<>();
-
+    List<Post> listaObjavaKorisnika=new ArrayList<>();
     public void getPost(String postId, final PostCallback postCallback) {
         firebaseFirestore.collection("Objave")
                 .document(postId)
@@ -56,7 +57,26 @@ public class GetPostData {
                     }
                 });
     }
-
+    public void getUsersPosts(String uid, final UsersPostsCallback usersPostsCallback) {
+        firebaseFirestore.collection("Objave")
+                .whereEqualTo("Korisnik_ID", uid)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            listaObjavaKorisnika.clear();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Post post = new Post(document.getId(), document.get("Korisnik_ID").toString(), document.get("Datum_objave").toString(), (double)document.get("Latitude"), (double)document.get("Longitude"), document.get("Opis").toString(), document.get("URL_slike").toString(), (long)document.get("Broj_lajkova"));
+                                listaObjavaKorisnika.add(post);
+                            }
+                            usersPostsCallback.onCallback(listaObjavaKorisnika);
+                        } else {
+                            usersPostsCallback.onCallback(null);
+                        }
+                    }
+                });
+    }
 
     /**
      * Metoda se koristi za dohvaćanje samo dijela podataka o objavi kako bi se smanjilo opterećenje baze
