@@ -313,14 +313,21 @@ public class DataManager {
     public void sendPostsUsersByLocation(List<Post> postList, List<User> userList){
         numberOfUsers = 0;
         numberOfPosts = 0;
+        firstCall = true;
         posts = postList;
         users = userList;
         postsReady = true;
         usersReady = true;
-        postBitmapsReady = false;
-        userBitmapsReady = false;
-        fillPostsWithBitmaps();
-        fillUsersWithBitmaps();
+        if(posts.isEmpty()){
+            postBitmapsReady = true;
+            userBitmapsReady = true;
+        }
+        else{
+            postBitmapsReady = false;
+            userBitmapsReady = false;
+            fillPostsWithBitmaps();
+            fillUsersWithBitmaps();
+        }
         sendDataToPresenter(presenter);
     }
 

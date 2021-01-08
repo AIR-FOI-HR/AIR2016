@@ -40,12 +40,14 @@ public class LoginTest extends AppCompatActivity {
     Context context;
     private LiveData model;
     private static final int MY_REQUEST_CODE = 0xe111;
+    Button chooseLocationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_test);
         context=this;
+        chooseLocationButton = findViewById(R.id.chooseLocationTimeline);
         DataManager dataManager = DataManager.getInstance();
 
         final Observer<String> nameObserver = new Observer<String>() {
@@ -80,6 +82,8 @@ public class LoginTest extends AppCompatActivity {
         if(dataPresentersManager.firstPresenter!=null){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.firstPresenter.getFragment()).commit();
             FillTopMenu();
+            String moduleName = dataPresentersManager.firstPresenter.getModuleName(context);
+            showHideChooseLocationButtonTimeline(moduleName);
         }
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
@@ -110,6 +114,8 @@ public class LoginTest extends AppCompatActivity {
                 public void onClick(View view) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.presenters.get(finalI).getFragment()).commit();
                     dataPresentersManager.loadFragment(finalI);
+                    String moduleName = dataPresentersManager.presenters.get(finalI).getModuleName(context);
+                    showHideChooseLocationButtonTimeline(moduleName);
                 }
 
             });
@@ -136,6 +142,8 @@ public class LoginTest extends AppCompatActivity {
                                 myLayout.setVisibility(LinearLayout.VISIBLE);
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                                 dataPresentersManager.loadFragment(0);
+                                String moduleName = dataPresentersManager.firstPresenter.getModuleName(context);
+                                showHideChooseLocationButtonTimeline(moduleName);
                             }
 
                             break;
@@ -159,6 +167,15 @@ public class LoginTest extends AppCompatActivity {
                 return true;
                 }
             };
+
+    private void showHideChooseLocationButtonTimeline(String moduleName){
+        String requiredModuleNameForLocationButton = "Timeline";
+        if(requiredModuleNameForLocationButton.equals(moduleName)){
+            chooseLocationButton.setVisibility(View.VISIBLE);
+        } else{
+            chooseLocationButton.setVisibility(View.GONE);
+        }
+    }
 
     private void displayMainFragment(){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

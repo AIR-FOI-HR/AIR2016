@@ -170,6 +170,9 @@ public class LeaderboardLocationMapview extends FragmentActivity implements OnMa
     public  void getUsersForLocationLeaderboard(List<Post> posts) {
         numberOfNewUsers=0;
         leaderboardKorisnici.clear();
+        if(posts.isEmpty()){
+            returnPostsAndUsersForTimeline(posts, leaderboardKorisnici);
+        }
         for (Post p : posts) {
             userRepository.getUser(p.getKorisnik_ID(), new UserCallback() {
                 @Override
