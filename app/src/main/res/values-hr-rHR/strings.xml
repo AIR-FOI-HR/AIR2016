@@ -88,6 +88,14 @@
     <string name="deletePost">Obriši objavu</string>
     <string name="deleteComment">Obriši komentar</string>
     <string name="title_activity_post_map_view">Mapa</string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="leaderboard_item_number">Mjesto</string>
+    <string name="leaderboard_item_points">Bodovi</string>
+    <string name="leaderboard_item_points_text">\\u0020bodova</string>
+    <string name="leaderboard_location_button">Odaberi lokaciju</string>
+    <string name="leaderboard_apply_button">Primjeni lokaciju</string>
+    <string name="choose_location_button_timeline">Odaberi lokaciju</string>
+    <string name="title_activity_leaderboard_location_mapview">Mapa</string>
 
 
 </resources>
