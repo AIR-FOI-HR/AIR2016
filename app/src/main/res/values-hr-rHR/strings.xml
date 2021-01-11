@@ -99,6 +99,9 @@
     <string name="radius_in_km">Radijus u km</string>
     <string name="comment_notification">je postavio/la komentar na tvojoj objavi</string>
     <string name="leaf_notification">je dodao/la listić na tvoje stablo</string>
+    <string name="tap_the_refresh_button_below_and_check_again">Klikni na osvježi i provjeri ponovo.</string>
+    <string name="refresh">Osvježi</string>
+    <string name="nothing_here">Nema obavijesti!!!</string>
 
 
 </resources>
