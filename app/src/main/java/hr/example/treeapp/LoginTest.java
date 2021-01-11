@@ -161,6 +161,8 @@ public class LoginTest extends AppCompatActivity {
                             startActivity(open);
                             break;
                         case R.id.nav_search:
+                            Intent newi = new Intent(LoginTest.this, Notifications.class);
+                            startActivity(newi);
                             break;
                         case R.id.nav_profile:
                             break;

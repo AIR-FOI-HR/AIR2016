@@ -4,21 +4,19 @@ import java.util.Date;
 
 public class Notification {
     public String notificationId;
-    public String recieverId;
+    public String receiverId;
     public String senderId;
     public String postId;
     public NotificationType type;
     public Date timestamp;
-    public boolean isRed;
 
-    public Notification(String notificationId, String recieverId, String senderId, String postId, NotificationType type, Date timestamp, boolean isRed) {
+    public Notification(String notificationId, String receiverId, String senderId, String postId, NotificationType type, Date timestamp) {
         this.notificationId = notificationId;
-        this.recieverId = recieverId;
+        this.receiverId = receiverId;
         this.senderId = senderId;
         this.postId = postId;
         this.type = type;
         this.timestamp = timestamp;
-        this.isRed = isRed;
     }
 
     public String getNotificationId() {
@@ -29,12 +27,12 @@ public class Notification {
         this.notificationId = notificationId;
     }
 
-    public String getRecieverId() {
-        return recieverId;
+    public String getReceiverId() {
+        return receiverId;
     }
 
-    public void setRecieverId(String recieverId) {
-        this.recieverId = recieverId;
+    public void setReceiverId(String receiverId) {
+        this.receiverId = receiverId;
     }
 
     public String getSenderId() {
@@ -69,11 +67,4 @@ public class Notification {
         this.timestamp = timestamp;
     }
 
-    public boolean isRed() {
-        return isRed;
-    }
-
-    public void setRed(boolean red) {
-        isRed = red;
-    }
 }

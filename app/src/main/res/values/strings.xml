@@ -112,5 +112,10 @@
     <string name="title_activity_leaderboard_location_mapview">Map</string>
     <string name="radius_in_km">Radius in km</string>
     <string name="default_notification_channel_id" translatable="false">12</string>
+    <string name="comment_notification">has commented on your post</string>
+    <string name="leaf_notification">has added leaf to your tree</string>
+    <string name="tap_the_refresh_button_below_and_check_again">Tap the refresh button below and check again.</string>
+    <string name="refresh">Refresh</string>
+    <string name="nothing_here">Nothing here!!!</string>
 
 </resources>
