@@ -35,7 +35,7 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/Theme.TreeApp">
-        <activity android:name=".Notifications"></activity>
+        <activity android:name=".NotificationsActivity"></activity>
 
         <service
             android:name=".MyFirebaseMessagingService"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Notifications">
+    tools:context=".NotificationsActivity">
 
     <RelativeLayout
         android:id="@+id/noNotificationsRelativeLayout"
@@ -87,6 +87,7 @@
             android:layout_alignParentEnd="true"
             android:backgroundTint="@color/transparent"
             android:scaleType="fitXY"
+            android:visibility="gone"
             app:srcCompat="@drawable/trash" />
 
     </RelativeLayout>

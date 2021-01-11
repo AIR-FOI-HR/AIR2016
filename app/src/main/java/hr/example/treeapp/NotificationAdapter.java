@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.core.entities.Notification;
 import com.example.core.entities.NotificationType;
 import com.example.core.entities.User;
+import com.example.timeline.PostRecyclerAdapter;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -26,17 +27,19 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private Context mContext;
     private List<Notification> mData;
     private UserRepository userRepository = new UserRepository();
+    private OnItemClicked onClickListener;
 
-    public NotificationAdapter(Context mContext, List<Notification> mData) {
+    public NotificationAdapter(Context mContext, List<Notification> mData, OnItemClicked onItemClicked) {
         this.mContext=mContext;
         this.mData=mData;
+        this.onClickListener = onItemClicked;
     }
 
     @NonNull
     @Override
     public NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View row = LayoutInflater.from(mContext).inflate(R.layout.row_notification, parent, false);
-        return new NotificationViewHolder(row);
+        return new NotificationViewHolder(row, onClickListener);
     }
 
     @Override
@@ -54,6 +57,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             Glide.with(mContext).load(R.drawable.leaf_notification).into(holder.notificationIcon);
             holder.notificationText.setText(R.string.leaf_notification);
         }
+
         if(checkIfTimestampWasToday(timestamp))
             holder.timestamp.setText(timestamp.getHours()+":"+timestamp.getMinutes());
         else
@@ -83,12 +87,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.notificationText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: otvoriti aktivnosti SinglePostView
-                /**
-                Intent singlePostView = new Intent(mContext, SinglePostViewActivity.class);
-                singlePostView.putExtra("postId",postId);
-                View.
-                 */
+                onClickListener.onItemClick(position);
+            }
+        });
+
+        holder.timestamp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickListener.onItemClick(position);
+            }
+        });
+        holder.userImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickListener.onItemClick(position);
             }
         });
     }
@@ -103,12 +115,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return mData.size();
     }
 
+    public interface OnItemClicked {
+        void onItemClick(int position);
+    }
+
     public class NotificationViewHolder extends RecyclerView.ViewHolder{
         ImageView userImage, notificationIcon;
         TextView username, notificationText, timestamp;
-
-        public NotificationViewHolder(@NonNull View itemView) {
+        OnItemClicked onItemClicked;
+        public NotificationViewHolder(@NonNull View itemView, OnItemClicked onItemClicked) {
             super(itemView);
+            this.onItemClicked=onItemClicked;
             userImage = itemView.findViewById(R.id.profile_image_notification);
             notificationIcon = itemView.findViewById(R.id.icon_notification);
             username=itemView.findViewById(R.id.username_notification);

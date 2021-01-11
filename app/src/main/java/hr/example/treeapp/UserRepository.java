@@ -196,7 +196,7 @@ public class UserRepository {
         String currentUserId = getCurrentUserID();
         notificationList.clear();
         firebaseFirestore.collection("Korisnici")
-                .document("aTQjGfPj47M0EKwxvXsw07je9qe2")
+                .document(currentUserId)
                 .collection("Notifikacije")
                 .orderBy("Timestamp", Query.Direction.ASCENDING)
                 .get()
