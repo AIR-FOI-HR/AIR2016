@@ -2,10 +2,14 @@ package hr.example.treeapp;
 
 
 import android.graphics.BitmapFactory;
+
+import com.example.core.entities.Notification;
+import com.example.core.entities.NotificationType;
 import com.example.core.entities.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -17,9 +21,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import androidx.annotation.NonNull;
 import com.example.core.entities.User;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import hr.example.treeapp.notifications.NotificationsCallback;
 
 
 public class UserRepository {
@@ -36,6 +43,7 @@ public class UserRepository {
     private boolean userpostoji = false;
     private int numberOfNewUsers = 0;
     List<User> leaderboardKorisnici = new ArrayList<>();
+    private List<Notification> notificationList = new ArrayList<Notification>();
 
 
     public void getUser(String korisnikID, final UserCallback userCallback) {
@@ -181,6 +189,52 @@ public class UserRepository {
                         }
                     }
                 });
+
+    }
+
+    public void getCurrentUserNotifications (final NotificationsCallback notificationsCallback){
+        String currentUserId = getCurrentUserID();
+        notificationList.clear();
+        firebaseFirestore.collection("Korisnici")
+                .document(currentUserId)
+                .collection("Notifikacije")
+                .orderBy("Timestamp", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for (QueryDocumentSnapshot document : task.getResult()){
+                                NotificationType notificationType = null;
+                                if(document.get("Type").toString().equals("comment"))
+                                    notificationType=NotificationType.comment;
+                                if(document.get("Type").toString().equals("leaf"))
+                                    notificationType=NotificationType.leaf;
+
+                                Timestamp googleTimestamp = (Timestamp) document.get("Timestamp");
+                                Date timestamp =googleTimestamp.toDate();
+                                Notification notification = new Notification(document.getId(),document.get("ReciverId").toString(),document.get("SenderId").toString(),document.get("PostId").toString(),notificationType,timestamp);
+                                notificationList.add(notification);
+                            }
+                            if (notificationList.isEmpty())
+                                 notificationsCallback.onCallback(null);
+                            else
+                                notificationsCallback.onCallback(notificationList);
+                        }
+                    }
+                });
+    }
+    public void clearCurrentUserNotifications (){
+        String currentUserId = getCurrentUserID();
+        for(int i=0; i<=notificationList.size();){
+            if(firebaseFirestore.collection("Korisnici")
+                    .document(currentUserId)
+                    .collection("Notifikacije")
+                    .document(notificationList.get(i).notificationId)
+                    .delete()
+                    .isComplete())
+                i++;
+        }
 
     }
 

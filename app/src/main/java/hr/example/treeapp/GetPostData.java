@@ -4,12 +4,15 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.example.core.entities.Comment;
+import com.example.core.entities.Notification;
+import com.example.core.entities.NotificationType;
 import com.example.core.entities.Post;
 import com.example.core.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -415,6 +418,7 @@ public class GetPostData {
         like.put("Korisnik_ID", currentUser.getUid());
         documentReference.set(like);
         updateLikesForPost(postID);
+        pushNotification(postID, NotificationType.leaf);
     }
 
     private void updateLikesForPost(String postID) {
@@ -515,6 +519,32 @@ public class GetPostData {
         comment.put("Datum", currentDateTimeString);
         comment.put("Tekst", commentText);
         documentReference.set(comment);
+        pushNotification(postID, NotificationType.comment);
+    }
+
+    private void pushNotification (String postId, NotificationType type){
+        String senderId = getCurrentUserID();
+
+        getPost(postId, new PostCallback() {
+            @Override
+            public void onCallback(Post post) {
+                String reciverId = post.getKorisnik_ID();
+
+                DocumentReference documentReference=firebaseFirestore.collection("Korisnici").document(reciverId).collection("Notifikacije").document();
+
+                Map<String, Object> notification = new HashMap<>();
+                notification.put("NotificationId", documentReference.getId());
+                notification.put("ReciverId", reciverId);
+                notification.put("SenderId", senderId);
+                notification.put("PostId", senderId);
+                notification.put("Type", type);
+                notification.put("PostId", postId);
+                notification.put("Timestamp", Timestamp.now());
+
+                documentReference.set(notification);
+            }
+        });
+
     }
 
 }
