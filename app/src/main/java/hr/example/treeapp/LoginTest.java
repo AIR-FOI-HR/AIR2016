@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import androidx.lifecycle.Observer;
 import hr.example.mapview.PostMapView;
+import hr.example.treeapp.notifications.NotificationsActivity;
 import managers.DataManager;
 import managers.DataPresentersManager;
 

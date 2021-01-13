@@ -89,9 +89,10 @@ public class LeaderboardFragment extends Fragment {
             userRepository.getUser(currentUserID, new UserCallback() {
                 @Override
                 public void onCallback(User user) {
-                    username.setText(user.korisnickoIme);
-                    points.setText(String.valueOf(user.bodovi)+" "+getString(R.string.points));
-
+                    if(user!=null){
+                        username.setText(user.korisnickoIme);
+                        points.setText(String.valueOf(user.bodovi)+" "+getString(R.string.points));
+                    }
                 }
             });
     }

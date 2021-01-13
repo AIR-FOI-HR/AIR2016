@@ -1,4 +1,4 @@
-package hr.example.treeapp;
+package hr.example.treeapp.notifications;
 
 import com.example.core.entities.Notification;
 

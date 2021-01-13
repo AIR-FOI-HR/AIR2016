@@ -1,4 +1,4 @@
-package hr.example.treeapp;
+package hr.example.treeapp.notifications;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +15,10 @@ import com.example.core.entities.Notification;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import hr.example.treeapp.R;
+import hr.example.treeapp.SinglePostViewActivity;
+import hr.example.treeapp.UserRepository;
 
 public class NotificationsActivity extends AppCompatActivity implements NotificationAdapter.OnItemClicked {
     private RecyclerView notificationRecyclerView;

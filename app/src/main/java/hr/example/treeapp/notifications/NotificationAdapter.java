@@ -1,4 +1,4 @@
-package hr.example.treeapp;
+package hr.example.treeapp.notifications;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,12 +15,16 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.core.entities.Notification;
 import com.example.core.entities.NotificationType;
 import com.example.core.entities.User;
-import com.example.timeline.PostRecyclerAdapter;
 
-import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import hr.example.treeapp.ProfileImageCallback;
+import hr.example.treeapp.R;
+import hr.example.treeapp.UserCallback;
+import hr.example.treeapp.UserImage;
+import hr.example.treeapp.UserRepository;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>{
 

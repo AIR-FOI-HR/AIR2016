@@ -22,11 +22,11 @@ import com.google.firebase.storage.StorageReference;
 import androidx.annotation.NonNull;
 import com.example.core.entities.User;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import hr.example.treeapp.notifications.NotificationsCallback;
 
 
 public class UserRepository {
@@ -198,7 +198,7 @@ public class UserRepository {
         firebaseFirestore.collection("Korisnici")
                 .document(currentUserId)
                 .collection("Notifikacije")
-                .orderBy("Timestamp", Query.Direction.ASCENDING)
+                .orderBy("Timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
