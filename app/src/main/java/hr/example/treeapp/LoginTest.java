@@ -60,7 +60,11 @@ public class LoginTest extends AppCompatActivity {
         final Observer<String> nameObserver = new Observer<String>() {
             @Override
             public void onChanged(String lastPostID) {
+                if (lastPostID == "Timeline send new data") {
+                    dataPresentersManager.refreshDataTimeline();
+                } else {
                     dataManager.GetPostsFromLastID();
+                }
             }
         };
         model.lastPostID().observe(this, nameObserver);
@@ -186,7 +190,7 @@ public class LoginTest extends AppCompatActivity {
                             }
                             break;
                     }
-                return true;
+                    return true;
                 }
             };
 

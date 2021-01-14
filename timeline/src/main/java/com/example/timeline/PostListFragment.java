@@ -16,13 +16,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.core.DataPresenter;
 import com.example.core.LiveData.LiveData;
 import com.example.core.entities.Post;
 import com.example.core.entities.User;
 
-public class PostListFragment extends Fragment implements DataPresenter, PostRecyclerAdapter.OnItemClicked {
+public class PostListFragment extends Fragment implements DataPresenter, PostRecyclerAdapter.OnItemClicked, SwipeRefreshLayout.OnRefreshListener {
     RecyclerView recyclerView;
     Context context;
     private List<Post> posts;
@@ -31,23 +32,26 @@ public class PostListFragment extends Fragment implements DataPresenter, PostRec
     private boolean moduleReady = false;
     private LinearLayoutManager layoutManager;
     PostRecyclerAdapter postRecyclerAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private boolean loading = true;
+    private boolean loading = false;
 
     LiveData liveData;
 
     public void implementScrollListener() {
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                        super.onScrollStateChanged(recyclerView, newState);
-                        if (!recyclerView.canScrollVertically(1)&&newState == RecyclerView.SCROLL_STATE_IDLE) {
-                            liveData.UpdateLastPostNumber(posts.get(posts.size()-1).getID_objava());
-                            recyclerView.suppressLayout(true);
-                        }
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1)&&newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if(!loading) {
+                        liveData.UpdateLastPostNumber(posts.get(posts.size() - 1).getID_objava());
+                        loading = true;
                     }
-                });
+                }
+            }
+        });
     }
 
     @Nullable
@@ -67,6 +71,8 @@ public class PostListFragment extends Fragment implements DataPresenter, PostRec
         liveData = new LiveData();
         implementScrollListener();
         moduleReady = true;
+        mSwipeRefreshLayout = view.findViewById(R.id.refreshLayout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         tryToDisplayData(false);
 
@@ -74,7 +80,8 @@ public class PostListFragment extends Fragment implements DataPresenter, PostRec
 
     @Override
     public void setData(List<Post> posts, List<User> users, boolean isNewData) {
-        recyclerView.suppressLayout(false);
+        loading = false;
+        mSwipeRefreshLayout.setRefreshing(false);
         this.posts = posts;
         this.users = users;
 
@@ -112,5 +119,13 @@ public class PostListFragment extends Fragment implements DataPresenter, PostRec
     @Override
     public void onItemClick(int position) {
         liveData.UpdateSelectedPostId(posts.get(position).getID_objava());
+    }
+
+    @Override
+    public void onRefresh() {
+        if(!loading) {
+            liveData.UpdateLastPostNumber("Timeline send new data");
+            loading = true;
+        }
     }
 }
