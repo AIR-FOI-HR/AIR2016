@@ -59,4 +59,22 @@ public class DataPresentersManager {
             dataManager.loadAllData(presenters.get(i), context);
         }
     }
+
+    public void refreshDataTimeline(){
+        DataManager dataManager = DataManager.getInstance();
+        String requiredModuleName = "Timeline";
+        int i = -1;
+        int j = -1;
+        for(DataPresenter dp : presenters){
+            String moduleName = dp.getModuleName(context);
+            j++;
+            if(requiredModuleName.equals(moduleName)){
+                i = j;
+                break;
+            }
+        }
+        if(i>=0) {
+            dataManager.loadDataTimeline(presenters.get(i), context);
+        }
+    }
 }
