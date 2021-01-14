@@ -119,10 +119,7 @@
     <string name="refresh">Refresh</string>
     <string name="nothing_here">Nothing here!!!</string>
 
-    <string name="module_name">Timeline view</string>
-    <string name="registration_default_profile_picture">default_profile_picture.jpeg</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     // User search
     <string name="user_search_hint">Enter username</string>

@@ -46,6 +46,7 @@ public class LoginTest extends AppCompatActivity {
     private LiveData model;
     private static final int MY_REQUEST_CODE = 0xe111;
     ImageButton chooseLocationButton;
+    GetPostData getPostData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class LoginTest extends AppCompatActivity {
         context=this;
         chooseLocationButton = findViewById(R.id.chooseLocationTimeline);
         DataManager dataManager = DataManager.getInstance();
-
+        getPostData = new GetPostData();
         final Observer<String> nameObserver = new Observer<String>() {
             @Override
             public void onChanged(String lastPostID) {
@@ -154,7 +155,7 @@ public class LoginTest extends AppCompatActivity {
 
                             selectedFragment=new LeaderboardFragment();
                             horizontalScrollView.setVisibility(HorizontalScrollView.GONE);
-                           myLayout.setVisibility(LinearLayout.GONE);
+                            myLayout.setVisibility(LinearLayout.GONE);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
 
                             break;
@@ -171,6 +172,9 @@ public class LoginTest extends AppCompatActivity {
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                             break;
                         case R.id.nav_profile:
+                            selectedFragment =new UserProfileFragment(getPostData.getCurrentUserID());
+                            //Fragment selectedFragment =new UserProfileFragment(user);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                             break;
                     }
                 return true;

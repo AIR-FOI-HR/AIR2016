@@ -111,8 +111,6 @@ public class UserRepository {
                     }
                 });
     }
-<<<<<<< HEAD
-
 
     public void getUser(Post post, final UserCallback UserCallback) {
         firebaseFirestore.collection("Korisnici")
@@ -138,52 +136,59 @@ public class UserRepository {
 
     public void getTopUsers(final AllUsersCallback allUsersCallback) {
         firebaseFirestore.collection("Korisnici")
-                .orderBy("Bodovi", Query.Direction.DESCENDING)
+                .orderBy("Bodovi",Query.Direction.DESCENDING)
                 .limit(10)
-=======
-    public void getUsersSearch(String search, final AllUsersCallback allUsersCallback) {
-        firebaseFirestore.collection("Korisnici")
-                .orderBy("Korisnicko_ime")
-                .startAt(search)
-                .endAt(search+'\uf8ff')
->>>>>>> feature/user_profile
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-<<<<<<< HEAD
                             leaderboardKorisnici.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                User user = new User(document.getId(), document.get("Ime").toString(), document.get("Prezime").toString(), document.get("E-mail").toString(), document.getString("Profilna_slika_ID"), (long) document.get("Uloga_ID"), document.get("Korisnicko_ime").toString(), document.get("Datum_rodenja").toString(), (long) document.get("Bodovi"));
+                                User user = new User(document.getId(), document.get("Ime").toString(), document.get("Prezime").toString(), document.get("E-mail").toString(), document.getString("Profilna_slika_ID"), (long)document.get("Uloga_ID"), document.get("Korisnicko_ime").toString(), document.get("Datum_rodenja").toString(), (long)document.get("Bodovi"));
                                 leaderboardKorisnici.add(user);
                             }
                             allUsersCallback.onCallback(leaderboardKorisnici);
-=======
-                            listaKorisnika.clear();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                User user = new User(document.getId(), document.get("Ime").toString(), document.get("Prezime").toString(), document.get("E-mail").toString(), document.getString("Profilna_slika_ID"), (long)document.get("Uloga_ID"), document.get("Korisnicko_ime").toString(), document.get("Datum_rodenja").toString(), (long)document.get("Bodovi"));
-                                listaKorisnika.add(user);
-                            }
-                            allUsersCallback.onCallback(listaKorisnika);
->>>>>>> feature/user_profile
                         } else {
                             allUsersCallback.onCallback(null);
                         }
                     }
                 });
     }
-<<<<<<< HEAD
+
+    public void getUsersSearch(String search, final AllUsersCallback allUsersCallback) {
+        firebaseFirestore.collection("Korisnici")
+                .orderBy("Korisnicko_ime")
+                .startAt(search)
+                .endAt(search+'\uf8ff')
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            leaderboardKorisnici.clear();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                User user = new User(document.getId(), document.get("Ime").toString(), document.get("Prezime").toString(), document.get("E-mail").toString(), document.getString("Profilna_slika_ID"), (long) document.get("Uloga_ID"), document.get("Korisnicko_ime").toString(), document.get("Datum_rodenja").toString(), (long) document.get("Bodovi"));
+                                leaderboardKorisnici.add(user);
+                            }
+                            allUsersCallback.onCallback(leaderboardKorisnici);
+                            listaKorisnika.clear();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                User user = new User(document.getId(), document.get("Ime").toString(), document.get("Prezime").toString(), document.get("E-mail").toString(), document.getString("Profilna_slika_ID"), (long)document.get("Uloga_ID"), document.get("Korisnicko_ime").toString(), document.get("Datum_rodenja").toString(), (long)document.get("Bodovi"));
+                                listaKorisnika.add(user);
+                            }
+                            allUsersCallback.onCallback(listaKorisnika);
+                        } else {
+                            allUsersCallback.onCallback(null);
+                        }
+                    }
+                });
+    }
 
 
-    public void getUserImage(String imageID, final UserImageCallback userImageCallback) {
-        StorageReference image = storageReference.child("Profilne_slike/" + imageID);
-        image.getBytes(1024 * 1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-=======
     public void getUserImage (String imageID, final UserImageCallback userImageCallback){
         StorageReference image= storageReference.child("Profilne_slike/"+imageID);
         image.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
->>>>>>> feature/user_profile
             @Override
             public void onSuccess(byte[] bytes) {
                 userImageCallback.onCallback(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
