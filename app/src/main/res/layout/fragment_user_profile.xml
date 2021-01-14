@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="top"
+    android:orientation="vertical"
+    tools:context=".UserProfileFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageViewProfilePicture"
+            android:layout_width="0dp"
+            android:layout_height="305dp"
+            android:contentDescription="@string/profile_pic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="232dp"
+            android:background="@color/white_transparent"
+            android:fontFamily="@font/roboto"
+            android:paddingTop="3dp"
+            android:paddingBottom="5dp"
+            android:text="@string/name"
+            android:textAlignment="center"
+            android:textColor="@color/tree_green"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/imageViewProfilePicture" />
+
+        <TextView
+            android:id="@+id/textViewUserName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white_transparent"
+            android:fontFamily="@font/roboto"
+            android:paddingBottom="6dp"
+            android:text="@string/username"
+            android:textAlignment="center"
+            android:textColor="@color/tree_green"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewProfilePicture">
+
+            <ImageView
+                android:id="@+id/imageViewLeafIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:contentDescription="@string/leaf_icon"
+                android:src="@drawable/leaf_green" />
+
+            <TextView
+                android:id="@+id/textViewPoints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto"
+                android:text="@string/number_of_points"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/imageViewTreeIcon"
+                android:layout_width="37dp"
+                android:layout_height="46dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:contentDescription="@string/tree_icon"
+                android:src="@drawable/addtree" />
+
+            <TextView
+                android:id="@+id/textViewPosts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto"
+                android:text="@string/number_of_posts"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/UserProfilePostsList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="200dp" />
+
+
+
+</LinearLayout>

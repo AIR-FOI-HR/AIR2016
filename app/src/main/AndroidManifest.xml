@@ -37,6 +37,7 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/Theme.TreeApp">
+
         <service
             android:name=".notifications.NotificationService"
             android:enabled="true"
@@ -71,6 +72,8 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@drawable/logo" />
+        <activity android:name=".SinglePostViewActivity" />
+        <activity android:name=".MainScreen" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

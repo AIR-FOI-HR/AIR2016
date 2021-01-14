@@ -137,8 +137,6 @@ public class LoginTest extends AppCompatActivity {
                     LinearLayout myLayout = (LinearLayout) findViewById(R.id.topmenumainlayout);
                     HorizontalScrollView horizontalScrollView = findViewById(R.id.topmenu);
 
-
-
                     switch(item.getItemId()){
                         case R.id.nav_home:
                             if(dataPresentersManager.firstPresenter!=null){
@@ -165,8 +163,12 @@ public class LoginTest extends AppCompatActivity {
                             startActivity(open);
                             break;
                         case R.id.nav_search:
-                            Intent newi = new Intent(LoginTest.this, NotificationsActivity.class);
-                            startActivity(newi);
+                            //Intent newi = new Intent(LoginTest.this, NotificationsActivity.class);
+                            //startActivity(newi);
+                            selectedFragment=new UserSearchTest();
+                            horizontalScrollView.setVisibility(HorizontalScrollView.GONE);
+                            myLayout.setVisibility(LinearLayout.GONE);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                             break;
                         case R.id.nav_profile:
                             break;
