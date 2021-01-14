@@ -46,6 +46,7 @@ public class LoginTest extends AppCompatActivity {
     private LiveData model;
     private static final int MY_REQUEST_CODE = 0xe111;
     ImageButton chooseLocationButton;
+    int current=0;
     GetPostData getPostData;
 
     @Override
@@ -62,7 +63,6 @@ public class LoginTest extends AppCompatActivity {
                     dataManager.GetPostsFromLastID();
             }
         };
-
         model.lastPostID().observe(this, nameObserver);
 
         final Observer<String> postIdObserver = new Observer<String>() {
@@ -137,44 +137,53 @@ public class LoginTest extends AppCompatActivity {
                     Fragment selectedFragment =null;
                     LinearLayout myLayout = (LinearLayout) findViewById(R.id.topmenumainlayout);
                     HorizontalScrollView horizontalScrollView = findViewById(R.id.topmenu);
-
                     switch(item.getItemId()){
                         case R.id.nav_home:
-                            if(dataPresentersManager.firstPresenter!=null){
-                                selectedFragment=dataPresentersManager.firstPresenter.getFragment();
-                                horizontalScrollView.setVisibility(HorizontalScrollView.VISIBLE);
-                                myLayout.setVisibility(LinearLayout.VISIBLE);
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-                                dataPresentersManager.loadFragment(0);
-                                String moduleName = dataPresentersManager.firstPresenter.getModuleName(context);
-                                showHideChooseLocationButtonTimeline(moduleName);
+                            if(current!=1) {
+                                if (dataPresentersManager.firstPresenter != null) {
+                                    selectedFragment = dataPresentersManager.firstPresenter.getFragment();
+                                    horizontalScrollView.setVisibility(HorizontalScrollView.VISIBLE);
+                                    myLayout.setVisibility(LinearLayout.VISIBLE);
+                                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                                    dataPresentersManager.loadFragment(0);
+                                    String moduleName = dataPresentersManager.firstPresenter.getModuleName(context);
+                                    showHideChooseLocationButtonTimeline(moduleName);
+                                    current=1;
+                                }
                             }
 
                             break;
                         case R.id.nav_leaderboard:
-
-                            selectedFragment=new LeaderboardFragment();
-                            horizontalScrollView.setVisibility(HorizontalScrollView.GONE);
-                            myLayout.setVisibility(LinearLayout.GONE);
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-
+                            if(current!=2) {
+                                selectedFragment = new LeaderboardFragment();
+                                horizontalScrollView.setVisibility(HorizontalScrollView.GONE);
+                                myLayout.setVisibility(LinearLayout.GONE);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                                current=2;
+                            }
                             break;
                         case R.id.nav_addtree:
                             Intent open = new Intent(LoginTest.this, AddTree.class);
                             startActivity(open);
                             break;
                         case R.id.nav_search:
-                            //Intent newi = new Intent(LoginTest.this, NotificationsActivity.class);
-                            //startActivity(newi);
-                            selectedFragment=new UserSearchTest();
-                            horizontalScrollView.setVisibility(HorizontalScrollView.GONE);
-                            myLayout.setVisibility(LinearLayout.GONE);
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                            if(current!=4) {
+                                //Intent newi = new Intent(LoginTest.this, NotificationsActivity.class);
+                                //startActivity(newi);
+                                selectedFragment = new UserSearchTest();
+                                horizontalScrollView.setVisibility(HorizontalScrollView.GONE);
+                                myLayout.setVisibility(LinearLayout.GONE);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                                current=4;
+                            }
                             break;
                         case R.id.nav_profile:
-                            selectedFragment =new UserProfileFragment(getPostData.getCurrentUserID());
-                            //Fragment selectedFragment =new UserProfileFragment(user);
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                            if(current!=5) {
+                                selectedFragment = new UserProfileFragment(getPostData.getCurrentUserID());
+                                //Fragment selectedFragment =new UserProfileFragment(user);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                                current=5;
+                            }
                             break;
                     }
                 return true;
