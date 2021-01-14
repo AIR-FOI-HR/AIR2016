@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -24,7 +25,9 @@ import com.example.core.entities.User;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import hr.example.treeapp.notifications.NotificationsCallback;
 
@@ -263,6 +266,36 @@ public class UserRepository {
                     .isComplete())
                 i++;
         }
+
+    }
+
+    public void updatePoints(long bodovi){
+        String userid=firebaseAuth.getCurrentUser().getUid();
+        getUser(userid, new UserCallback() {
+            @Override
+            public void onCallback(User user) {
+                long originalni_bodovi=user.getBodovi();
+                originalni_bodovi=originalni_bodovi+bodovi;
+                DocumentReference documentReference = firebaseFirestore.collection("Korisnici").document(userid);
+                Map<String, Object> thisPost= new HashMap<>();
+                thisPost.put("Bodovi", originalni_bodovi);
+                documentReference.update(thisPost);
+            }
+        });
+
+    }
+    public void updatePointsForComment(String userID, long bodovi){
+        getUser(userID, new UserCallback() {
+            @Override
+            public void onCallback(User user) {
+                long originalni_bodovi=user.getBodovi();
+                originalni_bodovi=originalni_bodovi+bodovi;
+                DocumentReference documentReference = firebaseFirestore.collection("Korisnici").document(userID);
+                Map<String, Object> thisPost= new HashMap<>();
+                thisPost.put("Bodovi", originalni_bodovi);
+                documentReference.update(thisPost);
+            }
+        });
 
     }
 

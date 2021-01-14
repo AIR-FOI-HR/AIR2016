@@ -45,11 +45,14 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private Post post;
     private  Bitmap image;
     private TextView username;
+    private long bodovi;
 
     private GetPostData getPostData= new GetPostData();;
 
 
     private String userID;
+    private String userCommentPointsID;
+    private String userLikePointsID;
 
     private ImageView postImage;
     private Button postComment;
@@ -142,11 +145,20 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         leafImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!userLikedPictureFlag)
+                if(!userLikedPictureFlag) {
                     getPostData.likePost(postId);
-                if(userLikedPictureFlag)
+                    userLikePointsID = post.getKorisnik_ID();
+                    bodovi = 1;
+                    userRepository.updatePointsForComment(userLikePointsID, bodovi);
+                }
+
+                if(userLikedPictureFlag){
                     getPostData.removeLikeOnPost(postId);
-                refreshLikeStatus();
+                    userLikePointsID=post.getKorisnik_ID();
+                    bodovi=-1;
+                    userRepository.updatePointsForComment(userLikePointsID, bodovi);
+                    refreshLikeStatus();
+                    }
             }
         });
 
@@ -190,6 +202,9 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private void postComment() {
         String text=commentText.getText().toString();
         getPostData.postComent(postId,text);
+        userCommentPointsID=post.getKorisnik_ID();
+        bodovi=5;
+        userRepository.updatePointsForComment(userCommentPointsID, bodovi);
         Toast.makeText(context, "Commented!", Toast.LENGTH_SHORT).show();
         updateCommentRecycleView(text);
     }

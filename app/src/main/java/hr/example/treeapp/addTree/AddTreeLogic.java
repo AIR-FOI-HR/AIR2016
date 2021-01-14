@@ -21,14 +21,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import hr.example.treeapp.UserRepository;
+
 public class AddTreeLogic {
 
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     private StorageReference storageReference = firebaseStorage.getReference();
+    private UserRepository userRepository = new UserRepository();
 
     String slikaID;
     int Broj_lajkova = 0;
+    long bodovi;
 
     Context context;
 
@@ -43,6 +47,8 @@ public class AddTreeLogic {
         FirebaseUser userID = FirebaseAuth.getInstance().getCurrentUser();
         DocumentReference documentReference = firebaseFirestore.collection("Objave").document();
         Map<String, Object> objava = new HashMap<>();
+        bodovi=20;
+        userRepository.updatePoints(bodovi);
         objava.put("ID_objava", documentReference.getId());
         objava.put("Longitude", treeLng);
         objava.put("Latitude", treeLat);
