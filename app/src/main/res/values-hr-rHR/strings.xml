@@ -110,5 +110,11 @@
     <string name="refresh">Osvježi</string>
     <string name="nothing_here">Nema obavijesti!!!</string>
 
+    <string name="changeprofilepic">Promjena profilnu sliku</string>
+    <string name="changeuserdata">Promjena ime, prezime i korisničko ime</string>
+    <string name="changepassword">Promjena lozinke</string>
 
+    <string name="oldpassword">Trenutna lozinka</string>
+    <string name="newpassword">Nova lozinka</string>
+    <string name="newpasswordrepeat">Ponovite lozinku</string>
 </resources>

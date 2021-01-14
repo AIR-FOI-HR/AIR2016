@@ -241,6 +241,5 @@ public class LoginTest extends AppCompatActivity {
             DataManager dataManager = DataManager.getInstance();
             dataManager.sendPostsUsersByLocation(posts, users);
         }
-
     }
 }

@@ -133,4 +133,13 @@
     <string name="search_not_found">No users found!</string>
 
 
+    // User data change
+    <string name="changeprofilepic">Change profile picture</string>
+    <string name="changeuserdata">Change name, surname or username</string>
+    <string name="changepassword">Change password</string>
+
+    <string name="oldpassword">Old Password</string>
+    <string name="newpassword">New Password</string>
+    <string name="newpasswordrepeat">Repeat Password</string>
+
 </resources>

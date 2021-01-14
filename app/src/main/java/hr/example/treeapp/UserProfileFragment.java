@@ -1,7 +1,11 @@
 package hr.example.treeapp;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,12 +17,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -41,6 +49,9 @@ public class UserProfileFragment extends Fragment {
     GetPostData getPostData;
     RecyclerView myRecyclerView;
     UserProfilePostRecyclerAdapter userProfilePostRecyclerAdapter;
+    Context context;
+    ImageButton imageButton;
+    String test;
     public UserProfileFragment(User user) {
         this.selectedUser=user;
     }
@@ -62,12 +73,21 @@ public class UserProfileFragment extends Fragment {
         View inflatedView=inflater.inflate(R.layout.fragment_user_profile, container, false);
         myRecyclerView=(RecyclerView) inflatedView.findViewById(R.id.UserProfilePostsList);
         return inflatedView;
+
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        context=getContext();
         userInfo();
         getUsersPosts();
+        imageButton=view.findViewById(R.id.popUpButtonProfile);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopupProfile(view);
+            }
+        });
 
     }
 
@@ -137,5 +157,103 @@ public class UserProfileFragment extends Fragment {
             textViewUserName.setText("@"+selectedUser.korisnickoIme);
             textViewPoints.setText(Long.toString(selectedUser.bodovi));
         }
+    }
+
+    public void showPopupProfile(View v) {
+        PopupMenu popup = new PopupMenu(context, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.userprofilepopupmenu, popup.getMenu());
+        if(!getPostData.getCurrentUserID().equals(userID)) {
+            popup.getMenu().findItem(R.id.changeprofilepic).setVisible(false);
+            popup.getMenu().findItem(R.id.changeuserdata).setVisible(false);
+            popup.getMenu().findItem(R.id.changepassword).setVisible(false);
+        }
+        else{
+            popup.getMenu().findItem(R.id.changeprofilepic).setVisible(true);
+            popup.getMenu().findItem(R.id.changeuserdata).setVisible(true);
+            popup.getMenu().findItem(R.id.changepassword).setVisible(true);
+        }
+        popup.setOnMenuItemClickListener (new PopupMenu.OnMenuItemClickListener ()
+        {
+            @Override
+            public boolean onMenuItemClick (MenuItem item)
+            {
+                int id = item.getItemId();
+                switch (id)
+                {
+                    case R.id.changeprofilepic:  break;
+                    case R.id.changeuserdata: changeUserData(); break;
+                    case R.id.changepassword: changeUserPassword(); break;
+                }
+                return true;
+            }
+        });
+        popup.show();
+    }
+
+    private void changeUserData(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        TextView textView = new TextView(context);
+        textView.setText("Promjena podataka");
+        textView.setPadding(20, 30, 20, 30);
+        textView.setTextSize(20F);
+        textView.setBackgroundColor(getResources().getColor(R.color.baby_green));
+        textView.setTextColor(getResources().getColor(R.color.tree_green));
+
+        builder.setCustomTitle(textView);
+        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_change_userdata, (ViewGroup) getView(), false);
+        final EditText changeuserdataName = (EditText) viewInflated.findViewById(R.id.changeuserdataName);
+        final EditText changeuserdataSurname = (EditText) viewInflated.findViewById(R.id.changeuserdataSurname);
+        final EditText changeuserdataUsername = (EditText) viewInflated.findViewById(R.id.changeuserdataUsername);
+        builder.setView(viewInflated);
+
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+                test = changeuserdataName.getText().toString();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    private void changeUserPassword(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        TextView textView = new TextView(context);
+        textView.setText("Promjena podataka");
+        textView.setPadding(20, 30, 20, 30);
+        textView.setTextSize(20F);
+        textView.setBackgroundColor(getResources().getColor(R.color.baby_green));
+        textView.setTextColor(getResources().getColor(R.color.tree_green));
+
+        builder.setCustomTitle(textView);
+        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_change_password, (ViewGroup) getView(), false);
+        final EditText changeuserdataOldPassword = (EditText) viewInflated.findViewById(R.id.changeuserdataOldPassword);
+        final EditText changeuserdataNewPassword = (EditText) viewInflated.findViewById(R.id.changeuserdataNewPassword);
+        final EditText changeuserdataNewPasswordRepeat = (EditText) viewInflated.findViewById(R.id.changeuserdataNewPasswordRepeat);
+        builder.setView(viewInflated);
+
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+                test = changeuserdataOldPassword.getText().toString();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
     }
 }
