@@ -36,6 +36,9 @@ import com.example.core.entities.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import auth.RegistrationRepository;
+import auth.UsernameAvailabilityCallback;
+
 
 public class UserProfileFragment extends Fragment {
     User selectedUser;
@@ -52,6 +55,7 @@ public class UserProfileFragment extends Fragment {
     Context context;
     ImageButton imageButton;
     String test;
+    private RegistrationRepository registrationRepository = new RegistrationRepository(context);
     public UserProfileFragment(User user) {
         this.selectedUser=user;
     }
@@ -62,8 +66,6 @@ public class UserProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override
@@ -192,42 +194,100 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void changeUserData(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        TextView textView = new TextView(context);
-        textView.setText("Promjena podataka");
-        textView.setPadding(20, 30, 20, 30);
-        textView.setTextSize(20F);
-        textView.setBackgroundColor(getResources().getColor(R.color.baby_green));
-        textView.setTextColor(getResources().getColor(R.color.tree_green));
-
-        builder.setCustomTitle(textView);
-        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_change_userdata, (ViewGroup) getView(), false);
-        final EditText changeuserdataName = (EditText) viewInflated.findViewById(R.id.changeuserdataName);
-        final EditText changeuserdataSurname = (EditText) viewInflated.findViewById(R.id.changeuserdataSurname);
-        final EditText changeuserdataUsername = (EditText) viewInflated.findViewById(R.id.changeuserdataUsername);
-        builder.setView(viewInflated);
-
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+        userRepository.getCurrentUser(new UserCallback() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onCallback(User user) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                TextView textView = new TextView(context);
+                textView.setText(context.getString(R.string.changeuserdata));
+                textView.setPadding(20, 30, 20, 30);
+                textView.setTextSize(20F);
+                textView.setBackgroundColor(getResources().getColor(R.color.baby_green));
+                textView.setTextColor(getResources().getColor(R.color.tree_green));
 
-                dialog.dismiss();
-                test = changeuserdataName.getText().toString();
+                builder.setCustomTitle(textView);
+                View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_change_userdata, (ViewGroup) getView(), false);
+
+                final EditText changeuserdataName = (EditText) viewInflated.findViewById(R.id.changeuserdataName);
+                changeuserdataName.setText(user.ime);
+                final EditText changeuserdataSurname = (EditText) viewInflated.findViewById(R.id.changeuserdataSurname);
+                changeuserdataSurname.setText(user.prezime);
+                final EditText changeuserdataUsername = (EditText) viewInflated.findViewById(R.id.changeuserdataUsername);
+                changeuserdataUsername.setText(user.korisnickoIme);
+
+                builder.setView(viewInflated);
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        String ime=changeuserdataName.getText().toString();
+                        String prezime=changeuserdataSurname.getText().toString();
+                        String korime=changeuserdataUsername.getText().toString();
+                        if(changeuserdataName!=null && changeuserdataSurname!=null && changeuserdataUsername!=null) {
+                            if(!user.korisnickoIme.equals(korime)){
+                                registrationRepository.checkUsernameAvailability(korime, new UsernameAvailabilityCallback() {
+                                    @Override
+                                    public void onCallback(String value) {
+                                        if (value.equals("Dostupno")) {
+                                            user.ime = ime;
+                                            user.prezime = prezime;
+                                            user.korisnickoIme = korime;
+                                            userRepository.changeUserDataFirebase(user);
+                                            userRepository.getCurrentUser(new UserCallback() {
+                                                @Override
+                                                public void onCallback(User user) {
+                                                    textViewName.setText(user.ime + " " + user.prezime);
+                                                    textViewUserName.setText(user.korisnickoIme);
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                        } else
+                                            changeuserdataUsername.setError(context.getString(R.string.username_taken));
+                                    }
+                                });
+                            }
+                            else {
+                                user.ime = ime;
+                                user.prezime = prezime;
+                                user.korisnickoIme = korime;
+                                userRepository.changeUserDataFirebase(user);
+                                userRepository.getCurrentUser(new UserCallback() {
+                                    @Override
+                                    public void onCallback(User user) {
+                                        textViewName.setText(user.ime + " " + user.prezime);
+                                        textViewUserName.setText(user.korisnickoIme);
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
             }
         });
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.show();
     }
 
     private void changeUserPassword(){
+        final String[] error = new String[1];
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         TextView textView = new TextView(context);
-        textView.setText("Promjena podataka");
+        textView.setText(context.getString(R.string.changepassword));
         textView.setPadding(20, 30, 20, 30);
         textView.setTextSize(20F);
         textView.setBackgroundColor(getResources().getColor(R.color.baby_green));
@@ -235,25 +295,45 @@ public class UserProfileFragment extends Fragment {
 
         builder.setCustomTitle(textView);
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_change_password, (ViewGroup) getView(), false);
-        final EditText changeuserdataOldPassword = (EditText) viewInflated.findViewById(R.id.changeuserdataOldPassword);
         final EditText changeuserdataNewPassword = (EditText) viewInflated.findViewById(R.id.changeuserdataNewPassword);
         final EditText changeuserdataNewPasswordRepeat = (EditText) viewInflated.findViewById(R.id.changeuserdataNewPasswordRepeat);
-        builder.setView(viewInflated);
 
+        builder.setView(viewInflated);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                dialog.dismiss();
-                test = changeuserdataOldPassword.getText().toString();
+            public void onClick(DialogInterface dialogInterface, int which) {
+                //asd
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
             }
         });
-        builder.show();
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                String newPass =changeuserdataNewPassword.getText().toString();
+                String repeatPass=changeuserdataNewPasswordRepeat.getText().toString();
+                if(!newPass.equals("") && !repeatPass.equals("")) {
+                    if (registrationRepository.passwordNotCorrectFormat(newPass)==false) {
+                        if (newPass.equals(repeatPass)) {
+                            userRepository.changeUserPasswordFirebase(repeatPass);
+                            dialog.dismiss();
+                        } else {
+                            changeuserdataNewPasswordRepeat.setError(context.getString(R.string.invalid_password_repeat));
+                        }
+                    } else {
+                        changeuserdataNewPassword.setError(context.getString(R.string.invalid_password));
+                    }
+                }
+            }
+        });
     }
+
+
 }

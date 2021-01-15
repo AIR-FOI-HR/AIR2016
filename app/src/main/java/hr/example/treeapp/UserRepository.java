@@ -7,11 +7,13 @@ import com.example.core.entities.Notification;
 import com.example.core.entities.NotificationType;
 import com.example.core.entities.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import auth.AuthRepository;
 import hr.example.treeapp.notifications.NotificationsCallback;
 
 
@@ -35,7 +38,7 @@ public class UserRepository {
     private StorageReference storageReference = firebaseStorage.getReference();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     public FirebaseUser user;
-
+    public User currentUser;
 
     public List<User> listaKorisnika = new ArrayList<>();
 
@@ -263,7 +266,38 @@ public class UserRepository {
                     .isComplete())
                 i++;
         }
+    }
 
+    public User getCurrentUser(final UserCallback UserCallback) {
+        firebaseFirestore.collection("Korisnici")
+                .document(getCurrentUserID())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                currentUser = new User(document.getId(), document.get("Ime").toString(), document.get("Prezime").toString(), document.get("E-mail").toString(), document.getString("Profilna_slika_ID"), (long) document.get("Uloga_ID"), document.get("Korisnicko_ime").toString(), document.get("Datum_rodenja").toString(), (long) document.get("Bodovi"));
+                                UserCallback.onCallback(currentUser);
+                            }
+                        } else {
+                            UserCallback.onCallback(null);
+                        }
+                    }
+                });
+        return currentUser;
+    }
+
+    public void changeUserDataFirebase(User user){
+        firebaseFirestore.collection("Korisnici")
+                .document(getCurrentUserID())
+                .update("Ime", user.ime, "Prezime", user.prezime, "Korisnicko_ime", user.korisnickoIme);
+    }
+
+
+    public void changeUserPasswordFirebase(String password){
+        firebaseAuth.getCurrentUser().updatePassword(password);
     }
 
 }

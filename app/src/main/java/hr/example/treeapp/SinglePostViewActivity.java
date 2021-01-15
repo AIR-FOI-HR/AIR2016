@@ -46,9 +46,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private  Bitmap image;
     private TextView username;
 
-    private GetPostData getPostData= new GetPostData();;
-
-
+    private GetPostData getPostData= new GetPostData();
     private String userID;
 
     private ImageView postImage;
@@ -290,7 +288,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.postpopupmenu, popup.getMenu());
-        if(getPostData.getCurrentUserRole()!=1 && !getPostData.getCurrentUserID().equals(userID)) {
+        if(getPostData.getCurrentUserRole()!=1 && !userRepository.getCurrentUserID().equals(userID)) {
             popup.getMenu().findItem(R.id.postpopupdelete).setVisible(false);
         }
         else{
