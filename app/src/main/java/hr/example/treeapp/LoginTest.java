@@ -213,11 +213,6 @@ public class LoginTest extends AppCompatActivity {
         ft.commit();
     }
 
-    public void logout(View view){
-        FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-        finish();
-    }
 
     public void addTree (View view){
         /*Intent open = new Intent(LoginTest.this, AddTree.class);

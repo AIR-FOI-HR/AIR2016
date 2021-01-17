@@ -1,7 +1,9 @@
 package hr.example.treeapp;
 
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.view.View;
 
 import com.example.core.entities.Notification;
 import com.example.core.entities.NotificationType;
@@ -30,6 +32,8 @@ import java.util.List;
 
 import auth.AuthRepository;
 import hr.example.treeapp.notifications.NotificationsCallback;
+
+import static androidx.core.content.ContextCompat.startActivity;
 
 
 public class UserRepository {
@@ -303,6 +307,10 @@ public class UserRepository {
 
     public void changeUserPasswordFirebase(String password){
         firebaseAuth.getCurrentUser().updatePassword(password);
+    }
+
+    public void logout(){
+        FirebaseAuth.getInstance().signOut();
     }
 
 }

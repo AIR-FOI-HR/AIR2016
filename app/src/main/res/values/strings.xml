@@ -137,6 +137,7 @@
     <string name="changeprofilepic">Change profile picture</string>
     <string name="changeuserdata">Change name, surname or username</string>
     <string name="changepassword">Change password</string>
+    <string name="logout">Logout</string>
 
     <string name="oldpassword">Old Password</string>
     <string name="newpassword">New Password</string>

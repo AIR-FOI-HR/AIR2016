@@ -43,6 +43,7 @@ import auth.RegistrationRepository;
 import auth.UsernameAvailabilityCallback;
 
 import static android.app.Activity.RESULT_OK;
+import static androidx.core.content.ContextCompat.startActivity;
 
 
 public class UserProfileFragment extends Fragment {
@@ -198,6 +199,9 @@ public class UserProfileFragment extends Fragment {
                     case R.id.changepassword:
                         changeUserPassword();
                         break;
+                    case R.id.logout:
+                        userRepository.logout();
+                        startActivity(new Intent(context.getApplicationContext(), LoginActivity.class));
                 }
                 return true;
             }

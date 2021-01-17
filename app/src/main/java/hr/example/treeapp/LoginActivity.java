@@ -117,4 +117,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void onBackPressed() {
+        System.exit(1);
+    }
 }
