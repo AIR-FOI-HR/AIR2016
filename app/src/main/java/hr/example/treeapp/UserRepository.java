@@ -294,6 +294,11 @@ public class UserRepository {
                 .document(getCurrentUserID())
                 .update("Ime", user.ime, "Prezime", user.prezime, "Korisnicko_ime", user.korisnickoIme);
     }
+    public void changeUserProfilePicture(User user){
+        firebaseFirestore.collection("Korisnici")
+                .document(getCurrentUserID())
+                .update("Profilna_slika_ID", user.profilnaSlika );
+    }
 
 
     public void changeUserPasswordFirebase(String password){

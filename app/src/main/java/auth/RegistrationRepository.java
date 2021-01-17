@@ -106,7 +106,7 @@ public class RegistrationRepository {
         });
     }
 
-    private void UploadPicture(String Slika) {
+    public void UploadPicture(String Slika) {
         slikaID = UUID.randomUUID().toString();
         StorageReference riversRef = storageReference.child("Profilne_slike/" + slikaID);
         Uri myUri = Uri.parse(Slika);

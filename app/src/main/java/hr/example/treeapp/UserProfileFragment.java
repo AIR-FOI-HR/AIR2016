@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -33,11 +35,14 @@ import com.bumptech.glide.Glide;
 import com.example.core.entities.Post;
 import com.example.core.entities.User;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import auth.RegistrationRepository;
 import auth.UsernameAvailabilityCallback;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class UserProfileFragment extends Fragment {
@@ -54,15 +59,19 @@ public class UserProfileFragment extends Fragment {
     UserProfilePostRecyclerAdapter userProfilePostRecyclerAdapter;
     Context context;
     ImageButton imageButton;
-    String test;
-    private RegistrationRepository registrationRepository = new RegistrationRepository(context);
+    ImageView changePicture;
+    private Uri filePath;
+    private final int PICK_IMAGE_REQUEST = 71;
+    private RegistrationRepository registrationRepository;
+
     public UserProfileFragment(User user) {
-        this.selectedUser=user;
+        this.selectedUser = user;
     }
 
     public UserProfileFragment(String userID) {
-        this.userID=userID;
+        this.userID = userID;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,18 +81,20 @@ public class UserProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View inflatedView=inflater.inflate(R.layout.fragment_user_profile, container, false);
-        myRecyclerView=(RecyclerView) inflatedView.findViewById(R.id.UserProfilePostsList);
+        View inflatedView = inflater.inflate(R.layout.fragment_user_profile, container, false);
+        myRecyclerView = (RecyclerView) inflatedView.findViewById(R.id.UserProfilePostsList);
         return inflatedView;
 
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        context=getContext();
+        context = view.getContext();
+        registrationRepository = new RegistrationRepository(context);
         userInfo();
         getUsersPosts();
-        imageButton=view.findViewById(R.id.popUpButtonProfile);
+        imageButton = view.findViewById(R.id.popUpButtonProfile);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,19 +106,19 @@ public class UserProfileFragment extends Fragment {
 
     private void getUsersPosts() {
         //String[] data = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48"};
-        int col=3;
-        getPostData=new GetPostData();
+        int col = 3;
+        getPostData = new GetPostData();
         getPostData.getUsersPosts(userID, new UsersPostsCallback() {
             @Override
             public void onCallback(List<Post> usersPostsList) {
-                if(usersPostsList!=null){
+                if (usersPostsList != null) {
                     textViewPosts.setText(String.valueOf(usersPostsList.size()));
                     myRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), col));
-                    userProfilePostRecyclerAdapter=new UserProfilePostRecyclerAdapter(getActivity(), usersPostsList, new UserProfilePostRecyclerAdapter.OnItemClickListener() {
+                    userProfilePostRecyclerAdapter = new UserProfilePostRecyclerAdapter(getActivity(), usersPostsList, new UserProfilePostRecyclerAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(Post post) {
                             Intent singlePostView = new Intent(getActivity(), SinglePostViewActivity.class);
-                            singlePostView.putExtra("postId",post.getID_objava());
+                            singlePostView.putExtra("postId", post.getID_objava());
                             startActivity(singlePostView);
                         }
                     });
@@ -117,25 +128,24 @@ public class UserProfileFragment extends Fragment {
         });
 
 
-
     }
 
     private void userInfo() {
-        textViewName=(TextView)getView().findViewById(R.id.textViewName);
-        textViewUserName=(TextView)getView().findViewById(R.id.textViewUserName);
-        imageViewProfil=(ImageView)getView().findViewById(R.id.imageViewProfilePicture);
-        textViewPoints=(TextView)getView().findViewById(R.id.textViewPoints);
-        textViewPosts=(TextView)getView().findViewById(R.id.textViewPosts);
-        userRepository=new UserRepository();
+        textViewName = (TextView) getView().findViewById(R.id.textViewName);
+        textViewUserName = (TextView) getView().findViewById(R.id.textViewUserName);
+        imageViewProfil = (ImageView) getView().findViewById(R.id.imageViewProfilePicture);
+        textViewPoints = (TextView) getView().findViewById(R.id.textViewPoints);
+        textViewPosts = (TextView) getView().findViewById(R.id.textViewPosts);
+        userRepository = new UserRepository();
         //za UserProfileFragment(String userID);
-        if(userID!=null){
-            userRepository=new UserRepository();
+        if (userID != null) {
+            userRepository = new UserRepository();
             userRepository.getUser(userID, new UserCallback() {
                 @Override
                 public void onCallback(User user) {
-                    selectedUser=user;
-                    textViewName.setText(selectedUser.getIme()+" "+selectedUser.getPrezime());
-                    textViewUserName.setText("@"+selectedUser.getKorisnickoIme());
+                    selectedUser = user;
+                    textViewName.setText(selectedUser.getIme() + " " + selectedUser.getPrezime());
+                    textViewUserName.setText("@" + selectedUser.getKorisnickoIme());
                     textViewPoints.setText(Long.toString(selectedUser.getBodovi()));
                     userRepository.getUserImage(selectedUser.getUid(), new ProfileImageCallback() {
                         @Override
@@ -148,15 +158,15 @@ public class UserProfileFragment extends Fragment {
             });
         }
         //za UserProfileFragment(User user)
-        else{
+        else {
             userRepository.getUserImage(selectedUser.uid, new ProfileImageCallback() {
                 @Override
                 public void onCallbackList(UserImage userImage) {
                     imageViewProfil.setImageBitmap(userImage.image);
                 }
             });
-            textViewName.setText(selectedUser.ime+" "+selectedUser.prezime);
-            textViewUserName.setText("@"+selectedUser.korisnickoIme);
+            textViewName.setText(selectedUser.ime + " " + selectedUser.prezime);
+            textViewUserName.setText("@" + selectedUser.korisnickoIme);
             textViewPoints.setText(Long.toString(selectedUser.bodovi));
         }
     }
@@ -165,27 +175,29 @@ public class UserProfileFragment extends Fragment {
         PopupMenu popup = new PopupMenu(context, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.userprofilepopupmenu, popup.getMenu());
-        if(!getPostData.getCurrentUserID().equals(userID)) {
+        if (!getPostData.getCurrentUserID().equals(userID)) {
             popup.getMenu().findItem(R.id.changeprofilepic).setVisible(false);
             popup.getMenu().findItem(R.id.changeuserdata).setVisible(false);
             popup.getMenu().findItem(R.id.changepassword).setVisible(false);
-        }
-        else{
+        } else {
             popup.getMenu().findItem(R.id.changeprofilepic).setVisible(true);
             popup.getMenu().findItem(R.id.changeuserdata).setVisible(true);
             popup.getMenu().findItem(R.id.changepassword).setVisible(true);
         }
-        popup.setOnMenuItemClickListener (new PopupMenu.OnMenuItemClickListener ()
-        {
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
-            public boolean onMenuItemClick (MenuItem item)
-            {
+            public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
-                switch (id)
-                {
-                    case R.id.changeprofilepic:  break;
-                    case R.id.changeuserdata: changeUserData(); break;
-                    case R.id.changepassword: changeUserPassword(); break;
+                switch (id) {
+                    case R.id.changeprofilepic:
+                        changeProfilePicture();
+                        break;
+                    case R.id.changeuserdata:
+                        changeUserData();
+                        break;
+                    case R.id.changepassword:
+                        changeUserPassword();
+                        break;
                 }
                 return true;
             }
@@ -193,7 +205,7 @@ public class UserProfileFragment extends Fragment {
         popup.show();
     }
 
-    private void changeUserData(){
+    private void changeUserData() {
         userRepository.getCurrentUser(new UserCallback() {
             @Override
             public void onCallback(User user) {
@@ -234,13 +246,12 @@ public class UserProfileFragment extends Fragment {
                 dialog.show();
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v)
-                    {
-                        String ime=changeuserdataName.getText().toString();
-                        String prezime=changeuserdataSurname.getText().toString();
-                        String korime=changeuserdataUsername.getText().toString();
-                        if(changeuserdataName!=null && changeuserdataSurname!=null && changeuserdataUsername!=null) {
-                            if(!user.korisnickoIme.equals(korime)){
+                    public void onClick(View v) {
+                        String ime = changeuserdataName.getText().toString();
+                        String prezime = changeuserdataSurname.getText().toString();
+                        String korime = changeuserdataUsername.getText().toString();
+                        if (changeuserdataName != null && changeuserdataSurname != null && changeuserdataUsername != null) {
+                            if (!user.korisnickoIme.equals(korime)) {
                                 registrationRepository.checkUsernameAvailability(korime, new UsernameAvailabilityCallback() {
                                     @Override
                                     public void onCallback(String value) {
@@ -261,8 +272,7 @@ public class UserProfileFragment extends Fragment {
                                             changeuserdataUsername.setError(context.getString(R.string.username_taken));
                                     }
                                 });
-                            }
-                            else {
+                            } else {
                                 user.ime = ime;
                                 user.prezime = prezime;
                                 user.korisnickoIme = korime;
@@ -283,7 +293,7 @@ public class UserProfileFragment extends Fragment {
         });
     }
 
-    private void changeUserPassword(){
+    private void changeUserPassword() {
         final String[] error = new String[1];
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         TextView textView = new TextView(context);
@@ -315,12 +325,11 @@ public class UserProfileFragment extends Fragment {
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                String newPass =changeuserdataNewPassword.getText().toString();
-                String repeatPass=changeuserdataNewPasswordRepeat.getText().toString();
-                if(!newPass.equals("") && !repeatPass.equals("")) {
-                    if (registrationRepository.passwordNotCorrectFormat(newPass)==false) {
+            public void onClick(View v) {
+                String newPass = changeuserdataNewPassword.getText().toString();
+                String repeatPass = changeuserdataNewPasswordRepeat.getText().toString();
+                if (!newPass.equals("") && !repeatPass.equals("")) {
+                    if (registrationRepository.passwordNotCorrectFormat(newPass) == false) {
                         if (newPass.equals(repeatPass)) {
                             userRepository.changeUserPasswordFirebase(repeatPass);
                             dialog.dismiss();
@@ -335,5 +344,87 @@ public class UserProfileFragment extends Fragment {
         });
     }
 
+    private void changeProfilePicture() {
+        userRepository.getCurrentUser(new UserCallback() {
+            @Override
+            public void onCallback(User user) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                TextView textView = new TextView(context);
+                textView.setText(context.getString(R.string.changeprofilepic));
+                textView.setPadding(20, 30, 20, 30);
+                textView.setTextSize(20F);
+                textView.setBackgroundColor(getResources().getColor(R.color.baby_green));
+                textView.setTextColor(getResources().getColor(R.color.tree_green));
 
+                builder.setCustomTitle(textView);
+                View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_changeprofile_picture, (ViewGroup) getView(), false);
+                final ImageView changeProfilePicture = (ImageView) viewInflated.findViewById(R.id.change_imgProfile);
+                changePicture = changeProfilePicture;
+                changeProfilePicture.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        chooseImage();
+                    }
+                });
+
+                builder.setView(viewInflated);
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        registrationRepository.UploadPicture(filePath.toString());
+                        user.profilnaSlika = registrationRepository.slikaID;
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        userRepository.changeUserProfilePicture(user);
+                        userRepository.getCurrentUser(new UserCallback() {
+                            @Override
+                            public void onCallback(User user) {
+                                userRepository.getUserImage(user.uid, new ProfileImageCallback() {
+                                    @Override
+                                    public void onCallbackList(UserImage userImage) {
+                                        imageViewProfil.setImageBitmap(userImage.image);
+                                    }
+                                });
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            }
+        });
+    }
+
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            filePath = data.getData();
+            try {
+
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath);
+                changePicture.setImageBitmap(bitmap);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

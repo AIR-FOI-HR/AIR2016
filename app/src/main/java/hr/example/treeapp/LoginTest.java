@@ -47,6 +47,7 @@ public class LoginTest extends AppCompatActivity {
     private static final int MY_REQUEST_CODE = 0xe111;
     ImageButton chooseLocationButton;
     int current=0;
+    int currentModule=0;
     GetPostData getPostData;
 
     @Override
@@ -122,10 +123,13 @@ public class LoginTest extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.presenters.get(finalI).getFragment()).commit();
-                    dataPresentersManager.loadFragment(finalI);
-                    String moduleName = dataPresentersManager.presenters.get(finalI).getModuleName(context);
-                    showHideChooseLocationButtonTimeline(moduleName);
+                    if(currentModule != finalI + 1) {
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.presenters.get(finalI).getFragment()).commit();
+                        dataPresentersManager.loadFragment(finalI);
+                        String moduleName = dataPresentersManager.presenters.get(finalI).getModuleName(context);
+                        showHideChooseLocationButtonTimeline(moduleName);
+                        currentModule = finalI + 1;
+                    }
                 }
 
             });
