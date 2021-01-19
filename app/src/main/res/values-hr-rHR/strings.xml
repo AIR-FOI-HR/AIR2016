@@ -118,4 +118,5 @@
     <string name="oldpassword">Trenutna lozinka</string>
     <string name="newpassword">Nova lozinka</string>
     <string name="newpasswordrepeat">Ponovite lozinku</string>
+    <string name="notifications">Notifications</string>
 </resources>

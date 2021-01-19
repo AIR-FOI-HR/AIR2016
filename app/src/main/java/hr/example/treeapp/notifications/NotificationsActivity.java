@@ -46,6 +46,12 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
                 fetchNotificatons();
             }
         });
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearNotifications();
+            }
+        });
     }
 
     private void setNotificationsAdapter(List<Notification> notificationsList) {
@@ -75,36 +81,7 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
         singlePostView.putExtra("postId",postId);
         startActivity(singlePostView);
     }
-   /** private void createMockData() {
-        Date date = new Date();
-        date.setTime(
-                122221321
-        );
-        notificationsList.add(new Notification("not1","B725sSarQLQlGBop5JvNaS9b5cu1", "okp3IrFw5iP52sdFg209uok3T4I2","26MOeG0FV8CWp07qqGyD",
-                NotificationType.comment,date,false));
-        notificationsList.add(new Notification("not1","B725sSarQLQlGBop5JvNaS9b5cu1", "3Xw4gd2CkCdPgddM9tjQtdmmpEA2","26MOeG0FV8CWp07qqGyD",
-                NotificationType.leaf,date,false));
-        notificationsList.add(new Notification("not1","B725sSarQLQlGBop5JvNaS9b5cu1", "93TUiDBhxATivWObkowFkKWC0ku1","26MOeG0FV8CWp07qqGyD",
-                NotificationType.leaf,date,false));
-        notificationsList.add(new Notification("not1","B725sSarQLQlGBop5JvNaS9b5cu1", "ARvJOct6v1bj9YZB5LrEpdZ0COk1","26MOeG0FV8CWp07qqGyD",
-                NotificationType.comment,date,false));
-        notificationsList.add(new Notification("not1","B725sSarQLQlGBop5JvNaS9b5cu1", "B725sSarQLQlGBop5JvNaS9b5cu1","26MOeG0FV8CWp07qqGyD",
-                NotificationType.leaf,date,false));
-        notificationsList.add(new Notification("not1","B725sSarQLQlGBop5JvNaS9b5cu1", "BiU29vEAKNNs4nE9a41I8ritBZ02","26MOeG0FV8CWp07qqGyD",
-                NotificationType.comment,date,false));
-        notificationsList.add(new Notification("not1","B725sSarQLQlGBop5JvNaS9b5cu1", "PjLr4Bjec8ftJkRKapfkQfE9PqB3","26MOeG0FV8CWp07qqGyD",
-                NotificationType.leaf,date,false));
-        notificationsList.add(new Notification("not1","B725sSarQLQlGBop5JvNaS9b5cu1", "aTQjGfPj47M0EKwxvXsw07je9qe2","26MOeG0FV8CWp07qqGyD",
-                NotificationType.leaf,date,false));
-        notificationsList.add(new Notification("not1","B725sSarQLQlGBop5JvNaS9b5cu1", "bKuvnY0Qn4UVrJDDVZtDHEpCf4X2","26MOeG0FV8CWp07qqGyD",
-                NotificationType.comment,date,false));
-        notificationsList.add(new Notification("not1","B725sSarQLQlGBop5JvNaS9b5cu1", "okp3IrFw5iP52sdFg209uok3T4I2","26MOeG0FV8CWp07qqGyD",
-                NotificationType.comment,date,false));
-        notificationsList.add(new Notification("not1","B725sSarQLQlGBop5JvNaS9b5cu1", "qXOkkh3Fh2XuVPGPe0TPX3jOxc72","26MOeG0FV8CWp07qqGyD",
-                NotificationType.leaf,date,false));
-        notificationsList.add(new Notification("not1","B725sSarQLQlGBop5JvNaS9b5cu1", "rZeR7U1aiGeatawfR9zB7h4qEqL2","26MOeG0FV8CWp07qqGyD",
-                NotificationType.comment,date,false));
-        notificationsList.add(new Notification("not1","B725sSarQLQlGBop5JvNaS9b5cu1", "zS88jZq7QVbPwYPS3PU8vg1CSgw1","26MOeG0FV8CWp07qqGyD",
-                NotificationType.comment,date,false));
-    }*/
+    private void clearNotifications(){
+        userRepository.clearCurrentUserNotifications();
+    }
 }

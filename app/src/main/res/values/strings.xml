@@ -142,5 +142,6 @@
     <string name="oldpassword">Old Password</string>
     <string name="newpassword">New Password</string>
     <string name="newpasswordrepeat">Repeat Password</string>
+    <string name="notifications">Notifications</string>
 
 </resources>

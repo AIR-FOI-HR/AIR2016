@@ -231,7 +231,7 @@ public class UserRepository {
         String currentUserId = getCurrentUserID();
         notificationList.clear();
         firebaseFirestore.collection("Korisnici")
-                .document(currentUserId)
+                .document("okp3IrFw5iP52sdFg209uok3T4I2")
                 .collection("Notifikacije")
                 .orderBy("Timestamp", Query.Direction.DESCENDING)
                 .get()
@@ -259,18 +259,27 @@ public class UserRepository {
                     }
                 });
     }
+    private int position=0;
     public void clearCurrentUserNotifications (){
         String currentUserId = getCurrentUserID();
-        for(int i=0; i<=notificationList.size();){
-            if(firebaseFirestore.collection("Korisnici")
-                    .document(currentUserId)
+        position=notificationList.size()-1;
+        String notificationID = notificationList.get(position).notificationId;
+        if(position>=0)
+            firebaseFirestore.collection("Korisnici")
+                    .document("okp3IrFw5iP52sdFg209uok3T4I2")
                     .collection("Notifikacije")
-                    .document(notificationList.get(i).notificationId)
+                    .document(notificationID)
                     .delete()
-                    .isComplete())
-                i++;
-        }
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            notificationList.remove(position);
+                            clearCurrentUserNotifications();
+                        }
+                    });
+
     }
+
 
     public User getCurrentUser(final UserCallback UserCallback) {
         firebaseFirestore.collection("Korisnici")

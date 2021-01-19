@@ -41,6 +41,7 @@ import java.util.List;
 
 import auth.RegistrationRepository;
 import auth.UsernameAvailabilityCallback;
+import hr.example.treeapp.notifications.NotificationsActivity;
 
 import static android.app.Activity.RESULT_OK;
 import static androidx.core.content.ContextCompat.startActivity;
@@ -144,17 +145,21 @@ public class UserProfileFragment extends Fragment {
             userRepository.getUser(userID, new UserCallback() {
                 @Override
                 public void onCallback(User user) {
-                    selectedUser = user;
-                    textViewName.setText(selectedUser.getIme() + " " + selectedUser.getPrezime());
-                    textViewUserName.setText("@" + selectedUser.getKorisnickoIme());
-                    textViewPoints.setText(Long.toString(selectedUser.getBodovi()));
-                    userRepository.getUserImage(selectedUser.getUid(), new ProfileImageCallback() {
-                        @Override
-                        public void onCallbackList(UserImage userImage) {
-                            imageViewProfil.setImageBitmap(userImage.image);
-                        }
-                    });
+                    if (user == null) {
 
+                    }
+                    else{
+                        selectedUser = user;
+                        textViewName.setText(selectedUser.getIme() + " " + selectedUser.getPrezime());
+                        textViewUserName.setText("@" + selectedUser.getKorisnickoIme());
+                        textViewPoints.setText(Long.toString(selectedUser.getBodovi()));
+                        userRepository.getUserImage(selectedUser.getUid(), new ProfileImageCallback() {
+                            @Override
+                            public void onCallbackList(UserImage userImage) {
+                                imageViewProfil.setImageBitmap(userImage.image);
+                            }
+                        });
+                    }
                 }
             });
         }
@@ -198,6 +203,10 @@ public class UserProfileFragment extends Fragment {
                         break;
                     case R.id.changepassword:
                         changeUserPassword();
+                        break;
+                    case R.id.notifications:
+                        Intent openNotifications = new Intent (context.getApplicationContext(), NotificationsActivity.class);
+                        startActivity(openNotifications);
                         break;
                     case R.id.logout:
                         userRepository.logout();

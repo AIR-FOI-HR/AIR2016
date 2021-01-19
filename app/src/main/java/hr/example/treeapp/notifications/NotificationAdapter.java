@@ -70,21 +70,28 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         userRepository.getUser(senderId, new UserCallback() {
             @Override
             public void onCallback(User user) {
-                holder.username.setText(user.korisnickoIme);
-                userRepository.getUserImage(user.uid, new ProfileImageCallback() {
-                    @Override
-                    public void onCallbackList(UserImage userImage) {
-                        if(userImage.image!=null && userImage.url==null)
-                            Glide.with(mContext).load(userImage.image).into(holder.userImage);
-                        if(userImage.url!=null && userImage.image==null){
-                            RequestOptions options = new RequestOptions()
-                                    .centerCrop()
-                                    .placeholder(R.mipmap.ic_launcher_round)
-                                    .error(R.mipmap.ic_launcher_round);
-                            Glide.with(mContext).load(userImage.url).apply(options).into(holder.userImage);
+                if(user==null){
+                    holder.username.setText("Anonymous");
+                    Glide.with(mContext).load(R.drawable.default_image).into(holder.userImage);
+                }
+                else{
+                    holder.username.setText(user.korisnickoIme);
+                    userRepository.getUserImage(user.uid, new ProfileImageCallback() {
+                        @Override
+                        public void onCallbackList(UserImage userImage) {
+                            if(userImage.image!=null && userImage.url==null)
+                                Glide.with(mContext).load(userImage.image).into(holder.userImage);
+                            if(userImage.url!=null && userImage.image==null){
+                                RequestOptions options = new RequestOptions()
+                                        .centerCrop()
+                                        .placeholder(R.mipmap.ic_launcher_round)
+                                        .error(R.mipmap.ic_launcher_round);
+                                Glide.with(mContext).load(userImage.url).apply(options).into(holder.userImage);
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
             }
         });
 
