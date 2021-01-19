@@ -118,4 +118,6 @@
     <string name="oldpassword">Trenutna lozinka</string>
     <string name="newpassword">Nova lozinka</string>
     <string name="newpasswordrepeat">Ponovite lozinku</string>
+    <string name="changedescription">Ažuriraj opis</string>
+    <string name="changelocation">Ažuriraj lokaciju</string>
 </resources>

@@ -143,4 +143,7 @@
     <string name="newpassword">New Password</string>
     <string name="newpasswordrepeat">Repeat Password</string>
 
+    // Change post data
+    <string name="changedescription">Change description</string>
+    <string name="changelocation">Change location</string>
 </resources>

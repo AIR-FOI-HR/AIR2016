@@ -5,15 +5,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 
 import android.graphics.Point;
 import android.os.Bundle;;
+import android.util.Log;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,9 +33,12 @@ import com.example.core.entities.Comment;
 import com.example.core.entities.Post;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -38,6 +46,7 @@ import java.util.List;
 
 import com.example.core.entities.User;
 
+import hr.example.treeapp.addTree.AddTreeLogic;
 
 
 public class SinglePostViewActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -67,6 +76,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
     private List<String> likesList;
     private Context context=this;
     private UserRepository userRepository= new UserRepository();
+    private AddTreeLogic addTreeLogic=new AddTreeLogic(this);
     private boolean userIsAnonymous;
     private boolean reactionsVisible =false;
 
@@ -110,6 +120,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         initClickListeners();
 
         reactionsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+
     }
     private void initClickListeners(){
         postImage.setOnClickListener(new View.OnClickListener() {
@@ -290,9 +301,13 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         inflater.inflate(R.menu.postpopupmenu, popup.getMenu());
         if(getPostData.getCurrentUserRole()!=1 && !userRepository.getCurrentUserID().equals(userID)) {
             popup.getMenu().findItem(R.id.postpopupdelete).setVisible(false);
+            popup.getMenu().findItem(R.id.postpopupdescription).setVisible(false);
+            popup.getMenu().findItem(R.id.postpopuplocation).setVisible(false);
         }
         else{
             popup.getMenu().findItem(R.id.postpopupdelete).setVisible(true);
+            popup.getMenu().findItem(R.id.postpopupdescription).setVisible(true);
+            popup.getMenu().findItem(R.id.postpopuplocation).setVisible(true);
         }
         popup.setOnMenuItemClickListener (new PopupMenu.OnMenuItemClickListener ()
         {
@@ -303,6 +318,8 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                 switch (id)
                 {
                     case R.id.postpopupdelete: deletePost(); break;
+                    case R.id.postpopupdescription: changeDescription(); break;
+                    case R.id.postpopuplocation: changeLocation(); break;
                 }
                 return true;
             }
@@ -393,6 +410,111 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                             .error(R.mipmap.ic_launcher_round);
                     Glide.with(SinglePostViewActivity.this).load(userImage.url).apply(options).into(profilePicture);
                 }
+            }
+        });
+    }
+
+
+    private void changeLocation() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View viewInflated = LayoutInflater.from(this).inflate(R.layout.dialog_change_location, (ViewGroup) findViewById(android.R.id.content).getRootView(), false);
+        Mapa mapa = new Mapa(post);
+
+        builder.setView(viewInflated);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTreeLogic.UpdatePostLocation(post.getID_objava(), mapa.marker.getPosition().latitude, mapa.marker.getPosition().longitude);
+                Log.i("positive", "onClick: "+mapa.marker.getPosition().latitude);
+                dialog.dismiss();
+
+            }
+        });
+    }
+public class Mapa implements OnMapReadyCallback{
+    private GoogleMap gMap;
+    private Post post;
+    public Marker marker;
+    public Mapa(Post post){
+        this.post=post;
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.treeLocationMapView2);
+        mapFragment.getMapAsync(this);
+    }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.gMap=googleMap;
+        final com.google.android.gms.maps.model.LatLng treeLocation =
+                new com.google.android.gms.maps.model.LatLng(post.getLatitude(),
+                        post.getLongitude());
+        gMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+
+       marker=gMap.addMarker(new MarkerOptions()
+                .position(treeLocation)
+                .draggable(true)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker)));
+
+        float zoomLvl = (float)15;
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(treeLocation,zoomLvl));
+    }
+}
+    private void changeDescription() {
+        final String[] error = new String[1];
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        TextView textView = new TextView(context);
+        textView.setText(context.getString(R.string.changedescription));
+        textView.setPadding(20, 30, 20, 30);
+        textView.setTextSize(20F);
+        textView.setBackgroundColor(getResources().getColor(R.color.baby_green));
+        textView.setTextColor(getResources().getColor(R.color.tree_green));
+
+        builder.setCustomTitle(textView);
+        View viewInflated = LayoutInflater.from(this).inflate(R.layout.dialog_change_description, (ViewGroup) findViewById(android.R.id.content).getRootView(), false);
+        final EditText changeDescription = (EditText) viewInflated.findViewById(R.id.changeDescription);
+        changeDescription.setText(post.getOpis());
+        changeDescription.requestFocus();
+        builder.setView(viewInflated);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String newDescription = changeDescription.getText().toString();
+                addTreeLogic.UpdatePostDescription(post.getID_objava(), newDescription);
+                description.setText(newDescription);
+                dialog.dismiss();
+                /*finish();
+                overridePendingTransition(0, 0);
+                startActivity(getIntent());
+                overridePendingTransition(0, 0);*/
+
+
             }
         });
     }

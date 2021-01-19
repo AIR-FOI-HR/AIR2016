@@ -7,28 +7,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputLayout
+        <fragment
+            android:id="@+id/treeLocationMapView2"
+            class="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:background="@color/white"
-            android:layout_height="wrap_content"
-            android:paddingRight="20dp"
-            android:paddingLeft="20dp">
-
-            <EditText
-                android:id="@+id/changeDescription"
-                android:gravity="top|left"
-                android:layout_width="match_parent"
-                android:background="@color/white"
-                android:layout_height="wrap_content"
-                android:textColor="@color/tree_green"
-                android:imeOptions="actionDone"
-                android:inputType="textMultiLine"
-                android:lines="8"
-                android:minLines="3"
-                android:maxLines="10"
-                android:scrollbars="vertical"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
+            android:layout_height="180dp"
+            android:minHeight="120dp" />
     </LinearLayout>
 </FrameLayout>

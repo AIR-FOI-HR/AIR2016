@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,6 +21,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import addTreeLogic.LatLng;
 
 public class AddTreeLogic {
 
@@ -72,6 +75,16 @@ public class AddTreeLogic {
         bmp.compress(Bitmap.CompressFormat.JPEG, 40, baos);
         byte[] data = baos.toByteArray();
         riversRef.putBytes(data);
+    }
+
+    public void UpdatePostDescription(String postid, String description){
+        DocumentReference documentReference = firebaseFirestore.collection("Objave").document(postid);
+        documentReference.update("Opis", description);
+    }
+
+    public void UpdatePostLocation(String postid, double latitude, double longitude){
+        DocumentReference documentReference = firebaseFirestore.collection("Objave").document(postid);
+        documentReference.update("Latitude", latitude, "Longitude", longitude);
     }
 
 }

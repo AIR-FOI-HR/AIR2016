@@ -179,7 +179,8 @@ public class LoginTest extends AppCompatActivity {
                                 //Intent newi = new Intent(LoginTest.this, NotificationsActivity.class);
                                 //startActivity(newi);
                                 selectedFragment = new UserSearchTest();
-                                horizontalScrollView.setVisibility(HorizontalScrollView.GONE);
+                                horizontalScrollView.setVisibility(HorizontalScrollView.INVISIBLE);
+                                chooseLocationButton.setVisibility(View.GONE);
                                 myLayout.setVisibility(LinearLayout.GONE);
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                                 current=4;
