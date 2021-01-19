@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onCallback(String value) {
                     if (value == "ok") {
-                        startActivity(new Intent(getApplicationContext(), LoginTest.class));
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         finish();
                     } else if (value == "notVerified") {
                         email.setError(getString(R.string.email_unconfirmed));
@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onCallback(String value) {
                 if(value=="ok") {
-                    startActivity(new Intent(getApplicationContext(), LoginTest.class));
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 }
                 else{

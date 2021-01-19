@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import androidx.lifecycle.Observer;
 import hr.example.mapview.PostMapView;
-import hr.example.treeapp.notifications.NotificationsActivity;
 import managers.DataManager;
 import managers.DataPresentersManager;
 
@@ -22,10 +21,7 @@ import com.example.timeline.PostListFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,12 +31,11 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 
 
 import java.util.List;
 
-public class LoginTest extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
     DataPresentersManager dataPresentersManager;
     Context context;
     private LiveData model;
@@ -73,7 +68,7 @@ public class LoginTest extends AppCompatActivity {
         final Observer<String> postIdObserver = new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                Intent singlePostView = new Intent(LoginTest.this, SinglePostViewActivity.class);
+                Intent singlePostView = new Intent(MainActivity.this, SinglePostViewActivity.class);
                 singlePostView.putExtra("postId",s);
                 startActivity(singlePostView);
             }
@@ -171,7 +166,7 @@ public class LoginTest extends AppCompatActivity {
                             }
                             break;
                         case R.id.nav_addtree:
-                            Intent open = new Intent(LoginTest.this, AddTree.class);
+                            Intent open = new Intent(MainActivity.this, AddTree.class);
                             startActivity(open);
                             break;
                         case R.id.nav_search:
@@ -189,6 +184,9 @@ public class LoginTest extends AppCompatActivity {
                         case R.id.nav_profile:
                             if(current!=5) {
                                 selectedFragment = new UserProfileFragment(getPostData.getCurrentUserID());
+                                horizontalScrollView.setVisibility(HorizontalScrollView.INVISIBLE);
+                                chooseLocationButton.setVisibility(View.GONE);
+                                myLayout.setVisibility(LinearLayout.GONE);
                                 //Fragment selectedFragment =new UserProfileFragment(user);
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                                 current=5;
@@ -223,7 +221,7 @@ public class LoginTest extends AppCompatActivity {
 
     public void mapView (View view){
         Intent openMapview = new Intent(
-                LoginTest.this,
+                MainActivity.this,
                 PostMapView.class
         );
         startActivity(openMapview);

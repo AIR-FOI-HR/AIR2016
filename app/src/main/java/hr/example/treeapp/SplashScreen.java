@@ -27,7 +27,7 @@ public class SplashScreen extends AppCompatActivity {
                     @Override
                     public void onCallback(String value) {
                         if (value == "user_is_logged_in") {
-                            startActivity(new Intent(getApplicationContext(), LoginTest.class));
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         } else {
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         }
