@@ -9,13 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.core.entities.Post;
+import com.google.api.Distribution;
 
 import java.util.List;
 
@@ -27,6 +31,7 @@ public class UserProfilePostRecyclerAdapter extends RecyclerView.Adapter<UserPro
     private LayoutInflater mInflater;
     private OnItemClickListener listener;
     Context mContext;
+    CardView cardViewPost;
     // data is passed into the constructor
     UserProfilePostRecyclerAdapter(Context context, List<Post> usersPostsList, OnItemClickListener listener) {
         this.mContext=context;
@@ -77,9 +82,12 @@ public class UserProfilePostRecyclerAdapter extends RecyclerView.Adapter<UserPro
             display.getSize(size);
             int width=size.x;
             Log.i("sirina", "ViewHolder: "+width);
-            imageViewUserProfilePost=(ImageView)itemView.findViewById(R.id.imageViewUserProfilePost);
-            imageViewUserProfilePost.setMinimumWidth(width/3);
-            imageViewUserProfilePost.setMinimumHeight(100);
+
+            cardViewPost= (CardView) itemView.findViewById(R.id.cardViewPost);
+            LinearLayout.LayoutParams layoutParams=(LinearLayout.LayoutParams)cardViewPost.getLayoutParams();
+            layoutParams.width=width/3;
+            cardViewPost.setLayoutParams(layoutParams);
+
         }
         public void bind(Post post, OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener(){

@@ -87,6 +87,7 @@ public class GetPostData {
     public void getUsersPosts(String uid, final UsersPostsCallback usersPostsCallback) {
         firebaseFirestore.collection("Objave")
                 .whereEqualTo("Korisnik_ID", uid)
+                .orderBy("Datum_objave", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

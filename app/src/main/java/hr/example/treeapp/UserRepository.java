@@ -260,11 +260,12 @@ public class UserRepository {
                 });
     }
     private int position=0;
-    public void clearCurrentUserNotifications (){
+    public void clearCurrentUserNotifications (final DeleteDoneCallback deleteDoneCallback){
         String currentUserId = getCurrentUserID();
         position=notificationList.size()-1;
-        String notificationID = notificationList.get(position).notificationId;
-        if(position>=0)
+
+        if(position>=0){
+            String notificationID = notificationList.get(position).notificationId;
             firebaseFirestore.collection("Korisnici")
                     .document("okp3IrFw5iP52sdFg209uok3T4I2")
                     .collection("Notifikacije")
@@ -274,10 +275,17 @@ public class UserRepository {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             notificationList.remove(position);
-                            clearCurrentUserNotifications();
+                            if(position==0)
+                                deleteDoneCallback.onCallbackList(true);
+                            clearCurrentUserNotifications(new DeleteDoneCallback() {
+                                @Override
+                                public void onCallbackList(boolean deleteDone) {
+
+                                }
+                            });
                         }
                     });
-
+        }
     }
 
 

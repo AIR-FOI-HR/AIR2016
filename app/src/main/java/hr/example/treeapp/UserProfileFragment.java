@@ -23,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -62,6 +63,9 @@ public class UserProfileFragment extends Fragment {
     Context context;
     ImageButton imageButton;
     ImageView changePicture;
+    GridView gridView;
+    List<Bitmap> postImages=new ArrayList<>();
+    int imageWidth;
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST = 71;
     private RegistrationRepository registrationRepository;
@@ -84,7 +88,11 @@ public class UserProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inflatedView = inflater.inflate(R.layout.fragment_user_profile, container, false);
-        myRecyclerView = (RecyclerView) inflatedView.findViewById(R.id.UserProfilePostsList);
+        //myRecyclerView = (RecyclerView) inflatedView.findViewById(R.id.UserProfilePostsList);
+        gridView=(GridView)inflatedView.findViewById(R.id.gridViewPosts);
+        int gridWidth=getResources().getDisplayMetrics().widthPixels;
+        imageWidth=gridWidth/3;
+        gridView.setColumnWidth(imageWidth);
         return inflatedView;
 
     }
@@ -115,16 +123,27 @@ public class UserProfileFragment extends Fragment {
             public void onCallback(List<Post> usersPostsList) {
                 if (usersPostsList != null) {
                     textViewPosts.setText(String.valueOf(usersPostsList.size()));
-                    myRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), col));
-                    userProfilePostRecyclerAdapter = new UserProfilePostRecyclerAdapter(getActivity(), usersPostsList, new UserProfilePostRecyclerAdapter.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(Post post) {
-                            Intent singlePostView = new Intent(getActivity(), SinglePostViewActivity.class);
-                            singlePostView.putExtra("postId", post.getID_objava());
-                            startActivity(singlePostView);
-                        }
-                    });
-                    myRecyclerView.setAdapter(userProfilePostRecyclerAdapter);
+                    for(int i=0; i<usersPostsList.size(); i++){
+                        getPostData.getPostImage(usersPostsList.get(i).getURL_slike(), new PostImageCallback() {
+                            @Override
+                            public void onCallback(Bitmap slika) {
+                                postImages.add(slika);
+                                if(postImages.size()==usersPostsList.size()){
+                                    gridView.setAdapter(new ProfilePostAdapter(getActivity(), postImages, imageWidth));
+                                    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            String postID=usersPostsList.get(position).getID_objava();
+                                            Intent open = new Intent(getContext(), SinglePostViewActivity.class);
+                                            open.putExtra("postId", postID);
+                                            startActivity(open);
+
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
                 }
             }
         });

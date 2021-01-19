@@ -16,6 +16,7 @@ import com.example.core.entities.Notification;
 import java.util.ArrayList;
 import java.util.List;
 
+import hr.example.treeapp.DeleteDoneCallback;
 import hr.example.treeapp.R;
 import hr.example.treeapp.SinglePostViewActivity;
 import hr.example.treeapp.UserRepository;
@@ -71,6 +72,12 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
                     notificationRecyclerView.setVisibility(View.VISIBLE);
                     clearButton.setVisibility(View.VISIBLE);
                 }
+                else{
+                    notifications=null;
+                    noNotifications.setVisibility(View.VISIBLE);
+                    notificationRecyclerView.setVisibility(View.GONE);
+                    clearButton.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -82,6 +89,12 @@ public class NotificationsActivity extends AppCompatActivity implements Notifica
         startActivity(singlePostView);
     }
     private void clearNotifications(){
-        userRepository.clearCurrentUserNotifications();
+        userRepository.clearCurrentUserNotifications(new DeleteDoneCallback() {
+            @Override
+            public void onCallbackList(boolean deleteDone) {
+                if(deleteDone)
+                    fetchNotificatons();
+            }
+        });
     }
 }
