@@ -13,7 +13,7 @@ public class CroppActivity extends AppCompatActivity {
 
     private ImageView img;
     private final int CODE_IMG_GALERY=1;
-    private final String SAMPLE_CROPPED_IMG_NAME = "SampleCroppImg";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
