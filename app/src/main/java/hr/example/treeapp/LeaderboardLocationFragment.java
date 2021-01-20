@@ -77,8 +77,6 @@ public class LeaderboardLocationFragment extends Fragment{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
                 if (resultCode == requestCode) {
                     leaderboardKorisnici = (List<User>) data.getSerializableExtra("USERLIST");
-                    // TODO Update your TextView.
-                    Log.d("rasema", "leaderboard");
                 }
 
         myRecyclerView=(RecyclerView)view.findViewById(R.id.leaderboard_location_recycler);
