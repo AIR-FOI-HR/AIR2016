@@ -49,13 +49,6 @@ public class RegistrationStep2 extends AppCompatActivity {
         }
 
 
-        Log.d("Poruka", Ime);
-        Log.d("Poruka", Prezime);
-        Log.d("Poruka", String.valueOf(day));
-        Log.d("Poruka", String.valueOf(month));
-        Log.d("Poruka", String.valueOf(year));
-
-
         //dohvacanje upisanih podataka kao objekte
         email = (EditText) findViewById(R.id.txtBoxStep2Email);
         korIme = (EditText) findViewById(R.id.txtBoxStep2Username);
