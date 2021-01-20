@@ -33,13 +33,10 @@ import java.util.List;
 public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, DataPresenter {
 
     private GoogleMap mMap;
-    private SupportMapFragment mMapFragment;
     private List<Post> posts;
     private boolean dataReady=false;
-    private List<User> users;
     private boolean mapReady=false;
     private LiveData liveData;
-    private boolean cameraMoving;
 
     @Nullable
     @Override
@@ -52,15 +49,11 @@ public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleM
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         liveData = new LiveData();
-        mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
-        /**setContentView(R.layout.activity_post_map_view);
-         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-         .findFragmentById(R.id.map);
-         mapFragment.getMapAsync(this);**/
+
     }
-    private boolean timerStarted=false;
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -68,67 +61,18 @@ public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleM
         final com.google.android.gms.maps.model.LatLng mapsLatLng =
                 new com.google.android.gms.maps.model.LatLng(44.602505,
                         16.44023);
-        Float zoomLvl = (float)40;
+        float zoomLvl = (float)20;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mapsLatLng,zoomLvl));
 
-        mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
-            @Override
-            public void onCameraMoveStarted(int i) {
-
-            }
-        });
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
                 updateData();
-                /**
-
-                 if(!timerStarted){
-                 timerStarted=true;
-                 updateData();
-                 new CountDownTimer(2000,1000){
-
-                @Override
-                public void onTick(long millisUntilFinished) {
-
-                }
-
-                @Override
-                public void onFinish() {
-                timerStarted=false;
-                }
-                };
-                 }
-                if(!timerStarted){
-                    timerStarted=true;
-                    updateData();
-                    new CountDownTimer(2000,1000){
-
-                        @Override
-                        public void onTick(long millisUntilFinished) {
-
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            timerStarted=false;
-                        }
-                    };
-                }*/
-
             }
         });
-/*
-        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-            @Override
-            public void onCameraMove() {
-                updateData();
-            }
-        });*/
         mapReady=true;
         if(dataReady)
             setMarkersOnMap();
-
     }
 
     private void updateData() {
@@ -168,11 +112,9 @@ public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void setData(List<Post> posts, List<User> users, boolean isDataNew) {
         this.posts=posts;
-        this.users=users;
         dataReady=true;
         if(mapReady)
             setMarkersOnMap();
-
     }
 
     @Override

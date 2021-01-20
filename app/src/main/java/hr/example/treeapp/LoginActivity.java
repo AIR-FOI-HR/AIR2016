@@ -17,7 +17,7 @@ import auth.AuthRepository;
 import auth.LogInStatusCallback;
 import auth.PassReset;
 
-public class LoginActivity extends AppCompatActivity {
+public class     LoginActivity extends AppCompatActivity {
 
     EditText email, password;
     AuthRepository authRepository;

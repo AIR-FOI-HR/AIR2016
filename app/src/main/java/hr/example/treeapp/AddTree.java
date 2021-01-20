@@ -202,13 +202,11 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
     private void checkPermissionsOnStartup() {
         if (!permissionsChecks.checkAllPermissions()) {
             alertDialogeForAskingPermissions();
-
             // check if pressedLater variable is been true
         } else if (pressedLater) {
             if (laterPressedTime != 0) {
-
-                /**
                 //check if its been 1 hour since later is been pressed.
+                /**
                 Date dateObj = new Date();
                 long timeNow = dateObj.getTime();
                 long oneHourLater = laterPressedTime + (3600 * 1000);
@@ -217,7 +215,6 @@ public class AddTree extends AppCompatActivity implements View.OnClickListener, 
                     requestPermission();
                     editor.putBoolean(getResources().getString(R.string.later), false);
                     editor.commit();
-
                 }*/
 
             }

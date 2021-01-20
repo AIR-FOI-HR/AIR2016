@@ -48,8 +48,8 @@ public class ImageManipulation {
         options.setHideBottomControls(false);
         options.setFreeStyleCropEnabled(false); //zaklučan omjer
 
-        options.setStatusBarColor(activity.getResources().getColor(R.color.tree_green));
-        options.setToolbarColor(activity.getResources().getColor(R.color.tree_green));
+        options.setStatusBarColor(activity.getResources().getColor(R.color.baby_green));
+        options.setToolbarColor(activity.getResources().getColor(R.color.baby_green));
 
         options.setToolbarTitle(activity.getString(R.string.crop_image));
 

@@ -305,14 +305,7 @@ public class GetPostData {
         firebaseFirestore.collection("Objave")
                 .whereLessThanOrEqualTo("Latitude", maxLatitude)
                 .whereGreaterThanOrEqualTo("Latitude", minLatitude)
-                    /**collectionObjave.whereLessThanOrEqualTo("Longitude", maxLongitude)
-                     .whereGreaterThanOrEqualTo("Longitude", minLongitude);
-                     if(prikazaneObjaveId.size()>0)*/
                     .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                     /*collectionObjave.whereLessThanOrEqualTo("Longitude", maxLongitude)
-                     .whereGreaterThanOrEqualTo("Longitude", minLongitude);
-                     if(prikazaneObjaveId.size()>0)*/
-                      //   .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {

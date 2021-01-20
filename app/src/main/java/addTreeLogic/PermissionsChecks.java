@@ -15,78 +15,41 @@ public class PermissionsChecks {
         this.activity=activity;
     }
     public boolean checkLocationPermissions(){
-        if((ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+        return ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED))
-            return true;
-        else
-            return false;
+                        == PackageManager.PERMISSION_GRANTED;
     }
 
     public boolean checkCameraAndStoragePermissions(){
-        if(ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.CAMERA)
+        return ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED)
-            return true;
-        else
-            return false;
+                        == PackageManager.PERMISSION_GRANTED;
     }
 
     public boolean checkAllPermissions(){
-        if(checkCameraAndStoragePermissions() && checkLocationPermissions())
-            return true;
-        else
-            return false;
-        /**
-         * ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CAMERA)
-         *                 != PackageManager.PERMISSION_GRANTED &&
-         *                 ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-         *                         != PackageManager.PERMISSION_GRANTED &&
-         *                 ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-         *                         != PackageManager.PERMISSION_GRANTED &&
-         *                 ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-         *                         != PackageManager.PERMISSION_GRANTED &&
-         *                 ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
-         *                         != PackageManager.PERMISSION_GRANTED
-         */
+        return checkCameraAndStoragePermissions() && checkLocationPermissions();
     }
 
 
     public boolean checkAnyCameraAndStoragePermission (){
-        if(ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED)
-            return false;
-        else return true;
+        return ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     public boolean checkBuildVersion(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            return true;
-        else
-            return false;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
     public boolean checkAnyImportantPermission (){
-        if (ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED)
-            return false;
-        else
-            return true;
+        return ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(activity.getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 }

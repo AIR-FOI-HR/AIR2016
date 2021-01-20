@@ -30,10 +30,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import auth.AuthRepository;
 import hr.example.treeapp.notifications.NotificationsCallback;
 
-import static androidx.core.content.ContextCompat.startActivity;
 
 
 public class UserRepository {
@@ -267,7 +265,7 @@ public class UserRepository {
         if(position>=0){
             String notificationID = notificationList.get(position).notificationId;
             firebaseFirestore.collection("Korisnici")
-                    .document("okp3IrFw5iP52sdFg209uok3T4I2")
+                    .document(currentUserId)
                     .collection("Notifikacije")
                     .document(notificationID)
                     .delete()

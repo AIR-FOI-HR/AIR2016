@@ -31,7 +31,7 @@ public class NotificationService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        Log.d("a","tu sam");
+
         if(remoteMessage.getData().size()>0){
             sendNotification2(remoteMessage);
         }
