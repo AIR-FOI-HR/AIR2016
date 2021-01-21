@@ -23,6 +23,7 @@ public class RegistrationStep2 extends AppCompatActivity {
 
     AuthRepository authRepository;
     RegistrationRepository registrationRepository;
+    UserRepository userRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class RegistrationStep2 extends AppCompatActivity {
 
         authRepository= new AuthRepository(this);
         registrationRepository = new RegistrationRepository(this);
+        userRepository = new UserRepository();
 
         Intent intent = getIntent();
         Ime = intent.getStringExtra("name_key");
@@ -142,6 +144,7 @@ public class RegistrationStep2 extends AppCompatActivity {
                 } else {
                     email.setError(getString(R.string.email_exist));
                 }
+                userRepository.logout();
             }
         });
     }
