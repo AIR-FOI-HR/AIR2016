@@ -39,10 +39,12 @@ public class RegistrationStep3 extends AppCompatActivity {
     public void OpenRegistrationStep2(View view) {
         Intent open = new Intent(RegistrationStep3.this, RegistrationStep2.class);
         startActivity(open);
+        overridePendingTransition(R.anim.slideleft, R.anim.stayinplace);
     }
 
     public void OpenRegistrationStep4(View view) {
-
+        Intent open = new Intent(RegistrationStep3.this, RegistrationStep4.class);
+        startActivity(open);
     }
 
     public void OpenLogIn(View view) {
