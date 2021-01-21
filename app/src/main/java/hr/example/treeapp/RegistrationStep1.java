@@ -32,6 +32,8 @@ public class RegistrationStep1 extends AppCompatActivity {
         setContentView(R.layout.activity_registration_step1);
         registrationRepository = new RegistrationRepository(this);
         imageView=(ImageView) findViewById(R.id.imgProfile);
+        datumrodenja= findViewById(R.id.datePickerStep1);
+        datumrodenja.setMaxDate(System.currentTimeMillis());
 
         imageView.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -48,7 +50,6 @@ public class RegistrationStep1 extends AppCompatActivity {
     public void OpenRegistrationStep2(View view) {
         name=findViewById(R.id.txtBoxStep1Name);
         surname=findViewById(R.id.txtBoxStep1Surname);
-        datumrodenja= findViewById(R.id.datePickerStep1);
         int day=datumrodenja.getDayOfMonth();
         int month=datumrodenja.getMonth()+1;
         int year=datumrodenja.getYear();

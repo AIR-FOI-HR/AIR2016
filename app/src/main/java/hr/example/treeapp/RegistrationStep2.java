@@ -11,6 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.core.entities.User;
+
+import java.util.List;
+
 public class RegistrationStep2 extends AppCompatActivity {
     EditText email, korIme, password, repeatedPassword;
     String Ime, Prezime, Slika;
@@ -128,15 +132,18 @@ public class RegistrationStep2 extends AppCompatActivity {
         }
 
         //upisuje korisnika u Authentication i Database kolekciju korisnici ukoliko nema pogreške
-        if(registrationRepository.firebaseCreateUser(Email, Password, Ime, Prezime, Bodovi, KorIme, Slika, datumRodenja, UlogaID) == 1){
-            Intent open = new Intent(RegistrationStep2.this, RegistrationStep3.class);
-            open.putExtra("email", Email);
-            startActivity(open);
-        }else{
-            email.setError(getString(R.string.email_exist));
-        }
-
-
+        registrationRepository.firebaseCreateUser(Email, Password, Ime, Prezime, Bodovi, KorIme, Slika, datumRodenja, UlogaID, new RegistrationCallback() {
+            @Override
+            public void onCallback(int result) {
+                if(result == 1){
+                    Intent open = new Intent(RegistrationStep2.this, RegistrationStep3.class);
+                    open.putExtra("email", Email);
+                    startActivity(open);
+                } else {
+                    email.setError(getString(R.string.email_exist));
+                }
+            }
+        });
     }
 
     public void OpenLogIn(View view) {
