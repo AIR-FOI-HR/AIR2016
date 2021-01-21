@@ -4,7 +4,6 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.example.core.entities.Comment;
-import com.example.core.entities.Notification;
 import com.example.core.entities.NotificationType;
 import com.example.core.entities.Post;
 import com.example.core.entities.User;

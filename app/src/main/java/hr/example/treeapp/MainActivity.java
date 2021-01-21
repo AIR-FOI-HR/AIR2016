@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import androidx.lifecycle.Observer;
-import hr.example.mapview.PostMapView;
 import managers.DataManager;
 import managers.DataPresentersManager;
 
@@ -218,14 +217,14 @@ public class MainActivity extends AppCompatActivity {
             startActivity(open);*/
     }
 
-
+/*
     public void mapView (View view){
         Intent openMapview = new Intent(
                 MainActivity.this,
                 PostMapView.class
         );
         startActivity(openMapview);
-    }
+    }*/
 
     public void chooseLocationButtonClick(View view) {
         Intent open = new Intent(getApplicationContext(), LeaderboardLocationMapview.class);
