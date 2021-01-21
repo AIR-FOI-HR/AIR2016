@@ -242,7 +242,7 @@ public class GetPostData {
                     }
                 });
     }
-    
+
     /**
     public void getPostsInLatLngBoundry (double minLatitude, double maxLatitude, double minLongitude, double maxLongitude, final GetPostsInLatLng getPostsInLatLng){
     List<Post> objave = new ArrayList<>();

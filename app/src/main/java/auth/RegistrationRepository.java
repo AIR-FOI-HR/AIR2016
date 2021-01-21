@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,6 +41,7 @@ public class RegistrationRepository {
     private StorageReference storageReference = firebaseStorage.getReference();
     public FirebaseUser user;
     public String dostupno, userID, slikaID;
+    public int returnValueRegistration;
     List<String> listaKorisnickihImena = new ArrayList<String>();
     public Context context;
 
@@ -73,7 +75,7 @@ public class RegistrationRepository {
                 });
     }
 
-    public void firebaseCreateUser(String Email, String Password, String Ime, String Prezime, int Bodovi, String KorIme, String Slika , String datumRodenja, int UlogaID) {
+    public int firebaseCreateUser(String Email, String Password, String Ime, String Prezime, int Bodovi, String KorIme, String Slika , String datumRodenja, int UlogaID) {
         firebaseAuth.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -99,11 +101,24 @@ public class RegistrationRepository {
                     documentReference.set(korisnik);
                     user=firebaseAuth.getCurrentUser();
                     user.sendEmailVerification();
+                    returnValueRegistration = 1;
                 } else {
-                    //TODO: čemu služi ovaj else, maknuti ga ako ne treba (možemo složiti i da se kod korisnika koji ne postave sliku uploada neka default slika)
+                    try
+                    {
+                        throw task.getException();
+                    }
+                    catch (FirebaseAuthUserCollisionException existEmail)
+                    {
+                        returnValueRegistration = 0;
+                    }
+                    catch (Exception e)
+                    {
+                        returnValueRegistration = 0;
+                    }
                 }
             }
         });
+        return returnValueRegistration;
     }
 
     public void UploadPicture(String Slika) {

@@ -59,6 +59,7 @@
     <string name="invalid_email">Email is not valid, please check it!</string>
     <string name="invalid_password_repeat">Repeated password is incorrect!</string>
     <string name="emailverified">Email is not verified!</string>
+    <string name="email_exist">Email already exist!</string>
 
     <string name="about_tree">Tell the story about the tree:</string>
     <string name="plant_tree">PLANT TREE</string>
