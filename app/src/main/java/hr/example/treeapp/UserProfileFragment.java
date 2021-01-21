@@ -404,6 +404,7 @@ public class UserProfileFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         registrationRepository.UploadPicture(filePath.toString());
+                        userRepository.deleteProfilePicture(user.profilnaSlika);
                         user.profilnaSlika = registrationRepository.slikaID;
                         try {
                             Thread.sleep(2000);

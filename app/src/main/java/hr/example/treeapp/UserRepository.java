@@ -324,6 +324,10 @@ public class UserRepository {
         firebaseAuth.getCurrentUser().updatePassword(password);
     }
 
+    public void deleteProfilePicture(String id){
+        storageReference.child("Profilne_slike/"+id).delete();
+    }
+
     public void logout(){
         FirebaseAuth.getInstance().signOut();
     }
