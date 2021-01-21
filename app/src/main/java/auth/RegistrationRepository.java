@@ -31,7 +31,9 @@ import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 
+import hr.example.treeapp.GetPostsFromLastID;
 import hr.example.treeapp.R;
+import hr.example.treeapp.RegistrationCallback;
 
 public class RegistrationRepository {
 
@@ -41,7 +43,6 @@ public class RegistrationRepository {
     private StorageReference storageReference = firebaseStorage.getReference();
     public FirebaseUser user;
     public String dostupno, userID, slikaID;
-    public int returnValueRegistration;
     List<String> listaKorisnickihImena = new ArrayList<String>();
     public Context context;
 
@@ -75,7 +76,7 @@ public class RegistrationRepository {
                 });
     }
 
-    public int firebaseCreateUser(String Email, String Password, String Ime, String Prezime, int Bodovi, String KorIme, String Slika , String datumRodenja, int UlogaID) {
+    public void firebaseCreateUser(String Email, String Password, String Ime, String Prezime, int Bodovi, String KorIme, String Slika , String datumRodenja, int UlogaID, final RegistrationCallback registrationCallback) {
         firebaseAuth.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -101,7 +102,7 @@ public class RegistrationRepository {
                     documentReference.set(korisnik);
                     user=firebaseAuth.getCurrentUser();
                     user.sendEmailVerification();
-                    returnValueRegistration = 1;
+                    registrationCallback.onCallback(1);
                 } else {
                     try
                     {
@@ -109,16 +110,15 @@ public class RegistrationRepository {
                     }
                     catch (FirebaseAuthUserCollisionException existEmail)
                     {
-                        returnValueRegistration = 0;
+                        registrationCallback.onCallback(0);
                     }
                     catch (Exception e)
                     {
-                        returnValueRegistration = 0;
+                        registrationCallback.onCallback(0);
                     }
                 }
             }
         });
-        return returnValueRegistration;
     }
 
     public void UploadPicture(String Slika) {
