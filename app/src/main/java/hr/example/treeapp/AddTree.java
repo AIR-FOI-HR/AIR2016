@@ -27,7 +27,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.core.DataPresenter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -46,8 +45,7 @@ import addTreeLogic.LatLng;
 import addTreeLogic.MapsLogic;
 import addTreeLogic.PermissionsChecks;
 import hr.example.treeapp.addTree.AddTreeLogic;
-import managers.DataManager;
-import managers.DataPresentersManager;
+
 
 public class AddTree extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, LocationListener {
     TextView treeDescription;

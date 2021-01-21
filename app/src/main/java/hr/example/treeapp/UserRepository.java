@@ -229,7 +229,7 @@ public class UserRepository {
         String currentUserId = getCurrentUserID();
         notificationList.clear();
         firebaseFirestore.collection("Korisnici")
-                .document("okp3IrFw5iP52sdFg209uok3T4I2")
+                .document(currentUserId)
                 .collection("Notifikacije")
                 .orderBy("Timestamp", Query.Direction.DESCENDING)
                 .get()
