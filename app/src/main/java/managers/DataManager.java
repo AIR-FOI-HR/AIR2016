@@ -45,6 +45,7 @@ public class DataManager {
     private boolean userPostoji = false;
 
     private boolean userpostoji=false;
+    private boolean lastWasLocation = false;
 
 
     public static DataManager getInstance(){
@@ -60,7 +61,6 @@ public class DataManager {
         userBitmapsReady = false;
         postsReady = false;
         usersReady = false;
-
         newPostsReady = false;
         firstCall = true;
         numberOfNewUsers = 0;
@@ -98,6 +98,7 @@ public class DataManager {
         }
 
     public void loadDataTimeline(DataPresenter presenter, Context context){
+        lastWasLocation = false;
         this.presenter = presenter;
         this.context = context;
         numberOfPosts = 0;
@@ -292,25 +293,27 @@ public class DataManager {
         }
     }
 
-    public void GetPostsFromLastID(){
-        getPostData.getPostsFromLastID(new GetPostsFromLastID() {
-            @Override
-            public void onCallback(List<Post> postList) {
-                if (postList != null) {
-                    posts.addAll(postList);
-                    newPostsReady = true;
-                    fillPostsWithBitmaps();
-                    getUsers(postList);
-                    sendNewDataToPresenter(presenter);
+    public void GetPostsFromLastID() {
+        if (lastWasLocation == false) {
+            getPostData.getPostsFromLastID(new GetPostsFromLastID() {
+                @Override
+                public void onCallback(List<Post> postList) {
+                    if (postList != null) {
+                        posts.addAll(postList);
+                        newPostsReady = true;
+                        fillPostsWithBitmaps();
+                        getUsers(postList);
+                        sendNewDataToPresenter(presenter);
+                    } else {
+                        Log.d("dokument", "Nema dokumenta objave.");
+                    }
                 }
-                else{
-                    Log.d("dokument", "Nema dokumenta objave.");
-                }
-            }
-        });
+            });
+        }
     }
 
     public void sendPostsUsersByLocation(List<Post> postList, List<User> userList){
+        lastWasLocation = true;
         numberOfUsers = 0;
         numberOfPosts = 0;
         firstCall = true;

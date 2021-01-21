@@ -46,8 +46,11 @@ public class PostListFragment extends Fragment implements DataPresenter, PostRec
                 super.onScrollStateChanged(recyclerView, newState);
                 if (!recyclerView.canScrollVertically(1)&&newState == RecyclerView.SCROLL_STATE_IDLE) {
                     if(!loading) {
-                        liveData.UpdateLastPostNumber(posts.get(posts.size() - 1).getID_objava());
-                        loading = true;
+                        int num = posts.size();
+                        if(num!=0) {
+                            liveData.UpdateLastPostNumber(posts.get(posts.size() - 1).getID_objava());
+                            loading = true;
+                        }
                     }
                 }
             }
@@ -123,9 +126,7 @@ public class PostListFragment extends Fragment implements DataPresenter, PostRec
 
     @Override
     public void onRefresh() {
-        if(!loading) {
-            liveData.UpdateLastPostNumber("Timeline send new data");
-            loading = true;
-        }
+        liveData.UpdateLastPostNumber("Timeline send new data");
+        loading = true;
     }
 }
