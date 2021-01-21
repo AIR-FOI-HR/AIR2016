@@ -238,7 +238,6 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == requestCode) {
             List<Post> posts = (List<Post>) data.getSerializableExtra("POSTLIST");
             List<User> users = (List<User>) data.getSerializableExtra("USERLIST");
-            Log.d("rasema", "timeline");
             DataManager dataManager = DataManager.getInstance();
             dataManager.sendPostsUsersByLocation(posts, users);
         }

@@ -128,10 +128,15 @@ public class RegistrationStep2 extends AppCompatActivity {
         }
 
         //upisuje korisnika u Authentication i Database kolekciju korisnici ukoliko nema pogreške
-        registrationRepository.firebaseCreateUser(Email, Password, Ime, Prezime, Bodovi, KorIme, Slika, datumRodenja, UlogaID);
-        Intent open = new Intent(RegistrationStep2.this, RegistrationStep3.class);
-        open.putExtra("email", Email);
-        startActivity(open);
+        if(registrationRepository.firebaseCreateUser(Email, Password, Ime, Prezime, Bodovi, KorIme, Slika, datumRodenja, UlogaID) == 1){
+            Intent open = new Intent(RegistrationStep2.this, RegistrationStep3.class);
+            open.putExtra("email", Email);
+            startActivity(open);
+        }else{
+            email.setError(getString(R.string.email_exist));
+        }
+
+
     }
 
     public void OpenLogIn(View view) {

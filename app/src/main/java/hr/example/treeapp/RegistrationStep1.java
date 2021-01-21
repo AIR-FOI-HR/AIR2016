@@ -82,6 +82,8 @@ public class RegistrationStep1 extends AppCompatActivity {
 
         }
 
+
+
         if(registrationRepository.nameEmpty(Name)){
             name.setError(getString(R.string.no_name));
         }
