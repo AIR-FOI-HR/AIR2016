@@ -41,17 +41,17 @@
         android:id="@+id/btnMailLogin3"
         android:layout_width="266dp"
         android:layout_height="53dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="@color/tree_green"
         android:fontFamily="robo"
+        android:onClick="OpenRegistration"
         android:text="@string/sign_up"
         android:textSize="18sp"
-        android:onClick="OpenRegistration"
+        app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lblRegistration3" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/txtPassword3"
@@ -86,7 +86,7 @@
         android:id="@+id/btnGoogleLogin3"
         android:layout_width="176dp"
         android:layout_height="46dp"
-        android:layout_marginTop="22dp"
+        android:layout_marginTop="16dp"
         android:onClick="signIn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -98,15 +98,15 @@
         android:id="@+id/lblRegistration3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginBottom="16dp"
         android:capitalize="characters"
         android:fontFamily="@font/roboto_light"
         android:text="@string/registration"
         android:textColor="@color/tree_green"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/btnMailLogin3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnGoogleLogin3" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/imageView6"
