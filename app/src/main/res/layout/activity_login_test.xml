@@ -33,8 +33,10 @@
         android:layout_height="30dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="8dp"
-        android:background="@color/transparent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/baby_green"
         android:onClick="chooseLocationButtonClick"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/filter_icon_png" />
