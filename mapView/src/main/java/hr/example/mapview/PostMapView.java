@@ -61,7 +61,7 @@ public class PostMapView extends Fragment implements OnMapReadyCallback, GoogleM
         final com.google.android.gms.maps.model.LatLng mapsLatLng =
                 new com.google.android.gms.maps.model.LatLng(44.602505,
                         16.44023);
-        float zoomLvl = (float)20;
+        float zoomLvl = (float)10;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mapsLatLng,zoomLvl));
 
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {

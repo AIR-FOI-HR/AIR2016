@@ -28,7 +28,9 @@ import com.example.core.entities.User;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import hr.example.treeapp.notifications.NotificationsCallback;
 
@@ -330,6 +332,36 @@ public class UserRepository {
 
     public void logout(){
         FirebaseAuth.getInstance().signOut();
+    }
+
+    public void updatePoints(long bodovi){
+        String userid=firebaseAuth.getCurrentUser().getUid();
+        getUser(userid, new UserCallback() {
+            @Override
+            public void onCallback(User user) {
+                long originalni_bodovi=user.getBodovi();
+                originalni_bodovi=originalni_bodovi+bodovi;
+                DocumentReference documentReference = firebaseFirestore.collection("Korisnici").document(userid);
+                Map<String, Object> thisPost= new HashMap<>();
+                thisPost.put("Bodovi", originalni_bodovi);
+                documentReference.update(thisPost);
+            }
+        });
+
+    }
+    public void updatePointsForComment(String userID, long bodovi){
+        getUser(userID, new UserCallback() {
+            @Override
+            public void onCallback(User user) {
+                long originalni_bodovi=user.getBodovi();
+                originalni_bodovi=originalni_bodovi+bodovi;
+                DocumentReference documentReference = firebaseFirestore.collection("Korisnici").document(userID);
+                Map<String, Object> thisPost= new HashMap<>();
+                thisPost.put("Bodovi", originalni_bodovi);
+                documentReference.update(thisPost);
+            }
+        });
+
     }
 
 }
