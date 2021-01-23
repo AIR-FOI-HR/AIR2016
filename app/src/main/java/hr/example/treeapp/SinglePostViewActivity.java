@@ -319,16 +319,20 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
             public void onCallback(int userRole) {
                 if(userRole!=1  && !userRepository.getCurrentUserID().equals(userID)) {
                     popup.getMenu().findItem(R.id.postpopupdelete).setVisible(false);
-                    popup.getMenu().findItem(R.id.postpopupdescription).setVisible(false);
-                    popup.getMenu().findItem(R.id.postpopuplocation).setVisible(false);
                 }
                 else{
                     popup.getMenu().findItem(R.id.postpopupdelete).setVisible(true);
-                    popup.getMenu().findItem(R.id.postpopupdescription).setVisible(true);
-                    popup.getMenu().findItem(R.id.postpopuplocation).setVisible(true);
                 }
             }
         });
+        if(!userRepository.getCurrentUserID().equals(userID)){
+            popup.getMenu().findItem(R.id.postpopupdescription).setVisible(false);
+            popup.getMenu().findItem(R.id.postpopuplocation).setVisible(false);
+        }
+        else{
+            popup.getMenu().findItem(R.id.postpopupdescription).setVisible(true);
+            popup.getMenu().findItem(R.id.postpopuplocation).setVisible(true);
+        }
         popup.setOnMenuItemClickListener (new PopupMenu.OnMenuItemClickListener ()
         {
             @Override
