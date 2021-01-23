@@ -14,29 +14,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/teal_700"
+        android:background="@color/baby_green"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageViewUserProfilePost"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_margin="8dp"
             android:contentDescription="ProfilePicture"
-            android:src="@android:drawable/ic_menu_report_image"></ImageView>
+            android:src="@android:drawable/ic_menu_report_image"/>
 
         <TextView
             android:id="@+id/textViewUserName"
-            android:layout_width="160dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/general_margin"
             android:layout_marginEnd="@dimen/general_margin"
             android:layout_marginBottom="@dimen/general_margin"
-            android:paddingTop="12dp"
+            android:fontFamily="@font/roboto_light"
             android:paddingLeft="12dp"
             android:text="@string/username_post"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/cardview_light_background"></TextView>
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large">
+
+        </TextView>
 
     </LinearLayout>
 

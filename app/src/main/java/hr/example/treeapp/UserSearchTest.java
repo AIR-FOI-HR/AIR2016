@@ -77,6 +77,7 @@ public class UserSearchTest extends Fragment {
                         MainActivity.myLayout.setVisibility(LinearLayout.VISIBLE);
                         MainActivity.current = 1;
                         MainActivity.bottomNav.setSelectedItemId(R.id.nav_home);
+                        MainActivity.chooseLocationButton.setVisibility(View.VISIBLE);
                         //mainActivity.showHideChooseLocationButtonTimeline(moduleName);
                         return true;
                     }
@@ -99,7 +100,7 @@ public class UserSearchTest extends Fragment {
                             @Override
                             public void onItemClick(User user) {
                                 //open user prof
-                                Fragment selectedFragment =new UserProfileFragment(user.getUid());
+                                Fragment selectedFragment =new UserProfileFragment(user.getUid(),true);
                                 //Fragment selectedFragment =new UserProfileFragment(user);
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                             }

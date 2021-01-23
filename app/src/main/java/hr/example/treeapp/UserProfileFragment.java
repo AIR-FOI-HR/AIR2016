@@ -75,9 +75,15 @@ public class UserProfileFragment extends Fragment {
     private final int PICK_IMAGE_REQUEST = 71;
     private RegistrationRepository registrationRepository;
     MainActivity mainActivity;
+    boolean isSearch=false;
 
     public UserProfileFragment(User user) {
         this.selectedUser = user;
+    }
+
+    public UserProfileFragment(String userID, boolean isSearch) {
+        this.userID = userID;
+        this.isSearch=isSearch;
     }
 
     public UserProfileFragment(String userID) {
@@ -124,7 +130,7 @@ public class UserProfileFragment extends Fragment {
         view.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if( i == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                if( i == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP && !isSearch) {
                     DataPresentersManager dataPresentersManager=new DataPresentersManager(context);
                     if(dataPresentersManager.firstPresenter!=null) {
                         //String moduleName = dataPresentersManager.firstPresenter.getModuleName(context);
@@ -133,9 +139,20 @@ public class UserProfileFragment extends Fragment {
                         MainActivity.myLayout.setVisibility(LinearLayout.VISIBLE);
                         MainActivity.current = 1;
                         MainActivity.bottomNav.setSelectedItemId(R.id.nav_home);
-                        //mainActivity.showHideChooseLocationButtonTimeline(moduleName);
+                        MainActivity.chooseLocationButton.setVisibility(View.VISIBLE);
                         return true;
                     }
+                }
+                if( i == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP && isSearch) {
+                        Fragment selectedFragment = new UserSearchTest();
+                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                        MainActivity. horizontalScrollView.setVisibility(HorizontalScrollView.INVISIBLE);
+                        MainActivity.chooseLocationButton.setVisibility(View.GONE);
+                        MainActivity.myLayout.setVisibility(LinearLayout.GONE);
+                        MainActivity.current=4;
+                        MainActivity.bottomNav.setSelectedItemId(R.id.nav_search);
+                        isSearch=false;
+                        return true;
                 }
                 return false;
             }

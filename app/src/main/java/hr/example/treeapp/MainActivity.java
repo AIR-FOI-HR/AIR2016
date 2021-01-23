@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     Context context;
     private LiveData model;
     private static final int MY_REQUEST_CODE = 0xe111;
-    ImageButton chooseLocationButton;
+    public static ImageButton chooseLocationButton;
     public static int current=0;
     int currentModule=0;
     GetPostData getPostData;
@@ -54,8 +54,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login_test);
         context=this;
         chooseLocationButton = findViewById(R.id.chooseLocationTimeline);
+        showHideChooseLocationButtonTimeline("");
         DataManager dataManager = DataManager.getInstance();
         getPostData = new GetPostData();
+
         final Observer<String> nameObserver = new Observer<String>() {
             @Override
             public void onChanged(String lastPostID) {
