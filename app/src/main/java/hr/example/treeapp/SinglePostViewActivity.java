@@ -229,7 +229,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                     userRepository.updatePointsForComment(userCommentPointsID, bodovi);
                 }
                 else {
-                    Toast.makeText(SinglePostViewActivity.this, R.string.Error, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.Error, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -392,7 +392,7 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                     populatePostData();
                 }
                 else {
-                    Toast.makeText(SinglePostViewActivity.this, R.string.Error, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.Error, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -420,10 +420,10 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
             public void onCallback(Bitmap slika) {
                 if(slika != null) {
                     image= slika;
-                    Glide.with(SinglePostViewActivity.this).load(image).into(postImage);
+                    Glide.with(getApplicationContext()).load(image).into(postImage);
                 }
                 else
-                    Toast.makeText(SinglePostViewActivity.this, R.string.Error_loading_picture, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.Error_loading_picture, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -447,13 +447,13 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
             @Override
             public void onCallbackList(UserImage userImage) {
                 if(userImage.image!=null && userImage.url==null)
-                    Glide.with(SinglePostViewActivity.this).load(userImage.image).into(profilePicture);
+                    Glide.with(getApplicationContext()).load(userImage.image).into(profilePicture);
                 else if (userImage.url!=null && userImage.image==null) {
                     RequestOptions options = new RequestOptions()
                             .centerCrop()
                             .placeholder(R.mipmap.ic_launcher_round)
                             .error(R.mipmap.ic_launcher_round);
-                    Glide.with(SinglePostViewActivity.this).load(userImage.url).apply(options).into(profilePicture);
+                    Glide.with(getApplicationContext()).load(userImage.url).apply(options).into(profilePicture);
                 }
             }
         });
