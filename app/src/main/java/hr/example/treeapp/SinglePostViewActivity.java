@@ -341,7 +341,9 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
                 int id = item.getItemId();
                 switch (id)
                 {
-                    case R.id.postpopupdelete: deletePost(); break;
+                    case R.id.postpopupdelete:
+                        deletePost();
+                        break;
                     case R.id.postpopupdescription: changeDescription(); break;
                     case R.id.postpopuplocation: changeLocation(); break;
                 }
@@ -353,6 +355,8 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
 
     public void deletePost(){
         getPostData.deletePost(postId);
+        bodovi=-20;
+        userRepository.updatePoints(bodovi);
         finish();
     }
 

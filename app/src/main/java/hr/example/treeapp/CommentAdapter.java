@@ -86,6 +86,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                     public void onCallback(int userRole) {
                         if(userRole!=1  && !getPostData.getCurrentUserID().equals(userId)) {
                             popupComment.getMenu().findItem(R.id.commentpopupdelete).setVisible(false);
+
+
                         }
                         else{
                             popupComment.getMenu().findItem(R.id.commentpopupdelete).setVisible(true);
@@ -99,7 +101,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                             case R.id.commentpopupdelete:
                                 getPostData.deleteComment( postID, mData.get(position).getKomentar_ID());
                                 notifyItemRangeChanged(position, mData.size());
-                                mData.remove(position);
+                          /*      String userCommentPointsID=mData.get(position).;
+                                long bodovi=-5;
+                                userRepository.updatePointsForComment(userCommentPointsID, bodovi);
+                            */    mData.remove(position);
                                 notifyItemRemoved(position);
                                 break;
                         }
