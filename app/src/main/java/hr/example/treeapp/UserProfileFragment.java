@@ -12,12 +12,14 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,8 +29,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -43,6 +47,7 @@ import java.util.List;
 import auth.RegistrationRepository;
 import auth.UsernameAvailabilityCallback;
 import hr.example.treeapp.notifications.NotificationsActivity;
+import managers.DataPresentersManager;
 
 import static android.app.Activity.RESULT_OK;
 import static androidx.core.content.ContextCompat.startActivity;
@@ -69,6 +74,7 @@ public class UserProfileFragment extends Fragment {
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST = 71;
     private RegistrationRepository registrationRepository;
+    MainActivity mainActivity;
 
     public UserProfileFragment(User user) {
         this.selectedUser = user;
@@ -101,6 +107,7 @@ public class UserProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         context = view.getContext();
+        mainActivity=new MainActivity();
         registrationRepository = new RegistrationRepository(context);
         userInfo();
         getUsersPosts();
@@ -110,6 +117,29 @@ public class UserProfileFragment extends Fragment {
             public void onClick(View view) {
                 showPopupProfile(view);
             }
+        });
+
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if( i == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                    DataPresentersManager dataPresentersManager=new DataPresentersManager(context);
+                    if(dataPresentersManager.firstPresenter!=null) {
+                        //String moduleName = dataPresentersManager.firstPresenter.getModuleName(context);
+                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.firstPresenter.getFragment()).commit();
+                        MainActivity.horizontalScrollView.setVisibility(HorizontalScrollView.VISIBLE);
+                        MainActivity.myLayout.setVisibility(LinearLayout.VISIBLE);
+                        MainActivity.current = 1;
+                        MainActivity.bottomNav.setSelectedItemId(R.id.nav_home);
+                        //mainActivity.showHideChooseLocationButtonTimeline(moduleName);
+                        return true;
+                    }
+                }
+                return false;
+            }
+
         });
 
     }

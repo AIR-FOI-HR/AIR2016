@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -35,14 +36,17 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    DataPresentersManager dataPresentersManager;
+    public DataPresentersManager dataPresentersManager;
     Context context;
     private LiveData model;
     private static final int MY_REQUEST_CODE = 0xe111;
     ImageButton chooseLocationButton;
-    int current=0;
+    public static int current=0;
     int currentModule=0;
     GetPostData getPostData;
+    public static HorizontalScrollView horizontalScrollView;
+    public static LinearLayout myLayout;
+    public static BottomNavigationView bottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         model.lastPostID().observe(this, nameObserver);
+
+        horizontalScrollView =findViewById(R.id.topmenu);
+        myLayout = (LinearLayout) findViewById(R.id.topmenumainlayout);
 
         final Observer<String> postIdObserver = new Observer<String>() {
             @Override
@@ -91,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             showHideChooseLocationButtonTimeline(moduleName);
         }
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         bottomNav.setItemIconTintList(null);
         //displayMainFragment();
@@ -137,8 +144,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     Fragment selectedFragment =null;
-                    LinearLayout myLayout = (LinearLayout) findViewById(R.id.topmenumainlayout);
-                    HorizontalScrollView horizontalScrollView = findViewById(R.id.topmenu);
                     switch(item.getItemId()){
                         case R.id.nav_home:
                             if(current!=1) {
@@ -146,9 +151,9 @@ public class MainActivity extends AppCompatActivity {
                                     selectedFragment = dataPresentersManager.firstPresenter.getFragment();
                                     horizontalScrollView.setVisibility(HorizontalScrollView.VISIBLE);
                                     myLayout.setVisibility(LinearLayout.VISIBLE);
+                                    String moduleName = dataPresentersManager.firstPresenter.getModuleName(context);
                                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                                     dataPresentersManager.loadFragment(0);
-                                    String moduleName = dataPresentersManager.firstPresenter.getModuleName(context);
                                     showHideChooseLocationButtonTimeline(moduleName);
                                     current=1;
                                 }
@@ -196,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
-    private void showHideChooseLocationButtonTimeline(String moduleName){
+    public void showHideChooseLocationButtonTimeline(String moduleName){
         String requiredModuleNameForLocationButton = "Timeline";
         if(requiredModuleNameForLocationButton.equals(moduleName)){
             chooseLocationButton.setVisibility(View.VISIBLE);

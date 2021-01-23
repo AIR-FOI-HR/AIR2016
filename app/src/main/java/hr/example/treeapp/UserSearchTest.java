@@ -10,11 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +27,8 @@ import com.google.errorprone.annotations.ForOverride;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import managers.DataPresentersManager;
 
 
 public class UserSearchTest extends Fragment {
@@ -58,7 +63,27 @@ public class UserSearchTest extends Fragment {
             }
         });
 
-
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if( i == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                    DataPresentersManager dataPresentersManager=new DataPresentersManager(getContext());
+                    if(dataPresentersManager.firstPresenter!=null) {
+                        //String moduleName = dataPresentersManager.firstPresenter.getModuleName(context);
+                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, dataPresentersManager.firstPresenter.getFragment()).commit();
+                        MainActivity.horizontalScrollView.setVisibility(HorizontalScrollView.VISIBLE);
+                        MainActivity.myLayout.setVisibility(LinearLayout.VISIBLE);
+                        MainActivity.current = 1;
+                        MainActivity.bottomNav.setSelectedItemId(R.id.nav_home);
+                        //mainActivity.showHideChooseLocationButtonTimeline(moduleName);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     public void Search(){
