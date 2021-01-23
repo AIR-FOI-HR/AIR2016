@@ -101,10 +101,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                             case R.id.commentpopupdelete:
                                 getPostData.deleteComment( postID, mData.get(position).getKomentar_ID());
                                 notifyItemRangeChanged(position, mData.size());
-                          /*      String userCommentPointsID=mData.get(position).;
-                                long bodovi=-5;
-                                userRepository.updatePointsForComment(userCommentPointsID, bodovi);
-                            */    mData.remove(position);
+                                SinglePostViewActivity singlePostViewActivity= new SinglePostViewActivity();
+                                singlePostViewActivity.getPostForRemovingCommentsData(postID);
+                                mData.remove(position);
                                 notifyItemRemoved(position);
                                 break;
                         }

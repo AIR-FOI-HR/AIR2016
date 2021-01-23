@@ -51,7 +51,7 @@ import hr.example.treeapp.addTree.AddTreeLogic;
 
 public class SinglePostViewActivity extends AppCompatActivity implements OnMapReadyCallback {
     private String postId;
-    private Post post;
+    public Post post;
     private  Bitmap image;
     private TextView username;
     private long bodovi;
@@ -216,6 +216,23 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         userRepository.updatePointsForComment(userCommentPointsID, bodovi);
         Toast.makeText(context, "Commented!", Toast.LENGTH_SHORT).show();
         updateCommentRecycleView(text);
+    }
+
+    public void getPostForRemovingCommentsData(String idPost) {
+        getPostData.getPost(idPost, new PostCallback() {
+            @Override
+            public void onCallback(Post callbackPost) {
+                if (callbackPost != null) {
+                    post = callbackPost;
+                    userCommentPointsID=post.getKorisnik_ID();
+                    bodovi=-5;
+                    userRepository.updatePointsForComment(userCommentPointsID, bodovi);
+                }
+                else {
+                    Toast.makeText(SinglePostViewActivity.this, R.string.Error, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     private void updateCommentRecycleView(String text) {
