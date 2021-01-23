@@ -81,12 +81,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                 PopupMenu popupComment = new PopupMenu(mContext, view);
                 MenuInflater inflater = popupComment.getMenuInflater();
                 inflater.inflate(R.menu.commentpopupmenu, popupComment.getMenu());
-                if(getPostData.getCurrentUserRole()!=1  && !getPostData.getCurrentUserID().equals(userId)) {
-                    popupComment.getMenu().findItem(R.id.commentpopupdelete).setVisible(false);
-                }
-                else{
-                    popupComment.getMenu().findItem(R.id.commentpopupdelete).setVisible(true);
-                }
+                getPostData.getCurrentUserRole(new CurrentUserRoleCallback() {
+                    @Override
+                    public void onCallback(int userRole) {
+                        if(userRole!=1  && !getPostData.getCurrentUserID().equals(userId)) {
+                            popupComment.getMenu().findItem(R.id.commentpopupdelete).setVisible(false);
+                        }
+                        else{
+                            popupComment.getMenu().findItem(R.id.commentpopupdelete).setVisible(true);
+                        }
+                    }
+                });
                 popupComment.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {

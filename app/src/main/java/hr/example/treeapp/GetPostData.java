@@ -363,8 +363,8 @@ public class GetPostData {
                         }
                     });*/
 
-    public long getCurrentUserRole() {
-        final long[] finali = new long[1];
+    public int getCurrentUserRole(final CurrentUserRoleCallback currentUserRoleCallback) {
+        final int[] finali = new int[1];
         firebaseFirestore.collection("Korisnici")
                 .document(firebaseAuth.getCurrentUser().getUid())
                 .get()
@@ -376,9 +376,11 @@ public class GetPostData {
                             DocumentSnapshot document = task.getResult();
                             if(document.exists()){
                                 i= (long) document.get("Uloga_ID");
-                                finali[0] =i;
+                                finali[0] = (int) i;
+                                currentUserRoleCallback.onCallback(finali[0]);
                             }
                         } else {
+                            currentUserRoleCallback.onCallback(0);
                         }
                     }
                 });
