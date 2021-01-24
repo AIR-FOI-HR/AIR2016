@@ -173,12 +173,12 @@ public class UserRepository {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            leaderboardKorisnici.clear();
+                            listaKorisnika.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 User user = new User(document.getId(), document.get("Ime").toString(), document.get("Prezime").toString(), document.get("E-mail").toString(), document.getString("Profilna_slika_ID"), (long) document.get("Uloga_ID"), document.get("Korisnicko_ime").toString(), document.get("Datum_rodenja").toString(), (long) document.get("Bodovi"));
-                                leaderboardKorisnici.add(user);
+                                listaKorisnika.add(user);
                             }
-                            allUsersCallback.onCallback(leaderboardKorisnici);
+                            allUsersCallback.onCallback(listaKorisnika);
                             listaKorisnika.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 User user = new User(document.getId(), document.get("Ime").toString(), document.get("Prezime").toString(), document.get("E-mail").toString(), document.getString("Profilna_slika_ID"), (long)document.get("Uloga_ID"), document.get("Korisnicko_ime").toString(), document.get("Datum_rodenja").toString(), (long)document.get("Bodovi"));

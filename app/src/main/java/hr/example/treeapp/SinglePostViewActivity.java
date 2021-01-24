@@ -2,6 +2,10 @@ package hr.example.treeapp;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -478,13 +482,30 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         });
         final AlertDialog dialog = builder.create();
         dialog.show();
-
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                FragmentManager fragmentManager=((FragmentActivity)context).getSupportFragmentManager();
+                Fragment fragment=fragmentManager.findFragmentById(R.id.treeLocationMapView2);
+                FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+                fragmentTransaction.remove(fragment);
+                fragmentTransaction.commit();
+            }
+        });
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addTreeLogic.UpdatePostLocation(post.getID_objava(), mapa.marker.getPosition().latitude, mapa.marker.getPosition().longitude);
-                Log.i("positive", "onClick: "+mapa.marker.getPosition().latitude);
+                Log.i("positive", "onClick: "+mapa.marker.getPosition().latitude+"  "+mapa.marker.getPosition().longitude);
+                map.clear();
+                map.addMarker(new MarkerOptions().position(mapa.marker.getPosition()).draggable(false).icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker)));
+                float zoomLvl = (float)15;
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(mapa.marker.getPosition(),zoomLvl));
                 dialog.dismiss();
+                /*finish();
+                overridePendingTransition(0, 0);
+                startActivity(getIntent());
+                overridePendingTransition(0, 0);*/
 
             }
         });
@@ -513,10 +534,27 @@ public class Mapa implements OnMapReadyCallback{
                 .position(treeLocation)
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker)));
+        gMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
 
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                marker.setPosition(marker.getPosition());
+            }
+        });
         float zoomLvl = (float)15;
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(treeLocation,zoomLvl));
     }
+
+
 }
     private void changeDescription() {
         final String[] error = new String[1];

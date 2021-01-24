@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -37,6 +39,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.core.entities.Post;
 import com.example.core.entities.User;
 
@@ -69,14 +72,14 @@ public class UserProfileFragment extends Fragment {
     ImageButton imageButton;
     ImageView changePicture;
     GridView gridView;
-    List<Bitmap> postImages=new ArrayList<>();
     int imageWidth;
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST = 71;
     private RegistrationRepository registrationRepository;
     MainActivity mainActivity;
     boolean isSearch=false;
-
+    int brojac;
+    int brojLajkova;
     public UserProfileFragment(User user) {
         this.selectedUser = user;
     }
@@ -162,21 +165,31 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void getUsersPosts() {
-        //String[] data = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48"};
-        int col = 3;
+        brojac=0;
+        brojLajkova=0;
+        textViewPoints = (TextView) getView().findViewById(R.id.textViewPoints);
+        textViewPosts = (TextView) getView().findViewById(R.id.textViewPosts);
         getPostData = new GetPostData();
         getPostData.getUsersPosts(userID, new UsersPostsCallback() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onCallback(List<Post> usersPostsList) {
                 if (usersPostsList != null) {
-                    textViewPosts.setText(String.valueOf(usersPostsList.size()));
-                    for(int i=0; i<usersPostsList.size(); i++){
-                        getPostData.getPostImage(usersPostsList.get(i).getURL_slike(), new PostImageCallback() {
+                        textViewPosts.setText(String.valueOf(usersPostsList.size()));
+                        usersPostsList.forEach((n)->getPostData.getPostLikes(n.getID_objava(), new GetLikesForPostCallback() {
+                            @Override
+                            public void onCallback(List<String> listOfLikesByUserID) {
+                                brojLajkova+=listOfLikesByUserID.size();
+                                textViewPoints.setText(String.valueOf(brojLajkova));
+                            }
+                        }));
+                        usersPostsList.forEach((n) -> getPostData.getPostImage(n.getURL_slike(), new PostImageCallback() {
                             @Override
                             public void onCallback(Bitmap slika) {
-                                postImages.add(slika);
-                                if(postImages.size()==usersPostsList.size()){
-                                    gridView.setAdapter(new ProfilePostAdapter(getActivity(), postImages, imageWidth));
+                                n.setSlika(slika);
+                                brojac++;
+                                if(brojac==usersPostsList.size()){
+                                    gridView.setAdapter(new ProfilePostAdapter(getActivity(), usersPostsList, imageWidth));
                                     gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                         @Override
                                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -184,13 +197,12 @@ public class UserProfileFragment extends Fragment {
                                             Intent open = new Intent(getContext(), SinglePostViewActivity.class);
                                             open.putExtra("postId", postID);
                                             startActivity(open);
-
                                         }
                                     });
                                 }
+
                             }
-                        });
-                    }
+                        }));
                 }
             }
         });
@@ -202,8 +214,6 @@ public class UserProfileFragment extends Fragment {
         textViewName = (TextView) getView().findViewById(R.id.textViewName);
         textViewUserName = (TextView) getView().findViewById(R.id.textViewUserName);
         imageViewProfil = (ImageView) getView().findViewById(R.id.imageViewProfilePicture);
-        textViewPoints = (TextView) getView().findViewById(R.id.textViewPoints);
-        textViewPosts = (TextView) getView().findViewById(R.id.textViewPosts);
         userRepository = new UserRepository();
         //za UserProfileFragment(String userID);
         if (userID != null) {
@@ -218,12 +228,21 @@ public class UserProfileFragment extends Fragment {
                         selectedUser = user;
                         textViewName.setText(selectedUser.getIme() + " " + selectedUser.getPrezime());
                         textViewUserName.setText("@" + selectedUser.getKorisnickoIme());
-                        textViewPoints.setText(Long.toString(selectedUser.getBodovi()));
                         userRepository.getUserImage(selectedUser.getUid(), new ProfileImageCallback() {
                             @Override
                             public void onCallbackList(UserImage userImage) {
-                                imageViewProfil.setImageBitmap(userImage.image);
+                                if(userImage.image!=null && userImage.url==null) {
+                                    Glide.with(getActivity()).load(userImage.image).into(imageViewProfil);
+                                }
+                                if(userImage.url!=null && userImage.image==null){
+                                    RequestOptions options = new RequestOptions()
+                                            .placeholder(R.mipmap.ic_launcher_round)
+                                            .error(R.mipmap.ic_launcher_round);
+                                    Glide.with(getActivity()).load(userImage.url).apply(options).into(imageViewProfil);
+                                }
+
                             }
+
                         });
                     }
                 }
@@ -506,5 +525,11 @@ public class UserProfileFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getUsersPosts();
     }
 }

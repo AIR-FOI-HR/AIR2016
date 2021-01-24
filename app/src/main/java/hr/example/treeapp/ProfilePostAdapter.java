@@ -17,16 +17,16 @@ public class ProfilePostAdapter extends BaseAdapter {
     private Context mContext;
     GetPostData getPostData;
     // Constructor
-    List<Bitmap> postImages=new ArrayList<>();
+    List<Post> usersPostsList=new ArrayList<>();
     int imageWidth;
-    public ProfilePostAdapter(Context c, List<Bitmap> postImages, int imageWidth) {
+    public ProfilePostAdapter(Context c, List<Post> usersPostsList, int imageWidth) {
         mContext = c;
-        this.postImages=postImages;
+        this.usersPostsList=usersPostsList;
         this.imageWidth=imageWidth;
     }
 
     public int getCount() {
-        return postImages.size();
+        return usersPostsList.size();
     }
 
     public Object getItem(int position) {
@@ -52,7 +52,7 @@ public class ProfilePostAdapter extends BaseAdapter {
         {
             imageView = (ImageView) convertView;
         }
-        imageView.setImageBitmap(postImages.get(position));
+        imageView.setImageBitmap(usersPostsList.get(position).getSlika());
         return imageView;
     }
 

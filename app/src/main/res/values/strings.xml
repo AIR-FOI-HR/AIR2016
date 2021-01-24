@@ -128,8 +128,8 @@
     <string name="profile_pic">Profile picture</string>
     <string name="leaf_icon">Leaf icon</string>
     <string name="tree_icon">Tree icon</string>
-    <string name="number_of_points" translatable="false">123456</string>
-    <string name="number_of_posts" translatable="false">123456</string>
+    <string name="number_of_points" translatable="false">0</string>
+    <string name="number_of_posts" translatable="false">0</string>
     <string name="search_no_username">Please enter username!</string>
     <string name="search_not_found">No users found!</string>
 

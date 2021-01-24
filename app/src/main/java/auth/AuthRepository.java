@@ -36,6 +36,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.util.HashMap;
 import java.util.Map;
 
+import hr.example.treeapp.MainActivity;
 import hr.example.treeapp.R;
 
 public class AuthRepository {
@@ -94,7 +95,6 @@ public class AuthRepository {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             if (account != null) {
                                 DocumentReference documentReference = firebaseFirestore.collection("Korisnici").document(user.getUid());
@@ -105,7 +105,7 @@ public class AuthRepository {
                                 korisnik.put("E-mail", account.getEmail());
                                 korisnik.put("Bodovi", 0);
                                 korisnik.put("Uloga_ID", 2);
-                                korisnik.put("Datum_rodenja", null);
+                                korisnik.put("Datum_rodenja", "1/1/2000");
                                 Uri photoUri = account.getPhotoUrl();
                                 korisnik.put("Profilna_slika_ID", photoUri.toString());
                                 documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -120,13 +120,17 @@ public class AuthRepository {
                                                         if(value=="ok"){
                                                             korisnik.put("Korisnicko_ime", googleSignInUsername);
                                                             googleSignInFirebaseInsertUser(documentReference, korisnik);
+                                                            Intent i1=new Intent(context, MainActivity.class);
+                                                            context.startActivity(i1);
                                                         }
 
                                                     }
                                                 });
                                             }
                                             else{
-                                                googleSignInFirebaseUpdateUser(documentReference, korisnik);
+                                                //googleSignInFirebaseUpdateUser(documentReference, korisnik);
+                                                Intent i1=new Intent(context, MainActivity.class);
+                                                context.startActivity(i1);
                                             }
                                         }
                                     }
