@@ -496,6 +496,8 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
             @Override
             public void onClick(View v) {
                 addTreeLogic.UpdatePostLocation(post.getID_objava(), mapa.marker.getPosition().latitude, mapa.marker.getPosition().longitude);
+                post.setLatitude(mapa.marker.getPosition().latitude);
+                post.setLongitude(mapa.marker.getPosition().longitude);
                 Log.i("positive", "onClick: "+mapa.marker.getPosition().latitude+"  "+mapa.marker.getPosition().longitude);
                 map.clear();
                 map.addMarker(new MarkerOptions().position(mapa.marker.getPosition()).draggable(false).icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker)));
