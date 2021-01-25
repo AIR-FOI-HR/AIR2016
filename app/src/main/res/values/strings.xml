@@ -132,6 +132,8 @@
     <string name="number_of_posts" translatable="false">0</string>
     <string name="search_no_username">Please enter username!</string>
     <string name="search_not_found">No users found!</string>
+    <string name="anonymous">Anonymous</string>
+    <string name="anonuser">user</string>
 
 
     // User data change

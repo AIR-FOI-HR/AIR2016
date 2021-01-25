@@ -123,5 +123,7 @@
     <string name="notifications">Notifications</string>
     <string name="changedescription">Ažuriraj opis</string>
     <string name="changelocation">Ažuriraj lokaciju</string>
+    <string name="anonuser">korisnik</string>
+    <string name="anonymous">Anonimni</string>
 
 </resources>

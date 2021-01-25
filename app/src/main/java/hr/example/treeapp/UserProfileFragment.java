@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -42,6 +43,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.core.entities.Post;
 import com.example.core.entities.User;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -215,6 +219,13 @@ public class UserProfileFragment extends Fragment {
         textViewUserName = (TextView) getView().findViewById(R.id.textViewUserName);
         imageViewProfil = (ImageView) getView().findViewById(R.id.imageViewProfilePicture);
         userRepository = new UserRepository();
+        FirebaseUser fUser= FirebaseAuth.getInstance().getCurrentUser();
+        if(fUser.isAnonymous()){
+            textViewName.setText(R.string.anonymous);
+            textViewUserName.setText(R.string.anonuser);
+            Bitmap bm= BitmapFactory.decodeResource(getResources(), R.drawable.default_image);
+            imageViewProfil.setImageBitmap(bm);
+        }
         //za UserProfileFragment(String userID);
         if (userID != null) {
             userRepository = new UserRepository();
@@ -274,6 +285,13 @@ public class UserProfileFragment extends Fragment {
             popup.getMenu().findItem(R.id.changeprofilepic).setVisible(true);
             popup.getMenu().findItem(R.id.changeuserdata).setVisible(true);
             popup.getMenu().findItem(R.id.changepassword).setVisible(true);
+        }
+        FirebaseUser fUser=FirebaseAuth.getInstance().getCurrentUser();
+        if(fUser.isAnonymous()){
+            popup.getMenu().findItem(R.id.changeprofilepic).setVisible(false);
+            popup.getMenu().findItem(R.id.changeuserdata).setVisible(false);
+            popup.getMenu().findItem(R.id.changepassword).setVisible(false);
+            popup.getMenu().findItem(R.id.notifications).setVisible(false);
         }
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
