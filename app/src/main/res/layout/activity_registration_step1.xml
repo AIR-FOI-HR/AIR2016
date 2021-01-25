@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:foregroundTint="@color/tree_green"
-        tools:context=".RegistrationStep1"
+        tools:context=".registration.RegistrationStep1"
         android:layout_gravity="bottom">
 
         <ImageView

@@ -72,16 +72,9 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@drawable/logo" />
-        <activity android:name=".SinglePostViewActivity" />
+        <activity android:name=".postView.SinglePostViewActivity" />
         <activity android:name=".MainScreen" />
-        <!--
-             The API key for Google Maps-based APIs is defined as a string resource.
-             (See the file "res/values/google_maps_api.xml").
-             Note that the API key is linked to the encryption key used to sign the APK.
-             You need a different API key for each encryption key, including the release key that is used to
-             sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/.
-        -->
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -90,21 +83,21 @@
             android:value="@string/default_notification_channel_id" />
 
         <activity
-            android:name=".LeaderboardLocationMapview"
+            android:name=".leaderboard.LeaderboardLocationMapview"
             android:label="@string/title_activity_leaderboard_location_mapview" />
-        <activity android:name=".SinglePostViewActivity" />
+        <activity android:name=".postView.SinglePostViewActivity" />
         <activity android:name=".MainScreen" />
         <activity
             android:name="hr.example.mapview.PostMapView"
             android:label="@string/title_activity_post_map_view" />
-        <activity android:name="auth.PassReset" />
-        <activity android:name="addTreeLogic.CroppActivity" />
-        <activity android:name=".AddTree" />
+        <activity android:name=".auth.PassReset" />
+        <activity android:name=".addTree.CroppActivity" />
+        <activity android:name=".addTree.AddTreeActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".RegistrationStep4" />
-        <activity android:name=".RegistrationStep3" />
-        <activity android:name=".RegistrationStep2" />
-        <activity android:name=".RegistrationStep1" />
+        <activity android:name=".registration.RegistrationStep4" />
+        <activity android:name=".registration.RegistrationStep3" />
+        <activity android:name=".registration.RegistrationStep2" />
+        <activity android:name=".registration.RegistrationStep1" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".SplashScreen">
             <intent-filter>

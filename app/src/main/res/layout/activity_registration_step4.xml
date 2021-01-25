@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="fill"
-        tools:context=".RegistrationStep4">
+        tools:context=".registration.RegistrationStep4">
 
         <pl.droidsonroids.gif.GifImageView
             android:id="@+id/gifImageView"

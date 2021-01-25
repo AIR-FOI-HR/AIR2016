@@ -20,11 +20,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import hr.example.treeapp.ProfileImageCallback;
+import hr.example.treeapp.callbacks.ProfileImageCallback;
 import hr.example.treeapp.R;
-import hr.example.treeapp.UserCallback;
-import hr.example.treeapp.UserImage;
-import hr.example.treeapp.UserRepository;
+import hr.example.treeapp.callbacks.UserCallback;
+import hr.example.treeapp.entities.UserImage;
+import hr.example.treeapp.repositories.UserRepository;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>{
 

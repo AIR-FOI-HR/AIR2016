@@ -1,6 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/notifications"
+        android:title="@string/notifications" />
+    <item
         android:id="@+id/changeprofilepic"
         android:title="@string/changeprofilepic"/>
     <item
@@ -9,9 +12,6 @@
     <item
         android:id="@+id/changepassword"
         android:title="@string/changepassword"/>
-    <item
-        android:id="@+id/notifications"
-        android:title="@string/notifications"/>
     <item
         android:id="@+id/logout"
         android:title="@string/logout"/>

@@ -16,10 +16,10 @@ import com.example.core.entities.Notification;
 import java.util.ArrayList;
 import java.util.List;
 
-import hr.example.treeapp.DeleteDoneCallback;
+import hr.example.treeapp.callbacks.DeleteDoneCallback;
 import hr.example.treeapp.R;
-import hr.example.treeapp.SinglePostViewActivity;
-import hr.example.treeapp.UserRepository;
+import hr.example.treeapp.postView.SinglePostViewActivity;
+import hr.example.treeapp.repositories.UserRepository;
 
 public class NotificationsActivity extends AppCompatActivity implements NotificationAdapter.OnItemClicked {
     private RecyclerView notificationRecyclerView;

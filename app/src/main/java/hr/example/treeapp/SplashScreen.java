@@ -8,8 +8,8 @@ import android.os.Handler;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import auth.AuthRepository;
-import auth.LogInStatusCallback;
+import hr.example.treeapp.repositories.AuthRepository;
+import hr.example.treeapp.auth.LogInStatusCallback;
 
 public class SplashScreen extends AppCompatActivity {
     FirebaseAuth firebaseAuth;

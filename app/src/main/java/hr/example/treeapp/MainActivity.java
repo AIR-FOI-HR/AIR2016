@@ -8,8 +8,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import androidx.lifecycle.Observer;
-import managers.DataManager;
-import managers.DataPresentersManager;
+
+import hr.example.treeapp.addTree.AddTreeActivity;
+import hr.example.treeapp.callbacks.UserAnonymousCallback;
+import hr.example.treeapp.leaderboard.LeaderboardFragment;
+import hr.example.treeapp.leaderboard.LeaderboardLocationMapview;
+import hr.example.treeapp.postView.SinglePostViewActivity;
+import hr.example.treeapp.profile.UserProfileFragment;
+import hr.example.treeapp.repositories.GetPostData;
+import hr.example.treeapp.repositories.UserRepository;
+import hr.example.treeapp.userSearch.UserSearchFragment;
+import hr.example.treeapp.managers.DataManager;
+import hr.example.treeapp.managers.DataPresentersManager;
 
 import com.example.core.LiveData.LiveData;
 import com.example.core.VisibleMapRange;
@@ -21,13 +31,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -47,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     public static HorizontalScrollView horizontalScrollView;
     public static LinearLayout myLayout;
     public static BottomNavigationView bottomNav;
+    private boolean currentUserIsGuest=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +85,11 @@ public class MainActivity extends AppCompatActivity {
         final Observer<String> postIdObserver = new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                Intent singlePostView = new Intent(MainActivity.this, SinglePostViewActivity.class);
-                singlePostView.putExtra("postId",s);
-                startActivity(singlePostView);
+                if(s!=null){
+                    Intent singlePostView = new Intent(MainActivity.this, SinglePostViewActivity.class);
+                    singlePostView.putExtra("postId",s);
+                    startActivity(singlePostView);
+                }
             }
         };
         model.selectedPostId().observe(this, postIdObserver);
@@ -103,6 +114,16 @@ public class MainActivity extends AppCompatActivity {
         bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         bottomNav.setItemIconTintList(null);
+        bottomNav.setSelectedItemId(R.id.nav_home);
+        UserRepository userRepository = new UserRepository();
+        userRepository.isCurrentUserAnonymous(new UserAnonymousCallback() {
+            @Override
+            public void onCallback(boolean isAnonymous) {
+                currentUserIsGuest=isAnonymous;
+                if(isAnonymous)
+                    bottomNav.getMenu().findItem(R.id.nav_addtree).setVisible(false);
+            }
+        });
         //displayMainFragment();
     }
 
@@ -172,14 +193,14 @@ public class MainActivity extends AppCompatActivity {
                             }
                             break;
                         case R.id.nav_addtree:
-                            Intent open = new Intent(MainActivity.this, AddTree.class);
-                            startActivity(open);
-                            break;
+                                Intent open = new Intent(MainActivity.this, AddTreeActivity.class);
+                                startActivity(open);
+                                break;
                         case R.id.nav_search:
                             if(current!=4) {
                                 //Intent newi = new Intent(LoginTest.this, NotificationsActivity.class);
                                 //startActivity(newi);
-                                selectedFragment = new UserSearchTest();
+                                selectedFragment = new UserSearchFragment();
                                 horizontalScrollView.setVisibility(HorizontalScrollView.INVISIBLE);
                                 chooseLocationButton.setVisibility(View.GONE);
                                 myLayout.setVisibility(LinearLayout.GONE);
@@ -211,27 +232,6 @@ public class MainActivity extends AppCompatActivity {
             chooseLocationButton.setVisibility(View.GONE);
         }
     }
-
-    private void displayMainFragment(){
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_container, new PostListFragment());
-        ft.commit();
-    }
-
-
-    public void addTree (View view){
-        /*Intent open = new Intent(LoginTest.this, AddTree.class);
-            startActivity(open);*/
-    }
-
-/*
-    public void mapView (View view){
-        Intent openMapview = new Intent(
-                MainActivity.this,
-                PostMapView.class
-        );
-        startActivity(openMapview);
-    }*/
 
     public void chooseLocationButtonClick(View view) {
         Intent open = new Intent(getApplicationContext(), LeaderboardLocationMapview.class);

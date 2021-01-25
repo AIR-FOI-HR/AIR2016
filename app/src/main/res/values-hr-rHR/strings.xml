@@ -50,7 +50,7 @@
     <string name="authentication_failed">Autentifikiacija neuspješna!</string>
     <string name="invalid_password_login">Neispravna lozinka!</string>
     <string name="about_tree">Ispričaj priču o stablu:</string>
-    <string name="plant_tree">POSADI DRVO</string>
+    <string name="plant_tree">POSADI STABLO</string>
     <string name="discard">ODUSTANI</string>
 
     <string name="emailverified">Email nije verificiran!</string>
@@ -120,7 +120,7 @@
     <string name="newpassword">Nova lozinka</string>
     <string name="newpasswordrepeat">Ponovite lozinku</string>
 
-    <string name="notifications">Notifications</string>
+    <string name="notifications">Obavijesti</string>
     <string name="changedescription">Ažuriraj opis</string>
     <string name="changelocation">Ažuriraj lokaciju</string>
     <string name="anonuser">korisnik</string>

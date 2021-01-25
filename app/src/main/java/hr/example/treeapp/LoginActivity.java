@@ -13,9 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.common.api.ApiException;
 
-import auth.AuthRepository;
-import auth.LogInStatusCallback;
-import auth.PassReset;
+import hr.example.treeapp.repositories.AuthRepository;
+import hr.example.treeapp.auth.LogInStatusCallback;
+import hr.example.treeapp.auth.PassReset;
+import hr.example.treeapp.registration.RegistrationStep1;
 
 public class     LoginActivity extends AppCompatActivity {
 
@@ -108,7 +109,9 @@ public class     LoginActivity extends AppCompatActivity {
             @Override
             public void onCallback(String value) {
                 if(value=="ok") {
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    Intent intent =new Intent(getApplicationContext(), MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                     finish();
                 }
                 else{

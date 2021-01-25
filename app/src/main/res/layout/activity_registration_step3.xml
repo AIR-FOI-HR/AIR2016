@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="fill_vertical"
-        tools:context=".RegistrationStep3">
+        tools:context=".registration.RegistrationStep3">
 
         <TextView
             android:id="@+id/btnLogInStep3"

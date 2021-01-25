@@ -122,6 +122,7 @@ public class PostListFragment extends Fragment implements DataPresenter, PostRec
     @Override
     public void onItemClick(int position) {
         liveData.UpdateSelectedPostId(posts.get(position).getID_objava());
+        liveData.UpdateSelectedPostId(null);
     }
 
     @Override
