@@ -338,21 +338,23 @@ public class SinglePostViewActivity extends AppCompatActivity implements OnMapRe
         getPostData.getCurrentUserRole(new CurrentUserRoleCallback() {
             @Override
             public void onCallback(int userRole) {
-                if(userRole!=1  && !userRepository.getCurrentUserID().equals(userID)) {
-                    popup.getMenu().findItem(R.id.postpopupdelete).setVisible(false);
+                if(userRole==1 || userRepository.getCurrentUserID().equals(post.getKorisnik_ID())) {
+                    popup.getMenu().findItem(R.id.postpopupdelete).setVisible(true);
                 }
                 else{
-                    popup.getMenu().findItem(R.id.postpopupdelete).setVisible(true);
+                    popup.getMenu().findItem(R.id.postpopupdelete).setVisible(false);
                 }
             }
         });
-        if(!userRepository.getCurrentUserID().equals(userID)){
+        if(!userRepository.getCurrentUserID().equals(post.getKorisnik_ID())){
             popup.getMenu().findItem(R.id.postpopupdescription).setVisible(false);
             popup.getMenu().findItem(R.id.postpopuplocation).setVisible(false);
+            popup.getMenu().findItem(R.id.postpopupdelete).setVisible(false);
         }
         else{
             popup.getMenu().findItem(R.id.postpopupdescription).setVisible(true);
             popup.getMenu().findItem(R.id.postpopuplocation).setVisible(true);
+            popup.getMenu().findItem(R.id.postpopupdelete).setVisible(true);
         }
         popup.setOnMenuItemClickListener (new PopupMenu.OnMenuItemClickListener ()
         {
