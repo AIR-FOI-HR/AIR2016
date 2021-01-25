@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         bottomNav.setItemIconTintList(null);
-        bottomNav.setSelectedItemId(R.id.nav_home);
+
         UserRepository userRepository = new UserRepository();
         userRepository.isCurrentUserAnonymous(new UserAnonymousCallback() {
             @Override
